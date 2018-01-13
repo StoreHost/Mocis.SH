@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2010
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Distribution", "Distribution", "{0DA5F628-DF6F-4ADA-A5CD-E09103D7F5F0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Debian", "Debian", "{A43FAB41-CD7A-4FEA-9EB1-439C4D149956}"
+EndProject
+Global
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A43FAB41-CD7A-4FEA-9EB1-439C4D149956} = {0DA5F628-DF6F-4ADA-A5CD-E09103D7F5F0}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6A9B4107-BD6F-4C22-B64D-9388CB546AF3}
+	EndGlobalSection
+EndGlobal
