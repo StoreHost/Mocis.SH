@@ -28,9 +28,9 @@ until ($quit) {
     chomp(my $input = <STDIN>);
     
     if ($input =~ /^[Y]?$/i) {      # Match Yy or blank
-		system ("apt update -y \n");
+		system ("screen -dmSL workstuffapt update -y \n");
 		system ("apt install -y curl \n");
-		system ("apt install apache2 -y \n");
+		system ("screen -dmSL workstuff2 apt install apache2 -y \n");
 		system ("apt update -y \n");
 		system ("apt install -y php7.0\n");
 		system ("apt install -y php-mbstring php7.0-mysql php7.0-mbstring php-gettext php7.0-cli php7.0-curl php7.0-gd \n");
