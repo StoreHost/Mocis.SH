@@ -32,7 +32,6 @@ case $menuitem in
         htop) htop=1;;
         Lamp-PHP7) lamp_php7=1;;
 		Back) goback=1;;
-
         Exit) echo "Bye"; break;;
 esac
 if [ $htop = 1 ] ; then
@@ -42,7 +41,6 @@ if [ $htop = 1 ] ; then
 			echo "htop is installed successfuly"
 fi
 if [ $lamp_php7 = 1 ] ; then
-
 			dialog --yesno "This can damage your system !! Do you want to continue?" 0 0
 		response=$?
 		case $response in
@@ -74,5 +72,5 @@ if [ $lamp_php7 = 1 ] ; then
 			fi
 fi
 if [ $goback = 1 ] ; then
-wget -O - $url/Menu/welcome.sh | bash
+bash /usr/share/storehost/Installer/Menu/welcome.sh | bash
 fi

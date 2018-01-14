@@ -42,7 +42,7 @@ bash /usr/share/storehost/Installer/dependencies/Bash/benchmark.sh
 exit
 fi
 if [ $install = 1 ] ; then
-bash /usr/share/Installer/Menu/install.sh
+bash /usr/share/storehost/Installer/Menu/install.sh
 fi
 if [ $interfaces = 1 ] ; then
 bash /usr/share/storehost/Installer/Menu/interfaces.sh

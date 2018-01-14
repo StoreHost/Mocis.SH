@@ -44,25 +44,14 @@ response=$?
 			if [ $response = 0 ] 
 			then
 				if [ -d "$dir" ]; then
-				echo "do some cleaning...."
+				echo "do some cleaning from previous...."
 				rm -R /usr/share/storehost/
-				mkdir /usr/share/storehost
-				wget -r -nH --cut-dirs=2 --no-parent --reject="index.html*" http://bench.myvps.care/github/%0d/Installer &>/dev/null
-				fi
-				else
-				echo "preparing stand by"
+				echo "Cloning newest version...."
+				git clone https://github.com/StoreHost/StoreHost-Installer.git /usr/share/storehost/
+				echo "Installing some nessesary binarys..."
 				apt-get install aptitude xmlstarlet -y &>/dev/null
-				cd /usr/share/storehost
-				wget -r -nH --cut-dirs=2 --no-parent --reject="index.html*" http://bench.myvps.care/github/%0d/Installer &>/dev/null
-				fi
-				echo "Creating Directorys"
-				mkdir /usr/share/storehost
-				sleep 1
-				cd /usr/share/storehost
-				sleep 1 
-				wget -r -nH --cut-dirs=2 --no-parent --reject="index.html*" http://bench.myvps.care/github/%0d/Installer &>/dev/null
-				sleep 1
-				apt-get install aptitude xmlstarlet -y &>/dev/null
+				echo "porting to the main Menu..."
+				bash /usr/share/installer/menu/welcome.sh
 			fi
 
 
