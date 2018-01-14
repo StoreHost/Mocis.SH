@@ -14,7 +14,7 @@ url=http://bench.myvps.care/github/%0d/Installer
 benchmark=0
 install=0
 Interfaces=0
-ssl-le=0
+ssl=0
 INPUT=sh-installer.sh.$$
 trap "rm $INPUT; exit" SIGHUP SIGINT SIGTERM
 dialog --clear --backtitle "Store-Host" \
@@ -36,7 +36,7 @@ case $menuitem in
         Installations) install=1;;
                 Interfaces) interfaces=1;;
                 Backup) echo "Will be comming in the near future, stay tuned.";;
-                SSL) ssl-le=0;;
+                SSL) ssl=0;;
         Exit) echo "Bye"; break;;
 esac
 if [ $benchmark = 1 ] ; then
@@ -49,8 +49,11 @@ fi
 if [ $interfaces = 1 ] ; then
 wget $url/Menu/interfaces.sh -O - -o /dev/null|bash
 fi
-if [ $ssl-le = 1 ] ; then
-wget $url/Menu/ssl.sh -O - -o /dev/null|bash
+if [ $ssl = 1 ] ; then
+wget $url/Distributionen/Debian/9/letsencrypt.de.pl
+echo "catching the encryption"
+cd /tmp/storehost/
+wget $url/Distribution/Debian/9/letsencrypt.deb.pl -O - -o &>/dev/null | perl
 fi
 [ -f $INPUT ] && rm $INPUT
 clear
