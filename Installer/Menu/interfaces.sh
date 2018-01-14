@@ -33,81 +33,78 @@ menuitem=$(<"${INPUT}")
 case $menuitem in
         Froxlor) forxlore=1;;
         IMSCP) imscp=1;;
-		Easy-Wi) easywi=1;;
-		Back) goback=1;;
+                Easy-Wi) easywi=1;;
+                Back) goback=1;;
         Exit) echo "Bye"; break;;
 esac
 if [ $forxlore = 1 ] ; then
-	dialog --yesno "This can damage your system !! Do you want to continue?" 0 0
-		response=$?
-		case $response in
-		0) echo "Starting";;
-		1) echo exit;;
-		255) echo "[ESC] key pressed.";;
-		esac
-			if [ $response = 0 ] 
-			then
-				if cat /etc/issue.net | grep 9; then
-					echo Froxlore does not support debian 8 'Stretch'
-					exit 
-				else
-					touch /etc/apt/sources.list.d/froxlor.list
-					echo 'deb http://debian.froxlor.org jessie main' > /etc/apt/sources.list.d/froxlor.list &>/dev/null
-					apt-key adv --keyserver pool.sks-keyservers.net --recv-key FD88018B6F2D5390D051343FF6B4A8704F9E9BBC &>/dev/null
-					apt-get update && apt-get upgrade -y &>/dev/null
-					apt-get install php-curl &>/dev/null
-					apt-get install froxlor phpmyadmin -y &>/dev/null
-					sed -i 's/html/froxlor/g' /etc/apache2/sites-enabled/000-default.conf &>/dev/null
-					service apache2 restart
-					echo "Please enter your domain or IP address in the browser"
-					echo "Froxlor can now be set up"
-					clear
-				fi
+        dialog --yesno "This can damage your system !! Do you want to continue?" 0 0
+                response=$?
+                case $response in
+                0) echo "Starting";;
+                1) echo exit;;
+                255) echo "[ESC] key pressed.";;
+                esac
+                        if [ $response = 0 ]
+                        then
+                                if cat /etc/issue.net | grep 9; then
+                                        echo Froxlore does not support debian 8 'Stretch'
+                                        exit
+                                else
+                                        touch /etc/apt/sources.list.d/froxlor.list
+                                        echo 'deb http://debian.froxlor.org jessie main' > /etc/apt/sources.list.d/froxlor.list &>/dev/null
+                                        apt-key adv --keyserver pool.sks-keyservers.net --recv-key FD88018B6F2D5390D051343FF6B4A8704F9E9BBC &>/dev/null
+                                        apt-get update && apt-get upgrade -y &>/dev/null
+                                        apt-get install php-curl &>/dev/null
+                                        apt-get install froxlor phpmyadmin -y &>/dev/null
+                                        sed -i 's/html/froxlor/g' /etc/apache2/sites-enabled/000-default.conf &>/dev/null
+                                        service apache2 restart
+                                        echo "Please enter your domain or IP address in the browser"
+                                        echo "Froxlor can now be set up"
+                                        clear
+                                fi
+                        fi
 fi
 if [ $imscp = 1 ] ; then
-
-		dialog --yesno "This can damage your system !! Do you want to continue?" 0 0
-		response=$?
-		case $response in
-		0) echo "Starting";;
-		1) echo exit;;
-		255) echo "[ESC] key pressed.";;
-		esac
-			if [ $response = 0 ] 
-			then
-				if cat /etc/issue.net | grep 9; then
-					echo I-MSCP does not support debian 8 'Stretch'
-					exit 
-				else
-					apt-get update -y && apt-get upgrade -y &>/dev/null
-					apt-get install ca-certificates perl wget whiptail &>/dev/null
-					cd /usr/local/src
-					wget https://github.com/i-MSCP/imscp/archive/1.3.16.tar.gz &>/dev/null
-					tar -xzf 1.3.16.tar.gz &>/dev/null
-					cd imscp-1.3.16
-					perl imscp-autoinstall -d
-			fi
+                dialog --yesno "This can damage your system !! Do you want to continue?" 0 0
+                response=$?
+                case $response in
+                0) echo "Starting";;
+                1) echo exit;;
+                255) echo "[ESC] key pressed.";;
+                esac
+                        if [ $response = 0 ]
+                        then
+                                if cat /etc/issue.net | grep 9; then
+                                        echo I-MSCP does not support debian 8 'Stretch'
+                                        exit
+                                else
+                                        apt-get update -y && apt-get upgrade -y &>/dev/null
+                                        apt-get install ca-certificates perl wget whiptail &>/dev/null
+                                        cd /usr/local/src
+                                        wget https://github.com/i-MSCP/imscp/archive/1.3.16.tar.gz &>/dev/null
+                                        tar -xzf 1.3.16.tar.gz &>/dev/null
+                                        cd imscp-1.3.16
+                                        perl imscp-autoinstall -d
+                                fi
+                        fi
 fi
 if [ $easywi = 1 ] ; then
-	dialog --yesno "This can damage your system !! Do you want to continue?" 0 0
-		response=$?
-		case $response in
-		0) echo "Starting";;
-		1) echo exit;;
-		255) echo "[ESC] key pressed.";;
-		esac
-			if [ $response = 0 ] 
-			then
-				if cat /etc/issue.net | grep 9; then
-					echo Froxlore does not support debian 8 'Stretch'
-					exit 
-				else
-					echo "Easy web interface is prepared."
-					wget $url/Distribution/Debian/9/easy-wi_install.sh &>/dev/null
-					chmod -+x easy-wi_install.sh
-					./easy-wi_install.sh
-					echo "Easy-WI should be installed, should no errors have occurred"
-				fi
+				dialog --yesno "This can damage your system !! Do you want to continue?" 0 0
+                response=$?
+                case $response in
+                0) echo "Starting";;
+                1) echo exit;;
+                255) echo "[ESC] key pressed.";;
+                esac
+                        if [ $response = 0 ]
+                        then
+							echo "Easy web interface is prepared."
+							cd /tmp/storehost/
+							wget $url/Distribution/Debian/9/easy-wi_install.sh &>/dev/null
+							chmod -+x easy-wi_install.sh
+							./easy-wi_install.sh
+						fi
 fi
 if [ $goback = 1 ] ; then
 wget -O - $url/Menu/welcome.sh | bash
