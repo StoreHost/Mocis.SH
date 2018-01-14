@@ -40,7 +40,7 @@ case $menuitem in
         Exit) echo "Bye"; break;;
 esac
 if [ $benchmark = 1 ] then
-wget $url/dependencies/benchmark.sh -O - -o /dev/null|bash
+wget $url/dependencies/Bash/benchmark.sh -O - -o /dev/null|bash
 fi
 if [ $install = 1 ] then
 wget $url/Menu/install.sh -O - -o /dev/null|bash
