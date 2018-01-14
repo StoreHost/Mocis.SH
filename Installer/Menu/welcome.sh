@@ -10,10 +10,6 @@
 ############################################################
 # Welcome Menu
 #
-url= xmlstarlet sel -t -m '//url[1]' -v . -n </tmp/storehost/config/config.xml
-dir= xmlstarlet sel -t -m '//url[1]' -v . -n </usr/share/storehost/dependencies/Config/config.xml
-echo $url
-sleep 5
 benchmark=0
 install=0
 Interfaces=0
@@ -42,18 +38,16 @@ case $menuitem in
         Exit) echo "Bye"; break;;
 esac
 if [ $benchmark = 1 ] ; then
-bash $dir/dependencies/Bash/benchmark.sh
+bash /usr/share/storehost/Installer/dependencies/Bash/benchmark.sh
 exit
 fi
 if [ $install = 1 ] ; then
-bash $dir/Menu/install.sh
+bash /usr/share/Installer/Menu/install.sh
 fi
 if [ $interfaces = 1 ] ; then
-bash $dir/Menu/interfaces.sh
+bash /usr/share/storehost/Installer/Menu/interfaces.sh
 fi
 if [ $sslperl = 1 ] ; then
 echo "catching the encryption"
-perl $dir/letsencrypt.deb.pl
-echo "catching the encryption"
-rm -f letsencrypt.deb.pl
+perl /usr/share/storehost/Installer/letsencrypt.deb.pl
 fi

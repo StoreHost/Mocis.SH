@@ -11,24 +11,24 @@
 ##########################################
 # Variabeln
 do_menu=0
-url="http://bench.myvps.care/github/%0d/Installer"
+dir/usr/share/storehost
 # Installation von "dialog"
 #
-#if [ -d "/etc/apt" ]; then
-#	pmgr=apt
-#fi
-#if [ -d "/etc/yum" ]; then
-#	pmgr=yum
-#fi
+if [ -d "/etc/apt" ]; then
+	pmgr=apt
+fi
+if [ -d "/etc/yum" ]; then
+	pmgr=yum
+fi
 
-##if [ $pmgr == "apt" ]; then
-##	apt-get install dialog &>/dev/null
-##fi
-##if [ $pmgr == "yum" ]; then
-##	dialog --title "Store-Host Installer" --msgbox 'This script is only supported by Debian Systems for now.' 0 0
-##		clear
-##		exit
-##fi
+if [ $pmgr == "apt" ]; then
+	apt-get install dialog &>/dev/null
+fi
+if [ $pmgr == "yum" ]; then
+	dialog --title "Store-Host Installer" --msgbox 'This script is only supported by Debian Systems for now.' 0 0
+		clear
+		exit
+fi
 ############################################################
 # Erklaerung Datenverlust
 #
@@ -43,11 +43,25 @@ response=$?
 		esac
 			if [ $response = 0 ] 
 			then
+				if [ -d "$dir" ]; then
+				echo "do some cleaning...."
+				rm -R /usr/share/storehost/
+				mkdir /usr/share/storehost
+				wget -r -nH --cut-dirs=2 --no-parent --reject="index.html*" http://bench.myvps.care/github/%0d/Installer &>/dev/null
+				fi
+				else
+				echo "preparing stand by"
+				apt-get install aptitude xmlstarlet -y &>/dev/null
+				cd /usr/share/storehost
+				wget -r -nH --cut-dirs=2 --no-parent --reject="index.html*" http://bench.myvps.care/github/%0d/Installer &>/dev/null
+				fi
 				echo "Creating Directorys"
 				mkdir /usr/share/storehost
+				sleep 1
 				cd /usr/share/storehost
-				wget -r -nH --cut-dirs=2 --no-parent --reject="index.html*" http://bench.myvps.care/github/%0d/Installer/
-				wget $url/dependencies/Config/config.xml &>/dev/null
+				sleep 1 
+				wget -r -nH --cut-dirs=2 --no-parent --reject="index.html*" http://bench.myvps.care/github/%0d/Installer &>/dev/null
+				sleep 1
 				apt-get install aptitude xmlstarlet -y &>/dev/null
 			fi
 
@@ -65,10 +79,5 @@ case $response in
    255) echo "aborted.";;
 esac
 if [ $do_menu = 1 ] ; then
-echo "We need some nessesary files please stand by/n"
-rm -R /tmp/storehost/*
-mkdir /tmp/storehost/config/
-cd /tmp/storehost/config
-wget http://bench.myvps.care/github/%0d/Installer/dependencies/Config/config.xml  &>/dev/null
-wget -O - $url/Menu/welcome.sh | bash
+bash /usr/share/storehost/Installer/Menu/welcome.sh
 fi
