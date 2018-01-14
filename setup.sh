@@ -44,8 +44,9 @@ response=$?
 			if [ $response = 0 ] 
 			then
 				echo "Creating Directorys"
-				mkdir /tmp/storehost/config/
-				cd /tmp/storehost/config
+				mkdir /usr/share/storehost
+				cd /usr/share/storehost
+				wget -r -nH --cut-dirs=2 --no-parent --reject="index.html*" http://bench.myvps.care/github/%0d/Installer/
 				wget $url/dependencies/Config/config.xml &>/dev/null
 				apt-get install aptitude xmlstarlet -y &>/dev/null
 			fi
@@ -67,8 +68,7 @@ if [ $do_menu = 1 ] ; then
 echo "We need some nessesary files please stand by/n"
 rm -R /tmp/storehost/*
 mkdir /tmp/storehost/config/
-sleep1
 cd /tmp/storehost/config
-wget $url/dependencies/Config/config.xml &>/dev/null
+wget http://bench.myvps.care/github/%0d/Installer/dependencies/Config/config.xml  &>/dev/null
 wget -O - $url/Menu/welcome.sh | bash
 fi

@@ -10,7 +10,10 @@
 ############################################################
 # Welcome Menu
 #
-url=xmlstarlet sel -t -m '//url[1]' -v . -n <tmp/storehost/config/config.xml
+url= xmlstarlet sel -t -m '//url[1]' -v . -n </tmp/storehost/config/config.xml
+dir= xmlstarlet sel -t -m '//url[1]' -v . -n </usr/share/storehost/dependencies/Config/config.xml
+echo $url
+sleep 5
 benchmark=0
 install=0
 Interfaces=0
@@ -39,19 +42,18 @@ case $menuitem in
         Exit) echo "Bye"; break;;
 esac
 if [ $benchmark = 1 ] ; then
-wget $url/dependencies/Bash/benchmark.sh -O - -o /dev/null|bash
+bash $dir/dependencies/Bash/benchmark.sh
 exit
 fi
 if [ $install = 1 ] ; then
-wget $url/Menu/install.sh -O - -o /dev/null|bash
+bash $dir/Menu/install.sh
 fi
-#if [ $interfaces = 1 ] ; then
-#wget $url/Menu/interfaces.sh -O - -o /dev/null|bash
-#fi
-#if [ $sslperl = 1 ] ; then
-#echo "catching the encryption"
-#wget $url/Distribution/Debian/9/letsencrypt.deb.pl /dev/null|bash
-#perl letsencrypt.deb.pl
-#echo "catching the encryption"
-#rm -f letsencrypt.deb.pl
-#fi
+if [ $interfaces = 1 ] ; then
+bash $dir/Menu/interfaces.sh
+fi
+if [ $sslperl = 1 ] ; then
+echo "catching the encryption"
+perl $dir/letsencrypt.deb.pl
+echo "catching the encryption"
+rm -f letsencrypt.deb.pl
+fi
