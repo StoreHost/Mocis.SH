@@ -48,7 +48,7 @@ if [ $forxlore = 1 ] ; then
                         if [ $response = 0 ]
                         then
                                 if cat /etc/issue.net | grep 9; then
-                                        echo Froxlore does not support debian 8 'Stretch'
+                                        dialog --title "Store-Host Installer" --msgbox 'Froxlor is not supported for Debian 9 "Stretch"' 0 0
                                         exit
                                 else
                                         touch /etc/apt/sources.list.d/froxlor.list
@@ -76,16 +76,16 @@ if [ $imscp = 1 ] ; then
                         if [ $response = 0 ]
                         then
                                 if cat /etc/issue.net | grep 9; then
-                                        echo I-MSCP does not support debian 8 'Stretch'
-                                        exit
+									dialog --title "Store-Host Installer" --msgbox 'I-MSCP is not supported for Debian 9 "Stretch"' 0 0
+                                    exit
                                 else
-                                        apt-get update -y && apt-get upgrade -y &>/dev/null
-                                        apt-get install ca-certificates perl wget whiptail &>/dev/null
-                                        cd /usr/local/src
-                                        wget https://github.com/i-MSCP/imscp/archive/1.3.16.tar.gz &>/dev/null
-                                        tar -xzf 1.3.16.tar.gz &>/dev/null
-                                        cd imscp-1.3.16
-                                        perl imscp-autoinstall -d
+                                    apt-get update -y && apt-get upgrade -y &>/dev/null
+                                    apt-get install ca-certificates perl wget whiptail &>/dev/null
+                                    cd /usr/local/src
+                                    wget https://github.com/i-MSCP/imscp/archive/1.6.x.tar.gz &>/dev/null
+                                    tar -xzf 1.6.x.tar.gz &>/dev/null
+                                    cd imscp-1.6.x
+                                    perl imscp-autoinstall -d
                                 fi
                         fi
 fi
