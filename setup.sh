@@ -50,7 +50,7 @@ response=$?
 ##########################################
 # Variabeln
 do_menu=0
-url="bench.myvps.care/github"
+url="bench.myvps.care/github/%0D"
 if
 	[ $UID -ne 0 ]; then
 		dialog --title "Store-Host Installer" --msgbox 'This script must be started as "root"!!"' 0 0

@@ -10,7 +10,7 @@
 ############################################################
 # Welcome Menu
 #
-url="bench.myvps.care"
+url="bench.myvps.care/%0D"
 benchmark=0
 install=0
 Interfaces=0
