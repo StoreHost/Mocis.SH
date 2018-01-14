@@ -1,20 +1,20 @@
 #!/bin/bash
 ############################################################
-# Developed by Store-Host 
+# Developed by Store-Host
 # Version 0.0.5.0
 # Web: https://www.store-host.com
-#	Store-Host is distributed in the hope that it will be useful,
+#       Store-Host is distributed in the hope that it will be useful,
 #   but WITHOUT ANY WARRANTY; without even the implied warranty of
 #   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #   GNU General Public License for more details.
 ############################################################
 # Welcome Menu
 #
-url="bench.myvps.care/%0D"
+url=http://bench.myvps.care/github/%0d/Installer
 benchmark=0
 install=0
 Interfaces=0
-ssl=0
+ssl-le=0
 INPUT=sh-installer.sh.$$
 trap "rm $INPUT; exit" SIGHUP SIGINT SIGTERM
 dialog --clear --backtitle "Store-Host" \
@@ -34,21 +34,22 @@ menuitem=$(<"${INPUT}")
 case $menuitem in
         Benchmarking) benchmark=1;;
         Installations) install=1;;
-		Interfaces) interfaces=1;;
-		Backup) echo "Will be comming in the near future, stay tuned.";; #do_backup=1;;
-		SSL) ssl=1;;
+                Interfaces) interfaces=1;;
+                Backup) echo "Will be comming in the near future, stay tuned.";;
+                SSL) ssl-le=0;;
         Exit) echo "Bye"; break;;
 esac
-if [ $benchmark = 1 ] then
+if [ $benchmark = 1 ] ; then
 wget $url/dependencies/Bash/benchmark.sh -O - -o /dev/null|bash
+exit
 fi
-if [ $install = 1 ] then
+if [ $install = 1 ] ; then
 wget $url/Menu/install.sh -O - -o /dev/null|bash
 fi
-if [ $interfaces = 1 ] then
+if [ $interfaces = 1 ] ; then
 wget $url/Menu/interfaces.sh -O - -o /dev/null|bash
 fi
-if [ $ssl = 1 ] then
+if [ $ssl-le = 1 ] ; then
 wget $url/Menu/ssl.sh -O - -o /dev/null|bash
 fi
 [ -f $INPUT ] && rm $INPUT

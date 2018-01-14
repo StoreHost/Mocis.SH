@@ -8,6 +8,10 @@
 #   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #   GNU General Public License for more details.
 ############################################################
+##########################################
+# Variabeln
+do_menu=0
+url="bench.myvps.care/github/%0D"
 # Installation von "dialog"
 #
 if [ -d "/etc/apt" ]; then
@@ -44,13 +48,9 @@ response=$?
 				apt-get install aptitude -y &>/dev/null
 				mkdir /tmp/storehost
 				mkdir /tmp/storehost/cpan/
-				do_perlinstaller=1
 			fi
 
-##########################################
-# Variabeln
-do_menu=0
-url="bench.myvps.care/github/%0D"
+
 if
 	[ $UID -ne 0 ]; then
 		dialog --title "Store-Host Installer" --msgbox 'This script must be started as "root"!!"' 0 0
