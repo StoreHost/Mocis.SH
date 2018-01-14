@@ -23,9 +23,9 @@ dialog --clear --backtitle "Store-Host" \
 letter of the choice as a hot key, or the \n\
 number keys 1-9 to choose an option.\n\
 Choose the TASK" 0 0 8 \
-Froxlor "Taskmanager" \
-IMSCP "PHP, Mysql, Apache" \
-Easy-Wi "Back to the Mainmenu" \
+Froxlor "Webhosting Controll Panel" \
+IMSCP "Webhosting Controll Panel" \
+Easy-Wi "Gameserver Webinterface" \
 Back "Back to the Mainmenu" \
 Exit "Exit to the shell" 2>"${INPUT}"
 menuitem=$(<"${INPUT}")
