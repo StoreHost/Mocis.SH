@@ -11,25 +11,24 @@
 ##########################################
 # Variabeln
 do_menu=0
-url="bench.myvps.care/github/%0D"
+url="http://bench.myvps.care/github/%0d/Installer"
 # Installation von "dialog"
 #
-if [ -d "/etc/apt" ]; then
-	pmgr=apt
-fi
-if [ -d "/etc/yum" ]; then
-	pmgr=yum
-fi
+#if [ -d "/etc/apt" ]; then
+#	pmgr=apt
+#fi
+#if [ -d "/etc/yum" ]; then
+#	pmgr=yum
+#fi
 
-if [ $pmgr == "apt" ]; then
-	apt-get install dialog &>/dev/null
-fi
-if [ $pmgr == "yum" ]; then
-	dialog --title "Store-Host Installer" --msgbox 'This script is only supported by Debian Systems for now.' 0 0
-		clear
-		exit
-fi
-clear
+##if [ $pmgr == "apt" ]; then
+##	apt-get install dialog &>/dev/null
+##fi
+##if [ $pmgr == "yum" ]; then
+##	dialog --title "Store-Host Installer" --msgbox 'This script is only supported by Debian Systems for now.' 0 0
+##		clear
+##		exit
+##fi
 ############################################################
 # Erklaerung Datenverlust
 #
@@ -45,14 +44,15 @@ response=$?
 			if [ $response = 0 ] 
 			then
 				echo "Creating Directorys"
-				apt-get install aptitude -y &>/dev/null
-				mkdir /tmp/storehost
-				mkdir /tmp/storehost/cpan/
+				mkdir /tmp/storehost/config/
+				cd /tmp/storehost/config
+				wget $url/dependencies/Config/config.xml &>/dev/null
+				apt-get install aptitude xmlstarlet -y &>/dev/null
 			fi
 
 
 if
-	[ $UID -ne 0 ]; then
+[ $UID -ne 0 ]; then
 		dialog --title "Store-Host Installer" --msgbox 'This script must be started as "root"!!"' 0 0
 		clear
 		exit
@@ -64,7 +64,11 @@ case $response in
    255) echo "aborted.";;
 esac
 if [ $do_menu = 1 ] ; then
-echo "We need some nessesary files please stand by"
-wget -O - $url/Installer/Menu/welcome.sh | bash
-#echo "everything is in place and we're starting now...'"
+echo "We need some nessesary files please stand by/n"
+rm -R /tmp/storehost/*
+mkdir /tmp/storehost/config/
+sleep1
+cd /tmp/storehost/config
+wget $url/dependencies/Config/config.xml &>/dev/null
+wget -O - $url/Menu/welcome.sh | bash
 fi

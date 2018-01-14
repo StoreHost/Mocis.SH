@@ -10,7 +10,7 @@
 ############################################################
 # Welcome Menu
 #
-url=http://bench.myvps.care/github/%0d/Installer
+url=xmlstarlet sel -t -m '//url[1]' -v . -n <tmp/storehost/config/config.xml
 benchmark=0
 install=0
 Interfaces=0
@@ -26,17 +26,16 @@ Choose the TASK" 0 0 8 \
 Benchmarking "Ensky Media Script" \
 Installations "PHP, Mysql..." \
 Interfaces "IMSCP, Froxlor, EasyWI" \
-SSL "Secure your Website free whit SSL" \
 Backup "FTP Backupscript to Remote Server" \
 Exit "Exit to the shell" 2>"${INPUT}"
 menuitem=$(<"${INPUT}")
+[ -f $INPUT ] && rm $INPUT
 # make decsion
 case $menuitem in
         Benchmarking) benchmark=1;;
         Installations) install=1;;
                 Interfaces) interfaces=1;;
                 Backup) echo "Will be comming in the near future, stay tuned.";;
-                SSL) sslperl=0;;
         Exit) echo "Bye"; break;;
 esac
 if [ $benchmark = 1 ] ; then
@@ -46,14 +45,13 @@ fi
 if [ $install = 1 ] ; then
 wget $url/Menu/install.sh -O - -o /dev/null|bash
 fi
-if [ $interfaces = 1 ] ; then
-wget $url/Menu/interfaces.sh -O - -o /dev/null|bash
-fi
+#if [ $interfaces = 1 ] ; then
+#wget $url/Menu/interfaces.sh -O - -o /dev/null|bash
+#fi
 #if [ $sslperl = 1 ] ; then
 #echo "catching the encryption"
-#wget $url/Distribution/Debian/9/letsencrypt.deb.pl
+#wget $url/Distribution/Debian/9/letsencrypt.deb.pl /dev/null|bash
 #perl letsencrypt.deb.pl
 #echo "catching the encryption"
 #rm -f letsencrypt.deb.pl
 #fi
-[ -f $INPUT ] && rm $INPUT
