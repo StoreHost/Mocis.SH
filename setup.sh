@@ -43,24 +43,6 @@ response=$?
 		esac
 			if [ $response = 0 ] 
 			then
-			do_menu=1
-			echo "Have fun."
-			fi
-
-
-if
-[ $UID -ne 0 ]; then
-		dialog --title "Store-Host Installer" --msgbox 'This script must be started as "root"!!"' 0 0
-		clear
-		exit
-fi
-response=$?
-case $response in
-   0) do_menu=1;;
-   1) exit;;
-   255) echo "aborted.";;
-esac
-if [ $do_menu = 1 ] ; then
 				echo "do some cleaning from previous...."
 				rm -R /usr/share/storehost/
 				echo "Installing some nessesary binarys..."
@@ -70,4 +52,13 @@ if [ $do_menu = 1 ] ; then
 				sleep 5
 				echo "porting to the main Menu..."
 				bash /usr/share/storehost/Installer/Menu/welcome.sh
+			echo "Have fun."
+			fi
+
+
+if
+[ $UID -ne 0 ]; then
+		dialog --title "Store-Host Installer" --msgbox 'This script must be started as "root"!!"' 0 0
+		clear
+		exit
 fi
