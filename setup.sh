@@ -46,10 +46,10 @@ response=$?
 				if [ -d "$dir" ]; then
 				echo "do some cleaning from previous...."
 				rm -R /usr/share/storehost/
+				echo "Installing some nessesary binarys..."
+				apt-get install aptitude xmlstarlet git -y &>/dev/null
 				echo "Cloning newest version...."
 				git clone https://github.com/StoreHost/StoreHost-Installer.git /usr/share/storehost/
-				echo "Installing some nessesary binarys..."
-				apt-get install aptitude xmlstarlet -y &>/dev/null
 				echo "porting to the main Menu..."
 				bash /usr/share/Installer/Menu/welcome.sh
 			fi
