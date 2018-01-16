@@ -102,8 +102,7 @@ until ($quit4) {
     if ($input =~ /^[Y]?$/i) {      # Match Yy or blank
         print "Going Back to the Menu...\nPlease Wait...!\n";
 		sleep 2;
-		chdir('/root'); 
-		system ("./menu.sh");
+		system ("bash /usr/share/storehost/Installer/Menu/welcome.sh");
 		sleep 2;
 		$quit4 = 1;
     } elsif ($input =~ /^[N]$/i) {  # Match Nn
