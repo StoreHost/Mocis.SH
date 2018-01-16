@@ -25,6 +25,7 @@ Choose the TASK" 0 0 8 \
 Benchmarking "Ensky Media Script" \
 Installations "PHP, Mysql..." \
 Interfaces "IMSCP, Froxlor, EasyWI" \
+SSL "Let's Encrypt whit certbot" \
 Backup "FTP Backupscript to Remote Server" \
 Exit "Exit to the shell" 2>"${INPUT}"
 menuitem=$(<"${INPUT}")
@@ -33,22 +34,23 @@ menuitem=$(<"${INPUT}")
 case $menuitem in
         Benchmarking) benchmark=1;;
         Installations) install=1;;
-                Interfaces) interfaces=1;;
-                Backup) echo "Will be comming in the near future, stay tuned.";;
+        Interfaces) interfaces=1;;
+		SSL) sslperl=1;;
+        Backup) echo "Will be comming in the near future, stay tuned.";;
         Exit) echo "Bye"; break;;
 esac
 if [ $benchmark = 1 ] ; then
 bash /usr/share/storehost/Installer/dependencies/Bash/benchmark.sh
 exit
 fi
-if [ $install = 1 ] ; then
-bash /usr/share/storehost/Installer/menu/install.sh
+if [ $install = 1  ] ; then
+bash /usr/share/storehost/Installer/Menu/install.sh
 fi
-if [ $interfaces = 1 ] ; then
-bash /usr/share/storehost/Installer/menu/interfaces.sh
+if [ $interfaces =  1 ] ; then
+bash /usr/share/storehost/Installer/Menu/interfaces.sh
 fi
 if [ $sslperl = 1 ] ; then
 echo "catching the encryption"
-perl /usr/share/storehost/Installer/Debian/9/letsencrypt.deb.pl
+perl /usr/share/storehost/Installer/Distribution/Debian/9/letsencrypt.deb.pl
 fi
  
