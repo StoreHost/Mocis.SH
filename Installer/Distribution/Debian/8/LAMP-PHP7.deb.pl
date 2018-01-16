@@ -72,7 +72,6 @@ until ($quit) {
 		system ("mysql -V");
 		printf "\n";
 		printf "\n";
-		system ("service apache2 status");
 		sleep 5;
 		system ("clear");
 		printf "Thank you for using the StoreHost installer.\n";
