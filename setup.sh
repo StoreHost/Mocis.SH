@@ -50,6 +50,7 @@ response=$?
 				apt-get install aptitude xmlstarlet git -y &>/dev/null
 				echo "Cloning newest version...."
 				git clone https://github.com/StoreHost/StoreHost-Installer.git /usr/share/storehost/
+				sleep 5
 				echo "porting to the main Menu..."
 				bash /usr/share/Installer/Menu/welcome.sh
 			fi
