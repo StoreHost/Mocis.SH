@@ -54,8 +54,6 @@ if [ $lamp_php7 = 1 ] ; then
 					chmod -+x /usr/share/storehost/Installer/Distribution/Debian/9/LAMP-PHP7.deb9.pl
 					perl /usr/share/storehost/Installer/Distribution/Debian/9/LAMP-PHP7.deb9.pl
 				else
-
-					wget $url/Distribution/Debian/8/LAMP-PHP7.deb.pl
 					chmod -+x /usr/share/storehost/Installer/Distribution/Debian/8/LAMP-PHP7.deb.pl
 					perl /usr/share/storehost/Installer/Distribution/Debian/8/LAMP-PHP7.deb.pl
 				fi

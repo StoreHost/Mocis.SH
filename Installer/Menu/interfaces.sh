@@ -54,10 +54,10 @@ if [ $forxlore = 1 ] ; then
                                         touch /etc/apt/sources.list.d/froxlor.list
                                         echo 'deb http://debian.froxlor.org jessie main' > /etc/apt/sources.list.d/froxlor.list &>/dev/null
                                         apt-key adv --keyserver pool.sks-keyservers.net --recv-key FD88018B6F2D5390D051343FF6B4A8704F9E9BBC &>/dev/null
-                                        apt-get update && apt-get upgrade -y &>/dev/null
-                                        apt-get install php-curl &>/dev/null
-                                        apt-get install froxlor phpmyadmin -y &>/dev/null
-                                        sed -i 's/html/froxlor/g' /etc/apache2/sites-enabled/000-default.conf &>/dev/null
+                                        apt-get update && apt-get upgrade -y 
+                                        apt-get install php-curl 
+                                        apt-get install froxlor phpmyadmin -y 
+                                        sed -i 's/html/froxlor/g' /etc/apache2/sites-enabled/000-default.conf 
                                         service apache2 restart
                                         echo "Please enter your domain or IP address in the browser"
                                         echo "Froxlor can now be set up"
@@ -79,11 +79,11 @@ if [ $imscp = 1 ] ; then
 									dialog --title "Store-Host Installer" --msgbox 'I-MSCP is not supported for Debian 9 "Stretch"' 0 0
                                     exit
                                 else
-                                    apt-get update -y && apt-get upgrade -y &>/dev/null
-                                    apt-get install ca-certificates perl wget whiptail &>/dev/null
-                                    cd /usr/local/src
-                                    wget https://github.com/i-MSCP/imscp/archive/1.6.x.tar.gz &>/dev/null
-                                    tar -xzf 1.6.x.tar.gz &>/dev/null
+                                    apt-get update -y && apt-get upgrade -y
+                                    apt-get install ca-certificates perl wget whiptail
+                                    cd /usr/share/storehost/
+                                    wget https://github.com/i-MSCP/imscp/archive/1.6.x.tar.gz
+                                    tar -xzf 1.6.x.tar.gz 
                                     cd imscp-1.6.x
                                     perl imscp-autoinstall -d
                                 fi
@@ -101,9 +101,8 @@ if [ $easywi = 1 ] ; then
                         then
 							echo "Easy web interface is prepared."
 							cd /tmp/storehost/
-							wget $url/Distribution/Debian/9/easy-wi_install.sh &>/dev/null
-							chmod -+x easy-wi_install.sh
-							./easy-wi_install.sh
+							chmod -+x /usr/share/storehost/Installer/Debian/9/easy-wi_install.sh
+							./usr/share/storehost/Installer/Debian/9/easy-wi_install.sh
 						fi
 fi
 if [ $goback = 1 ] ; then

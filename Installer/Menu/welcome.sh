@@ -43,8 +43,8 @@ if [ $benchmark = 1 ] ; then
 bash /usr/share/storehost/Installer/dependencies/Bash/benchmark.sh
 exit
 fi
-if [ $install = 1  ] ; then
-bash /usr/share/storehost/Installer/Menu/Installations.sh
+if [ $install = 1 ] ; then
+bash /usr/share/storehost/Installer/Menu/installation.sh
 fi
 if [ $interfaces = 1 ] ; then
 bash /usr/share/storehost/Installer/Menu/interfaces.sh
