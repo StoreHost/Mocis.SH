@@ -46,7 +46,7 @@ fi
 if [ $install = 1  ] ; then
 bash /usr/share/storehost/Installer/Menu/install.sh
 fi
-if [ $interfaces = 1  ] ; then
+if [ $interfaces = 1 ] ; then
 bash /usr/share/storehost/Installer/Menu/interfaces.sh
 fi
 if [ $sslperl = 1 ] ; then

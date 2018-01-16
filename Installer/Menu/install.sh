@@ -51,23 +51,13 @@ if [ $lamp_php7 = 1 ] ; then
 			if [ $response = 0 ] 
 			then
 				if cat /etc/issue.net | grep 9; then
-					mkdir /tmp/installer/
-					mkdir /tmp/installer/perl
-					cd /tmp/installer/perl
-					wget $url/Distribution/Debian/9/LAMP-PHP7.deb.pl
-					chmod -+x LAMP-PHP7.deb9.pl
-					perl LAMP-PHP7.deb9.pl
-					rm -f LAMP-PHP7.deb9.pl
-					clear
+					chmod -+x /usr/share/storehost/Installer/Distribution/Debian/9/LAMP-PHP7.deb9.pl
+					perl /usr/share/storehost/Installer/Distribution/Debian/9/LAMP-PHP7.deb9.pl
 				else
-					mkdir /tmp/installer/
-					mkdir /tmp/installer/perl
-					cd /tmp/installer/perl
+
 					wget $url/Distribution/Debian/8/LAMP-PHP7.deb.pl
-					chmod -+x LAMP-PHP7.deb.pl
-					perl LAMP-PHP7.deb.pl
-					rm -f LAMP-PHP7.deb.pl
-					clear
+					chmod -+x /usr/share/storehost/Installer/Distribution/Debian/8/LAMP-PHP7.deb.pl
+					perl /usr/share/storehost/Installer/Distribution/Debian/8/LAMP-PHP7.deb.pl
 				fi
 			fi
 fi
