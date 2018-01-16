@@ -51,7 +51,7 @@ response=$?
 				echo "Installing some nessesary binarys..."
 				apt-get install aptitude xmlstarlet -y &>/dev/null
 				echo "porting to the main Menu..."
-				bash /usr/share/installer/menu/welcome.sh
+				bash /usr/share/Installer/Menu/welcome.sh
 			fi
 
 

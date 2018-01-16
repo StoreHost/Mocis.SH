@@ -38,17 +38,17 @@ case $menuitem in
         Exit) echo "Bye"; break;;
 esac
 if [ $benchmark = 1 ] ; then
-bash /usr/share/storehost/installer/dependencies/Bash/benchmark.sh
+bash /usr/share/storehost/Installer/dependencies/Bash/benchmark.sh
 exit
 fi
 if [ $install = 1 ] ; then
-bash /usr/share/storehost/installer/menu/install.sh
+bash /usr/share/storehost/Installer/menu/install.sh
 fi
 if [ $interfaces = 1 ] ; then
-bash /usr/share/storehost/installer/menu/interfaces.sh
+bash /usr/share/storehost/Installer/menu/interfaces.sh
 fi
 if [ $sslperl = 1 ] ; then
 echo "catching the encryption"
-perl /usr/share/storehost/installer/Debian/9/letsencrypt.deb.pl
+perl /usr/share/storehost/Installer/Debian/9/letsencrypt.deb.pl
 fi
  
