@@ -26,5 +26,11 @@ A step by step series of examples that tell you have to get a development env ru
 Say what the step will be
 
 ```
-wget https://bench.myvps.care/setup.sh  -O - -o /dev/null|bash 
+wget https://bench.myvps.care/setup.sh  -O - -o /dev/null
+```
+```
+chmod -+x setup.sh
+```
+```
+./setup.sh
 ```
