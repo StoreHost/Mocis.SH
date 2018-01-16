@@ -43,16 +43,7 @@ response=$?
 		esac
 			if [ $response = 0 ] 
 			then
-				if [ -d "$dir" ]; then
-				echo "do some cleaning from previous...."
-				rm -R /usr/share/storehost/
-				echo "Installing some nessesary binarys..."
-				apt-get install aptitude xmlstarlet git -y &>/dev/null
-				echo "Cloning newest version...."
-				git clone https://github.com/StoreHost/StoreHost-Installer.git /usr/share/storehost/
-				sleep 5
-				echo "porting to the main Menu..."
-				bash /usr/share/Installer/Menu/welcome.sh
+			echo "Have fun."
 			fi
 
 
@@ -69,5 +60,13 @@ case $response in
    255) echo "aborted.";;
 esac
 if [ $do_menu = 1 ] ; then
-bash /usr/share/storehost/Installer/Menu/welcome.sh
+				echo "do some cleaning from previous...."
+				rm -R /usr/share/storehost/
+				echo "Installing some nessesary binarys..."
+				apt-get install aptitude xmlstarlet git -y &>/dev/null
+				echo "Cloning newest version...."
+				git clone https://github.com/StoreHost/StoreHost-Installer.git /usr/share/storehost/
+				sleep 5
+				echo "porting to the main Menu..."
+				bash /usr/share/storehost/Installer/Menu/welcome.sh
 fi
