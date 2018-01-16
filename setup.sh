@@ -43,6 +43,7 @@ response=$?
 		esac
 			if [ $response = 0 ] 
 			then
+			do_menu=1
 			echo "Have fun."
 			fi
 
