@@ -10,11 +10,11 @@
 ############################################################
 # Interfaces-Installer Menu
 #
-url=http://bench.myvps.care/github/%0d/Installer
 forxlore=0
 imscp=0
 easywi=0
 goback=0
+sinusbot=0
 INPUT=save.$$
 trap "rm $INPUT; exit" SIGHUP SIGINT SIGTERM
 dialog --clear --backtitle "Store-Host" \
@@ -26,6 +26,7 @@ Choose the TASK" 0 0 8 \
 Froxlor "Webhosting Controll Panel" \
 IMSCP "Webhosting Controll Panel" \
 Easy-Wi "Gameserver Webinterface" \
+Sinusbot "Teamspeak Musicbot" \
 Back "Back to the Mainmenu" \
 Exit "Exit to the shell" 2>"${INPUT}"
 menuitem=$(<"${INPUT}")
@@ -34,8 +35,9 @@ menuitem=$(<"${INPUT}")
 case $menuitem in
         Froxlor) forxlore=1;;
         IMSCP) imscp=1;;
-                Easy-Wi) easywi=1;;
-                Back) goback=1;;
+		Easy-Wi) easywi=1;;
+        Back) goback=1;;
+        Sinusbot) sinusbot=1;;
         Exit) echo "Bye"; break;;
 esac
 if [ $forxlore = 1 ] ; then
@@ -104,5 +106,7 @@ if [ $easywi = 1 ] ; then
 						fi
 fi
 if [ $goback = 1 ] ; then
-	bash /usr/share/storehost/Installer/Menun/welcome.sh
+	bash /usr/share/storehost/Installer/Menu/welcome.sh
 fi
+if [ $sinusbot = 1 ] ; then
+	perl /usr/share/storehost/Installer/Distribution/Debian/Sinusbot.pl
