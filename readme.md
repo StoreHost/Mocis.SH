@@ -34,3 +34,18 @@ chmod -+x setup.sh
 ```
 ./setup.sh
 ```
+
+### What can it do? 
+
+Right now there are this installation possibility: 
+
+
+Debian
+```
+LAMP (Apache + PHP7.0 + MariaDB)
+Easy-WI
+I-MSCP
+Froxlor
+Benchmarking
+Let's Encrypt whit Crontjob
+```
