@@ -14,7 +14,7 @@ benchmark=0
 install=0
 Interfaces=0
 sslperl=0
-INPUT=sh-installer.sh.$$
+INPUT=save.$$
 trap "rm $INPUT; exit" SIGHUP SIGINT SIGTERM
 dialog --clear --backtitle "Store-Host" \
 --title "[ M A I N - M E N U ]" \
@@ -30,27 +30,28 @@ Backup "FTP Backupscript to Remote Server" \
 Exit "Exit to the shell" 2>"${INPUT}"
 menuitem=$(<"${INPUT}")
 [ -f $INPUT ] && rm $INPUT
-# make decsion
 case $menuitem in
         Benchmarking) benchmark=1;;
         Installations) install=1;;
         Interfaces) interfaces=1;;
 		SSL) sslperl=1;;
-        Backup) echo "Will be comming in the near future, stay tuned.";;
+        Backup) echo "Will be coming in the near future, stay tuned.";;
         Exit) echo "Bye"; break;;
 esac
 if [ $benchmark = 1 ] ; then
 bash /usr/share/storehost/Installer/dependencies/Bash/benchmark.sh
 exit
 fi
+if [ $sslperl = 1 ] ; then
+	perl /usr/share/storehost/Installer/Distribution/Debian/9/letsencrypt.deb.pl
+exit
+fi
 if [ $install = 1 ] ; then
-bash /usr/share/storehost/Installer/Menu/installation.sh
+	bash /usr/share/storehost/Installer/Menu/installation.sh
+exit
 fi
 if [ $interfaces = 1 ] ; then
-bash /usr/share/storehost/Installer/Menu/interfaces.sh
+	bash /usr/share/storehost/Installer/Menu/interfaces.sh
+exit
 fi
-if [ $sslperl = 1 ] ; then
-echo "catching the encryption"
-perl /usr/share/storehost/Installer/Distribution/Debian/9/letsencrypt.deb.pl
-fi
- 
+exit

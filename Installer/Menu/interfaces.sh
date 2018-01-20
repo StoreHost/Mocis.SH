@@ -8,14 +8,14 @@
 #   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #   GNU General Public License for more details.
 ############################################################
-# Interaces-Installer Menu
+# Interfaces-Installer Menu
 #
 url=http://bench.myvps.care/github/%0d/Installer
 forxlore=0
 imscp=0
 easywi=0
 goback=0
-INPUT=sh-installer.sh.$$
+INPUT=save.$$
 trap "rm $INPUT; exit" SIGHUP SIGINT SIGTERM
 dialog --clear --backtitle "Store-Host" \
 --title "[ M A I N - M E N U ]" \
@@ -29,7 +29,8 @@ Easy-Wi "Gameserver Webinterface" \
 Back "Back to the Mainmenu" \
 Exit "Exit to the shell" 2>"${INPUT}"
 menuitem=$(<"${INPUT}")
-# make decsion
+[ -f $INPUT ] && rm $INPUT
+# make decision
 case $menuitem in
         Froxlor) forxlore=1;;
         IMSCP) imscp=1;;
@@ -98,11 +99,10 @@ if [ $easywi = 1 ] ; then
                         if [ $response = 0 ]
                         then
 							echo "Easy web interface is prepared."
-							cd /tmp/storehost/
-							chmod -+x /usr/share/storehost/Installer/Debian/9/easy-wi_install.sh
-							./usr/share/storehost/Installer/Debian/9/easy-wi_install.sh
+							chmod -+x /usr/share/storehost/Installer/Distribution/Debian/9/easy-wi_install.sh
+							bash /usr/share/storehost/Installer/Distribution/Debian/9/easy-wi_install.sh
 						fi
 fi
 if [ $goback = 1 ] ; then
-wget -O - $url/Menu/welcome.sh | bash
+	bash /usr/share/storehost/Installer/Menun/welcome.sh
 fi
