@@ -10,8 +10,6 @@
 ############################################################
 # Installer Menu
 #
-url=http://bench.myvps.care/github/%0d/Installer
-htop=0
 lamp_php7=0
 goback=0
 INPUT=sh-installer.sh.$$
@@ -22,7 +20,6 @@ dialog --clear --backtitle "Store-Host" \
 letter of the choice as a hot key, or the \n\
 number keys 1-9 to choose an option.\n\
 Choose the TASK" 0 0 8 \
-Htop "Task Manager" \
 Lamp-PHP7 "PHP, MySQL, Apache" \
 Back "Back to the Main Menu" \
 Exit "Exit to the shell" 2>"${INPUT}"
@@ -30,17 +27,10 @@ menuitem=$(<"${INPUT}")
 [ -f $INPUT ] && rm $INPUT
 # make decision
 case $menuitem in
-        htop) htop=1;;
         Lamp-PHP7) lamp_php7=1;;
 		Back) goback=1;;
         Exit) echo "Bye"; break;;
 esac
-if [ $htop = 1 ] ; then
-
-			echo "Installing Htop.../n"
-			aptitude install htop -y  &>/dev/null
-			echo "htop is installed successfully"
-fi
 if [ $lamp_php7 = 1 ] ; then
 			dialog --yesno "This can damage your system !! Do you want to continue?" 0 0
 		response=$?
