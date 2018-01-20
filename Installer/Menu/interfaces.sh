@@ -110,3 +110,6 @@ if [ $goback = 1 ] ; then
 fi
 if [ $sinusbot = 1 ] ; then
 	perl /usr/share/storehost/Installer/Distribution/Debian/Sinusbot.pl
+	exit
+fi
+exit
