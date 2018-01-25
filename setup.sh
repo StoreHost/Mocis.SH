@@ -1,6 +1,6 @@
 #!/bin/bash
 ############################################################
-# Developed by Store-Host 
+# Developed by Store-Host
 # Version 0.0.5.0
 # Web: https://www.store-host.com
 #	Store-Host is distributed in the hope that it will be useful,
@@ -9,11 +9,10 @@
 #   GNU General Public License for more details.
 ############################################################
 ##########################################
-# Variabeln
-do_menu=0
-dir/usr/share/storehost
-# Installation von "dialog"
-#
+# Version
+version=0.1
+versiontxt=read -r firstline</usr/share/storehost/Installer/dependencies/version.txt
+# Installation von "dialog
 if [ -d "/etc/apt" ]; then
 	pmgr=apt
 fi
@@ -41,17 +40,22 @@ response=$?
         1) exit;;
         255) echo "[ESC] key pressed.";;
 		esac
-			if [ $response = 0 ] 
+			if [ $response = 0 ]
 			then
-				echo "do some cleaning from previous...."
-				rm -R /usr/share/storehost/
-				echo "Installing some nessesary binarys..."
-				apt-get install aptitude xmlstarlet git -y &>/dev/null
-				echo "Cloning newest version...."
-				git clone https://github.com/StoreHost/StoreHost-Installer.git /usr/share/storehost/
-				sleep 5
-				echo "porting to the main Menu..."
-				bash /usr/share/storehost/Installer/Menu/welcome.sh
+				if [ $version -ge $versiontxt ]; then
+					printf "Youre up to date :D"
+				else
+					"do some cleaning from previous...."
+					rm -R /usr/share/storehost/
+					echo "Installing some nessesary binarys..."
+					apt-get install aptitude xmlstarlet git -y &>/dev/null
+					echo "Cloning newest version...."
+					git clone https://github.com/StoreHost/StoreHost-Installer.git /usr/share/storehost/
+					sleep 5
+					echo "porting to the main Menu..."
+					bash /usr/share/storehost/Installer/Menu/welcome.sh
+					return 
+				fi
 			fi
 
 
