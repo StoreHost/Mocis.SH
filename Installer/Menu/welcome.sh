@@ -26,8 +26,7 @@ Choose the TASK" 0 0 8 \
 Benchmarking "Ensky Media Script" \
 Installations "PHP, Mysql..." \
 Interfaces "IMSCP, Froxlor, EasyWI" \
-SSL "Let's Encrypt whit certbot" \
-Tools "" \
+Security "Not all but atleast some" \
 Backup "FTP Backupscript to Remote Server" \
 Exit "Exit to the shell" 2>"${INPUT}"
 menuitem=$(<"${INPUT}")
