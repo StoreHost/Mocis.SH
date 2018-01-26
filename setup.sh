@@ -8,10 +8,6 @@
 #   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #   GNU General Public License for more details.
 ############################################################
-##########################################
-# Version
-version=0.1
-versiontxt=read -r firstline</usr/share/storehost/Installer/dependencies/version.txt
 # Installation von "dialog
 if [ -d "/etc/apt" ]; then
 	pmgr=apt
@@ -37,16 +33,15 @@ dialog --title "Agreement" \
 response=$?
         case $response in
         0) echo "starting";;
-        1) exit;;
-        255) echo "[ESC] key pressed.";;
+        1) clear exit;;
+        255) clear echo "[ESC] key pressed.";;
 		esac
 			if [ $response = 0 ]
 			then
-				if [ $version -ge $versiontxt ]; then
-					printf "Youre up to date :D"
+				if find /usr/share/storehost/ -maxdepth 0 | read v; then bash /usr/share/storehost/Installer/Menu/welcome.sh return
 				else
-					"do some cleaning from previous...."
-					rm -R /usr/share/storehost/
+					echo "porting to the main Menu..."
+					bash /usr/share/storehost/Installer/Menu/welcome.sh
 					echo "Installing some nessesary binarys..."
 					apt-get install aptitude xmlstarlet git -y &>/dev/null
 					echo "Cloning newest version...."
@@ -54,14 +49,14 @@ response=$?
 					sleep 5
 					echo "porting to the main Menu..."
 					bash /usr/share/storehost/Installer/Menu/welcome.sh
-					return 
+					return
 				fi
 			fi
+
 
 
 if
 [ $UID -ne 0 ]; then
 		dialog --title "Store-Host Installer" --msgbox 'This script must be started as "root"!!"' 0 0
 		clear
-		exit
 fi

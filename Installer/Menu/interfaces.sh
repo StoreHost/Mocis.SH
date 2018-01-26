@@ -57,10 +57,10 @@ if [ $forxlore = 1 ] ; then
                                         touch /etc/apt/sources.list.d/froxlor.list
                                         echo 'deb http://debian.froxlor.org jessie main' > /etc/apt/sources.list.d/froxlor.list &>/dev/null
                                         apt-key adv --keyserver pool.sks-keyservers.net --recv-key FD88018B6F2D5390D051343FF6B4A8704F9E9BBC &>/dev/null
-                                        apt-get update && apt-get upgrade -y 
-                                        apt-get install php-curl 
-                                        apt-get install froxlor phpmyadmin -y 
-                                        sed -i 's/html/froxlor/g' /etc/apache2/sites-enabled/000-default.conf 
+                                        apt-get update && apt-get upgrade -y
+                                        apt-get install php-curl
+                                        apt-get install froxlor phpmyadmin -y
+                                        sed -i 's/html/froxlor/g' /etc/apache2/sites-enabled/000-default.conf
                                         service apache2 restart
                                         echo "Please enter your domain or IP address in the browser"
                                         echo "Froxlor can now be set up"
@@ -79,13 +79,13 @@ if [ $imscp = 1 ] ; then
                         if [ $response = 0 ]
                         then
                                 if cat /etc/issue.net | grep 9; then
-									dialog --title "Store-Host Installer" --msgbox 'I-MSCP is not supported for Debian 9 "Stretch"' 0 0
-                                    exit
+                                  dialog --title "Store-Host Installer" --msgbox 'I-MSCP is not supported for Debian 9 "Stretch"' 0 0
+                                  exit
                                 else
                                     apt-get update -y && apt-get upgrade -y
                                     apt-get install ca-certificates perl wget whiptail
                                     wget https://github.com/i-MSCP/imscp/archive/1.6.x.tar.gz -P /usr/share/storehost/
-                                    tar -xzf /usr/share/storehost/1.6.x.tar.gz 
+                                    tar -xzf /usr/share/storehost/1.6.x.tar.gz
                                     perl /usr/share/storehost/imscp-1.6.x/imscp-installer
                                 fi
                         fi
