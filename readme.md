@@ -1,6 +1,20 @@
-# Project War
+# M.O.C.I.S
+Welcome to the M.O.C.I.S Installer.
 
-Unified installations under common Linux distributions
+# For what is our Script Designed?
+Easy instalation of common and not so common Packages, Services and much more.
+
+Allredy included:
+```
+Easy-WI         #Gameserver Interface
+LAMP            #PHP-7-MariaDB-Apache2
+LAMP            #PHP-5-MariaDB-Apache2
+Sinusbot        #Teamspeak 3 Musicbot
+Benchmark       #Ensky-Media
+IMSCP           #Webhosting Controll Panel
+Froxlor         #Webhosting Controll Panel
+Let's Encrypt   #SSL certificate generation
+```
 
 ## Getting Started
 
@@ -35,17 +49,8 @@ chmod -+x setup.sh
 ./setup.sh
 ```
 
-### What can it do? 
+# Check our Website
 
-Right now there are this installation possibility: 
+https://www.mocis.sh
 
-
-Debian
-```
-LAMP (Apache + PHP7.0 + MariaDB)
-Easy-WI
-I-MSCP
-Froxlor
-Benchmarking
-Let's Encrypt whit Crontjob
-```
+Join us now and talk about us or report your bugs and errors.
