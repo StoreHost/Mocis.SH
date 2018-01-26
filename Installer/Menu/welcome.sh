@@ -15,9 +15,11 @@ install=0
 Interfaces=0
 security=0
 backup=0
+about=0
 INPUT=save.$$
 trap "rm $INPUT; exit" SIGHUP SIGINT SIGTERM
-dialog --clear --backtitle "Store-Host" \
+dialog --clear --backtitle "Mocis.sh" \
+--ascii-lines \
 --title "[ M A I N - M E N U ]" \
 --menu "You can use the UP/DOWN arrow keys, the first \n\
 letter of the choice as a hot key, or the \n\
@@ -28,6 +30,7 @@ Installations "PHP, Mysql..." \
 Interfaces "IMSCP, Froxlor, EasyWI" \
 Security "Not all but atleast some" \
 Backup "FTP Backupscript to Remote Server" \
+About "About us" \
 Exit "Exit to the shell" 2>"${INPUT}"
 menuitem=$(<"${INPUT}")
 [ -f $INPUT ] && rm $INPUT
@@ -37,7 +40,8 @@ case $menuitem in
         Interfaces) interfaces=1;;
         Security) security=1;;
         Backup) backup=1;;
-        Exit) echo "Bye"; break;;
+        About) about=1;;
+        Exit) echo "Bye"; clear;
 esac
 if [ $benchmark = 1 ] ; then
 bash /usr/share/storehost/Installer/dependencies/Bash/benchmark.sh
@@ -50,6 +54,13 @@ if [ $install = 1 ] ; then
 fi
 if [ $interfaces = 1 ] ; then
 	bash /usr/share/storehost/Installer/Menu/interfaces.sh
+fi
+if [ $about = 1 ] ; then
+  dialog --clear --backtitle "Mocis.sh" \
+  --title "[ About Mocis.sh ]" \
+  --msgbox "What is Mocis.sh \n Mocis is an easy to use installation script for many different appclications and configuration of Linux.\n\n\n\n
+  active Tester's:\n\n iTweek (ts3-server.ch)\n" 0 0
+  bash /usr/share/storehost/Installer/Menu/welcome.sh
 fi
 if [ $backup = 1 ] ; then
   clear

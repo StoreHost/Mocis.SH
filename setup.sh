@@ -28,8 +28,9 @@ fi
 # Erklaerung Datenverlust
 #
 dialog --title "Agreement" \
---backtitle "Store-Host Installer Script" \
---yesno "This script is still in development and therefore not yet stable. \n Please only use if you know what you do!!! \n Please send bugs to script@myvps.care \nWe can not be held responsible for any damage or damage that may be caused \n\n Would you like to proceed?  " 0 0
+--backtitle "Mocis.sh" \
+--ascii-lines \
+--yesno "This script is still in development and therefore not yet stable. \n Please only use on your OWN risk!!! \n We can not be held responsible for any damage or damage that may be caused \n Please check our website www.mocis.sh for more info and updates.\n\n Would you like to proceed?  " 0 0
 response=$?
         case $response in
         0) echo "starting";;
@@ -57,6 +58,7 @@ response=$?
 
 if
 [ $UID -ne 0 ]; then
-		dialog --title "Store-Host Installer" --msgbox 'This script must be started as "root"!!"' 0 0
+		dialog --ascii-lines \
+		--title "Store-Host Installer" --msgbox 'This script must be started as "root"!!"' 0 0
 		clear
 fi

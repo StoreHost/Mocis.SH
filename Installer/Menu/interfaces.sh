@@ -17,8 +17,9 @@ goback=0
 sinusbot=0
 INPUT=save.$$
 trap "rm $INPUT; exit" SIGHUP SIGINT SIGTERM
-dialog --clear --backtitle "Store-Host" \
---title "[ M A I N - M E N U ]" \
+dialog --clear --backtitle "Mocis.sh" \
+--title "[ Server Webinterfaces]" \
+--ascii-lines \
 --menu "You can use the UP/DOWN arrow keys, the first \n\
 letter of the choice as a hot key, or the \n\
 number keys 1-9 to choose an option.\n\

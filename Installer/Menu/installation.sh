@@ -14,12 +14,10 @@ lamp_php7=0
 goback=0
 INPUT=sh-installer.sh.$$
 trap "rm $INPUT; exit" SIGHUP SIGINT SIGTERM
-dialog --clear --backtitle "Store-Host" \
---title "[ M A I N - M E N U ]" \
---menu "You can use the UP/DOWN arrow keys, the first \n\
-letter of the choice as a hot key, or the \n\
-number keys 1-9 to choose an option.\n\
-Choose the TASK" 0 0 8 \
+dialog --clear --backtitle "Mocis.sh" \
+--title "[ Installation menu ]" \
+--ascii-lines \
+--menu "You can Install Apache, PHP, MySQL, and much more." 0 0 8 \
 Lamp-PHP7 "PHP, MySQL, Apache" \
 Back "Back to the Main Menu" \
 Exit "Exit to the shell" 2>"${INPUT}"
@@ -39,7 +37,7 @@ if [ $lamp_php7 = 1 ] ; then
 		1) echo exit;;
 		255) echo "[ESC] key pressed.";;
 		esac
-			if [ $response = 0 ] 
+			if [ $response = 0 ]
 			then
 				if cat /etc/issue.net | grep 9; then
 					chmod -+x /usr/share/storehost/Installer/Distribution/Debian/9/LAMP-PHP7.deb9.pl
