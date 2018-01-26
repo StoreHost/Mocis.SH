@@ -85,8 +85,9 @@ if [ $imscp = 1 ] ; then
                                     apt-get update -y && apt-get upgrade -y
                                     apt-get install ca-certificates perl wget whiptail
                                     wget https://github.com/i-MSCP/imscp/archive/1.6.x.tar.gz -P /usr/share/storehost/
-                                    tar -xzf /usr/share/storehost/1.6.x.tar.gz
-                                    perl /usr/share/storehost/imscp-1.6.x/imscp-installer
+                                    cd /usr/share/storehost/
+                                    tar -xzf 1.6.x.tar.gz
+                                    perl imscp-1.6.x/imscp-installer
                                 fi
                         fi
 fi
