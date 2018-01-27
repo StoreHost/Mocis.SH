@@ -40,13 +40,13 @@ A step by step series of examples that tell you have to get a development env ru
 Say what the step will be
 
 ```
-wget https://bench.myvps.care/setup.sh
+wget https://stable.mocis.sh
 ```
 ```
-chmod -+x setup.sh
+chmod -+x mocis.sh
 ```
 ```
-./setup.sh
+./mocis.sh
 ```
 
 # Check our Website
