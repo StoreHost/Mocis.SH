@@ -18,7 +18,7 @@ Let's Encrypt   #SSL certificate generation
 
 ## Getting Started
 
-Download the setup.pl file and execute it. The instalation is from this point self-explanatory.
+Download the mocis.sh file and execute it. The instalation is from this point self-explanatory.
 
 ### Prerequisites
 
