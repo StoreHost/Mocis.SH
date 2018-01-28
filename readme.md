@@ -46,6 +46,6 @@ bash mocis.sh
 
 # Check our Website
 
-https://www.mocis.sh
+http://www.mocis.sh
 
 Join us now and talk about us or report your bugs and errors.
