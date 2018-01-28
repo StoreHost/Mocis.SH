@@ -24,6 +24,13 @@ if [ $pmgr == "yum" ]; then
 		clear
 		exit
 fi
+if
+[ $UID -ne 0 ]; then
+		dialog --ascii-lines \
+		--title "Store-Host Installer" --msgbox 'This script must be started as "root"!!"' 0 0
+		clear
+		exit
+fi
 ############################################################
 # Erklaerung Datenverlust
 #
@@ -54,12 +61,3 @@ response=$?
 					bash /usr/share/storehost/Installer/Menu/welcome.sh
 				fi
 			fi
-
-
-
-if
-[ $UID -ne 0 ]; then
-		dialog --ascii-lines \
-		--title "Store-Host Installer" --msgbox 'This script must be started as "root"!!"' 0 0
-		clear
-fi
