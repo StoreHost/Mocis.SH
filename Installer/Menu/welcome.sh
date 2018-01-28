@@ -11,8 +11,8 @@
 # Welcome Menu
 #
 benchmark=0
-install=0
-Interfaces=0
+installer=0
+interfaces=0
 security=0
 backup=0
 about=0
@@ -36,7 +36,7 @@ menuitem=$(<"${INPUT}")
 [ -f $INPUT ] && rm $INPUT
 case $menuitem in
         Benchmarking) benchmark=1;;
-        Installations) install=1;;
+        Installations) installer=1;;
         Interfaces) interfaces=1;;
         Security) security=1;;
         Backup) backup=1;;
@@ -49,7 +49,7 @@ fi
 if [ $security = 1 ] ; then
 	bash /usr/share/storehost/Installer/Menu/security.sh
 fi
-if [ $install = 1 ] ; then
+if [ $installer = 1 ] ; then
 	bash /usr/share/storehost/Installer/Menu/installation.sh
 fi
 if [ $interfaces = 1 ] ; then
