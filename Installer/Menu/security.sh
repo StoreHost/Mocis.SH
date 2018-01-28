@@ -24,7 +24,7 @@ menuitem=$(<"${INPUT}")
 case $menuitem in
         SSL) sslperl=1;;
         Back) goback=1;;
-        Exit) echo "Bye"; break;;
+        Exit) echo "Bye"; clear;
 esac
 if [ $sslperl = 1 ] ; then
 	perl /usr/share/storehost/Installer/Distribution/Debian/9/letsencrypt.deb.pl
