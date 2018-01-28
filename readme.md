@@ -40,13 +40,10 @@ A step by step series of examples that tell you have to get a development env ru
 Say what the step will be
 
 ```
-wget https://stable.mocis.sh
+wget -O mocis.sh https://stable.mocis.sh
 ```
 ```
-chmod -+x mocis.sh
-```
-```
-./mocis.sh
+bash mocis.sh
 ```
 
 # Check our Website
