@@ -103,7 +103,7 @@ if [ $easywi = 1 ] ; then
                         if [ $response = 0 ]
                         then
 							echo "Easy web interface is prepared."
-							chmod -+x /usr/share/storehost/Installer/Distribution/Debian/9/easy-wi_install.sh
+							wget https://raw.githubusercontent.com/easy-wi/installer/master/easy-wi_install.sh /usr/share/storehost/Installer/Distribution/Debian/9/
 							bash /usr/share/storehost/Installer/Distribution/Debian/9/easy-wi_install.sh
 						fi
 fi
