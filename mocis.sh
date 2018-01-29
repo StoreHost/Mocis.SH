@@ -18,7 +18,7 @@ fi
 
 if [ $pmgr == "apt" ]; then
 	apt-get upgrade -y &>/dev/null
-	apt-get install dialog git bc -y &>/dev/null
+	apt-get install dialog curl git bc -y &>/dev/null
 	wget https://raw.githubusercontent.com/StoreHost/Mocis.SH/master/sys/version/version.txt -P /tmp/ &>/dev/null
 fi
 if [ $pmgr == "yum" ]; then
