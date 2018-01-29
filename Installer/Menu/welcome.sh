@@ -16,6 +16,7 @@ interfaces=0
 security=0
 backup=0
 about=0
+feedback=0
 INPUT=save.$$
 trap "rm $INPUT; exit" SIGHUP SIGINT SIGTERM
 dialog --clear --backtitle "Mocis.sh" \
@@ -31,6 +32,7 @@ Interfaces "IMSCP, Froxlor, EasyWI" \
 Security "Not all but atleast some" \
 Backup "FTP Backupscript to Remote Server" \
 About "About us" \
+Feedback "Give us your feedback" \
 Exit "Exit to the shell" 2>"${INPUT}"
 menuitem=$(<"${INPUT}")
 [ -f $INPUT ] && rm $INPUT
@@ -41,6 +43,7 @@ case $menuitem in
         Security) security=1;;
         Backup) backup=1;;
         About) about=1;;
+        Feedback) feedback=1;;
         Exit) echo "Bye"; clear;
 esac
 if [ $benchmark = 1 ] ; then
@@ -68,5 +71,11 @@ if [ $backup = 1 ] ; then
   sleep 3
   echo "Porting back to the menu"
   sleep 2
+  bash /usr/share/storehost/Installer/Menu/welcome.sh
+fi
+if [ $feedback = 1 ] ; then
+  dialog --title "[ M.O.C.I.S ]" \
+  --ascii-lines \
+  --msgbox "Sorry not ready now..."
   bash /usr/share/storehost/Installer/Menu/welcome.sh
 fi
