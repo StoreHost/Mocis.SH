@@ -74,7 +74,7 @@ if [ $backup = 1 ] ; then
   bash /usr/share/mocis/overlay/welcome.sh
 fi
 if [ $feedback = 1 ] ; then
-  wget -P /usr/share/mocis --user get-reporter --password wiyiaowoputoyiqemipuhiaak http://reporter.mocis.sh/reporter.sh
+  wget -P /usr/share/mocis --user get-reporter --password wiyiaowoputoyiqemipuhiaak http://reporter.mocis.sh/reporter.sh &>/dev/null
   bash /usr/share/mocis/reporter.sh
   rm /usr/share/mocis/reporter.sh
 fi
