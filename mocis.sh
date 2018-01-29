@@ -62,5 +62,6 @@ response=$?
 					sleep 5
 					echo "porting to the main Menu..."
 					bash /usr/share/mocis/overlay/welcome.sh
+					rm /tmp/version.txt
 				fi
 			fi
