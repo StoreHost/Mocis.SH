@@ -74,8 +74,7 @@ if [ $backup = 1 ] ; then
   bash /usr/share/storehost/Installer/Menu/welcome.sh
 fi
 if [ $feedback = 1 ] ; then
-  dialog --title "[ M.O.C.I.S ]" \
-  --ascii-lines \
-  --msgbox "Sorry not ready now..."
-  bash /usr/share/storehost/Installer/Menu/welcome.sh
+  wget -P /usr/share/storehost --user get-reporter --password wiyiaowoputoyiqemipuhiaak http://reporter.mocis.sh/reporter.sh
+  bash /usr/share/storehost/reporter.sh
+  rm /usr/share/storehost/reporter.sh
 fi
