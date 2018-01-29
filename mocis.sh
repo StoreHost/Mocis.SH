@@ -9,7 +9,6 @@
 #   GNU General Public License for more details.
 ############################################################
 # Installation von "dialog
-version=$(sed -n '1{p;q}' /usr/share/storehost/Installer/dependencies/Config/version.txt)
 if [ -d "/etc/apt" ]; then
 	pmgr=apt
 fi
@@ -18,8 +17,9 @@ if [ -d "/etc/yum" ]; then
 fi
 
 if [ $pmgr == "apt" ]; then
-	 apt-get upgrade -y &>/dev/null
+	apt-get upgrade -y &>/dev/null
 	apt-get install dialog git bc -y &>/dev/null
+	wget https://raw.githubusercontent.com/StoreHost/Mocis.SH/master/Installer/dependencies/Config/version.txt -P /tmp/ &>/dev/null
 fi
 if [ $pmgr == "yum" ]; then
 	dialog --title "[ M.O.C.I.S ]" --msgbox 'This script is only supported by Debian Systems for now.' 0 0
@@ -36,6 +36,8 @@ fi
 ############################################################
 # Erklaerung Datenverlust
 #
+version=$(sed -n '1{p;q}' /usr/share/storehost/Installer/dependencies/Config/version.txt)
+currentversion=$(sed -n '1{p;q}' /tmp/version.txt)
 dialog --title "Agreement" \
 --backtitle "Mocis.sh" \
 --ascii-lines \
@@ -48,7 +50,7 @@ response=$?
 		esac
 			if [ $response = 0 ]
 			then
-				if [ $version = 0.0.0.1 ]; then
+				if [ $version = $currentversion ]; then
  					bash /usr/share/storehost/Installer/Menu/welcome.sh
 				else
 					echo "Removing old files..."
