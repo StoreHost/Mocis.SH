@@ -9,6 +9,7 @@
 #   GNU General Public License for more details.
 ############################################################
 # Installation von "dialog
+version=$(sed -n '1{p;q}' /usr/share/storehost/Installer/dependencies/Config/version.txt)
 if [ -d "/etc/apt" ]; then
 	pmgr=apt
 fi
@@ -17,10 +18,11 @@ if [ -d "/etc/yum" ]; then
 fi
 
 if [ $pmgr == "apt" ]; then
+	 apt-get upgrade -y &>/dev/null
 	apt-get install dialog git bc -y &>/dev/null
 fi
 if [ $pmgr == "yum" ]; then
-	dialog --title "Store-Host Installer" --msgbox 'This script is only supported by Debian Systems for now.' 0 0
+	dialog --title "[ M.O.C.I.S ]" --msgbox 'This script is only supported by Debian Systems for now.' 0 0
 		clear
 		exit
 fi
@@ -46,10 +48,11 @@ response=$?
 		esac
 			if [ $response = 0 ]
 			then
-				if find /usr/share/storehost/ -maxdepth 0 | read v; then bash /usr/share/storehost/Installer/Menu/welcome.sh return
+				if [ $version = 0.0.0.1 ]; then
+ 					bash /usr/share/storehost/Installer/Menu/welcome.sh
 				else
-					echo "porting to the main Menu..."
-					bash /usr/share/storehost/Installer/Menu/welcome.sh
+					echo "Removing old files..."
+					rm -R /usr/share/storehost/
 					echo "Installing some nessesary binarys..."
 					apt-get install aptitude xmlstarlet git -y &>/dev/null
 					echo "Cloning newest version...."
@@ -59,5 +62,5 @@ response=$?
 					bash /usr/share/storehost/Installer/dependencies/Bash/reporter.sh &>/dev/null
 					sleep 3
 					bash /usr/share/storehost/Installer/Menu/welcome.sh
-					fi
 				fi
+			fi
