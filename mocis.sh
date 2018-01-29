@@ -29,14 +29,14 @@ fi
 if
 [ $UID -ne 0 ]; then
 		dialog --ascii-lines \
-		--title "Store-Host Installer" --msgbox 'This script must be started as "root"!!"' 0 0
+		--title "[ M.O.C.I.S ]" --msgbox 'This script must be started as "root"!!"' 0 0
 		clear
 		exit
 fi
 ############################################################
 # Erklaerung Datenverlust
 #
-version=$(sed -n '1{p;q}' /usr/share/storehost/Installer/dependencies/Config/version.txt)
+version=$(sed -n '1{p;q}' /usr/share/mocis/sys/version/version.txt)
 currentversion=$(sed -n '1{p;q}' /tmp/version.txt)
 dialog --title "Agreement" \
 --backtitle "Mocis.sh" \
@@ -51,18 +51,16 @@ response=$?
 			if [ $response = 0 ]
 			then
 				if [ $version = $currentversion ]; then
- 					bash /usr/share/storehost/Installer/Menu/welcome.sh
+ 					bash /usr/share/mocis/overlay/welcome.sh
 				else
 					echo "Removing old files..."
-					rm -R /usr/share/storehost/
+					rm -R /usr/share/mocis/
 					echo "Installing some nessesary binarys..."
 					apt-get install aptitude xmlstarlet git -y &>/dev/null
 					echo "Cloning newest version...."
-					git clone https://github.com/StoreHost/Mocis.SH.git /usr/share/storehost/
+					git clone https://github.com/StoreHost/Mocis.SH.git /usr/share/mocis/
 					sleep 5
 					echo "porting to the main Menu..."
-					bash /usr/share/storehost/Installer/dependencies/Bash/reporter.sh &>/dev/null
-					sleep 3
-					bash /usr/share/storehost/Installer/Menu/welcome.sh
+					bash /usr/share/mocis/overlay/welcome.sh
 				fi
 			fi
