@@ -60,9 +60,9 @@ if [ $interfaces = 1 ] ; then
 fi
 if [ $about = 1 ] ; then
   dialog --clear --backtitle "Mocis.sh" \
+  --ascii-lines \
   --title "[ About Mocis.sh ]" \
-  --msgbox "What is Mocis.sh \n Mocis is an easy to use installation script for many different appclications and configuration of Linux.\n\n\n\n
-  active Tester's:\n\n iTweek (ts3-server.ch)\n" 0 0
+  --msgbox "What is Mocis.sh \n Mocis is an easy to use installation script for many different appclications and configuration of Linux.\n\n\n\nactive Tester's:\n\niTweek (ts3-server.ch)\n" 0 0
   bash /usr/share/storehost/Installer/Menu/welcome.sh
 fi
 if [ $backup = 1 ] ; then
