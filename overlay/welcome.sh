@@ -42,7 +42,7 @@ case $menuitem in
         Benchmarking) benchmark=1;;
         Installations) installer=1;;
         Interfaces) interfaces=1;;
-        Docker) docker=1
+        Docker) docker=1;;
         Security) security=1;;
         Backup) backup=1;;
         About) about=1;;
