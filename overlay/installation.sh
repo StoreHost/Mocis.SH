@@ -51,16 +51,13 @@ if [ $lamp_php7 = 1 ] ; then
 				fi
 			fi
 fi
-fi
 if [ $goback = 1 ] ; then
 bash /usr/share/mocis/overlay/welcome.sh
 fi
 if [ $docker = 1 ] ; then
-  curl -fsSL https://download.docker.com/linux/$(. /etc/os-release; echo "$ID")/gpg | sudo apt-key add -
-  add-apt-repository \
-  "deb [arch=amd64] https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") \
-  $(lsb_release -cs) \
-  stable"
+  apt-get install -y apt-transport-https ca-certificates curl gnupg2 software-properties-common > /dev/null
+  curl -fsSL https://download.docker.com/linux/$(. /etc/os-release; echo "$ID")/gpg | apt-key add -
+  add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") $(lsb_release -cs) stable"
   apt-get update >/dev/null
   apt-get install docker-ce > /dev/null
 fi
