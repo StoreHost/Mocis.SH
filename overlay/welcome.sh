@@ -32,7 +32,6 @@ Installations "PHP, Mysql..." \
 Interfaces "IMSCP, Froxlor, EasyWI" \
 Docker "Docker Templates etc." \
 Security "Not all but atleast some" \
-Backup "FTP Backupscript to Remote Server" \
 About "About us" \
 Feedback "Give us your feedback" \
 Exit "Exit to the shell" 2>"${INPUT}"
@@ -44,7 +43,6 @@ case $menuitem in
         Interfaces) interfaces=1;;
         Docker) docker=1;;
         Security) security=1;;
-        Backup) backup=1;;
         About) about=1;;
         Feedback) feedback=1;;
         Exit) echo "Bye"; clear;
@@ -69,14 +67,6 @@ if [ $about = 1 ] ; then
   --ascii-lines \
   --title "[ About Mocis.sh ]" \
   --msgbox "What is Mocis.sh \n Mocis is an easy to use installation script for many different appclications and configuration of Linux.\n\n\n\nactive Tester's:\n\niTweek (ts3-server.ch)\n" 0 0
-  bash /usr/share/mocis/overlay/welcome.sh
-fi
-if [ $backup = 1 ] ; then
-  clear
-  echo "This is not integrated by the stand now. We're working hard on it."
-  sleep 3
-  echo "Porting back to the menu"
-  sleep 2
   bash /usr/share/mocis/overlay/welcome.sh
 fi
 if [ $feedback = 1 ] ; then
