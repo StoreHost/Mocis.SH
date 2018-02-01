@@ -8,8 +8,6 @@
 #   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #   GNU General Public License for more details.
 ############################################################
-# Installer Menu
-#
 lamp_php7=0
 docker=0
 goback=0

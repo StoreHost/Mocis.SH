@@ -8,13 +8,9 @@
 #   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #   GNU General Public License for more details.
 ############################################################
-# Installer Menu
-#
-############################################################
-# Welcome Menu
-#
 goback=0
 compose=0
+doc_portainer=0
 INPUT=save.$$
 trap "rm $INPUT; exit" SIGHUP SIGINT SIGTERM
 dialog --clear --backtitle "[ M.O.C.I.S ]" \
@@ -25,21 +21,42 @@ letter of the choice as a hot key, or the \n\
 number keys 1-9 to choose an option.\n\
 Choose the TASK" 0 0 8 \
 Compose "Docker Compose" \
+Portainer "Webinterface for Docker" \
 Back "Go back to the Menu" \
 Exit "Exit to the shell" 2>"${INPUT}"
 menuitem=$(<"${INPUT}")
 [ -f $INPUT ] && rm $INPUT
 case $menuitem in
         Compose) compose=1;;
+        Portainer) doc_portainer=1;;
         Back) goback=1;;
-        Exit) echo "Bye"; clear;
+        Exit) echo "Bye"; break;;
 esac
-if [ goback = 1 ] ; then
+if [ $goback = 1 ] ; then
   bash /usr/share/mocis/overlay/welcome.sh
 fi
-if [ compose = 1] ; then
+if [ $compose = 1 ] ; then
   curl -L https://github.com/docker/compose/releases/download/1.18.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
   chmod +x /usr/local/bin/docker-compose
   composeversion=$(docker-compose --version)
   dialog --title "Check Compose version" --backtitle "[ M.O.C.I.S ]" --ascii-lines --msgbox "Actually installed \n\n$composeversion" 0 0
+  bash /usr/share/mocis/overlay/welcome.sh
+fi
+if [ $doc_portainer = 1 ] ; then
+  dialog --title "Check Compose version" --backtitle "[ M.O.C.I.S ]" --ascii-lines --yesno "You have to install Docker first!!!\n\nDid you do that?" 0 0
+  response=$?
+          case $response in
+          0) echo "starting";;
+          1) clear exit;;
+          255) clear echo "[ESC] key pressed.";;
+  		esac
+  			if [ $response = 0 ]
+  			then
+          docker volume create portainer_data
+          docker run -d -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer
+          dialog --title "Check Compose version" --backtitle "[ M.O.C.I.S ]" --ascii-lines --msgbox "Portainer should be installed\n\nYou can check your webbrowser:\n\nYourIPAdress:9000" 0 0
+          bash /usr/share/mocis/overlay/welcome.sh
+        else
+          bash /usr/share/mocis/overlay/welcome.sh
+        fi
 fi

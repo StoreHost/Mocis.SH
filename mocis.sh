@@ -50,7 +50,7 @@ response=$?
 		esac
 			if [ $response = 0 ]
 			then
-				if [ $version = $currentversion ]; then
+				if [ $version = $currentversion ] ; then
  					bash /usr/share/mocis/overlay/welcome.sh
 				else
 					echo "Removing old files..."

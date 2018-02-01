@@ -17,6 +17,7 @@ security=0
 backup=0
 about=0
 feedback=0
+docker=0
 INPUT=save.$$
 trap "rm $INPUT; exit" SIGHUP SIGINT SIGTERM
 dialog --clear --backtitle "[ M.O.C.I.S ]" \
@@ -29,6 +30,7 @@ Choose the TASK" 0 0 8 \
 Benchmarking "Ensky Media Script" \
 Installations "PHP, Mysql..." \
 Interfaces "IMSCP, Froxlor, EasyWI" \
+Docker "Docker Templates etc." \
 Security "Not all but atleast some" \
 Backup "FTP Backupscript to Remote Server" \
 About "About us" \
@@ -40,6 +42,7 @@ case $menuitem in
         Benchmarking) benchmark=1;;
         Installations) installer=1;;
         Interfaces) interfaces=1;;
+        Docker) docker=1
         Security) security=1;;
         Backup) backup=1;;
         About) about=1;;
@@ -57,6 +60,9 @@ if [ $installer = 1 ] ; then
 fi
 if [ $interfaces = 1 ] ; then
 	bash /usr/share/mocis/overlay/interfaces.sh
+fi
+if [ $docker = 1 ] ; then
+	bash /usr/share/mocis/overlay/docker.sh
 fi
 if [ $about = 1 ] ; then
   dialog --clear --backtitle "[ M.O.C.I.S ]" \
