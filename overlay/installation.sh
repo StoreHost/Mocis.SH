@@ -11,7 +11,9 @@
 # Installer Menu
 #
 lamp_php7=0
+docker=0
 goback=0
+hostname=0
 INPUT=sh-installer.sh.$$
 trap "rm $INPUT; exit" SIGHUP SIGINT SIGTERM
 dialog --clear --backtitle "[ M.O.C.I.S ]" \
@@ -19,14 +21,15 @@ dialog --clear --backtitle "[ M.O.C.I.S ]" \
 --ascii-lines \
 --menu "You can Install Apache, PHP, MySQL, and much more." 0 0 8 \
 Lamp-PHP7 "PHP, MySQL, Apache" \
+Docker "Docker engine (experimental)" \
 Back "Back to the Main Menu" \
 Exit "Exit to the shell" 2>"${INPUT}"
 menuitem=$(<"${INPUT}")
 [ -f $INPUT ] && rm $INPUT
-# make decision
 case $menuitem in
         Lamp-PHP7) lamp_php7=1;;
-		Back) goback=1;;
+        Docker) docker=1
+		    Back) goback=1;;
         Exit) echo "Bye"; break;;
 esac
 if [ $lamp_php7 = 1 ] ; then
@@ -48,6 +51,16 @@ if [ $lamp_php7 = 1 ] ; then
 				fi
 			fi
 fi
+fi
 if [ $goback = 1 ] ; then
-bash /usr/share/mocis/overlay/welcome.sh 
+bash /usr/share/mocis/overlay/welcome.sh
+fi
+if [ $docker = 1 ] ; then
+  curl -fsSL https://download.docker.com/linux/$(. /etc/os-release; echo "$ID")/gpg | sudo apt-key add -
+  add-apt-repository \
+  "deb [arch=amd64] https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") \
+  $(lsb_release -cs) \
+  stable"
+  apt-get update >/dev/null
+  apt-get install docker-ce > /dev/null
 fi

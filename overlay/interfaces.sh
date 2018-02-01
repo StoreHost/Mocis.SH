@@ -11,6 +11,7 @@
 # Interfaces-Installer Menu
 #
 forxlore=0
+phpmyadmin=0
 imscp=0
 easywi=0
 goback=0
@@ -25,6 +26,7 @@ letter of the choice as a hot key, or the \n\
 number keys 1-9 to choose an option.\n\
 Choose the TASK" 0 0 8 \
 Froxlor "Webhosting Controll Panel" \
+PHPmyAdmin "MySQL Webaccess" \
 IMSCP "Webhosting Controll Panel" \
 Easy-Wi "Gameserver Webinterface" \
 Sinusbot "Teamspeak Musicbot" \
@@ -35,8 +37,9 @@ menuitem=$(<"${INPUT}")
 # make decision
 case $menuitem in
         Froxlor) forxlore=1;;
+        PHPmyAdmin) phpmyadmin=1;;
         IMSCP) imscp=1;;
-		Easy-Wi) easywi=1;;
+		    Easy-Wi) easywi=1;;
         Back) goback=1;;
         Sinusbot) sinusbot=1;;
         Exit) echo "Bye"; break;;
@@ -68,6 +71,9 @@ if [ $forxlore = 1 ] ; then
                                         clear
                                 fi
                         fi
+fi
+if [ $phpmyadmin = 1 ] ; then
+	apt-get install phpmyadmin -y
 fi
 if [ $imscp = 1 ] ; then
                 dialog --yesno "This can damage your system !! Do you want to continue?" 0 0
