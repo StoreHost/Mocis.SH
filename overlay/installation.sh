@@ -28,7 +28,7 @@ menuitem=$(<"${INPUT}")
 [ -f $INPUT ] && rm $INPUT
 case $menuitem in
         Lamp-PHP7) lamp_php7=1;;
-        Docker) docker=1
+        Docker) docker=1;;
 		    Back) goback=1;;
         Exit) echo "Bye"; break;;
 esac
