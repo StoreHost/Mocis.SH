@@ -2,7 +2,7 @@
 
 
 ############################################################
-# Installation von "dialog"
+# Installation von "dialog --no-lines"
 #
 
 if [ -d "/etc/apt" ]; then
@@ -13,10 +13,10 @@ if [ -d "/etc/yum" ]; then
 fi
 
 if [ $pmgr == "apt" ]; then
-	apt-get install dialog -y
+	apt-get install dialog --no-lines -y
 fi
 if [ $pmgr == "yum" ]; then
-	yum install dialog -y
+	yum install dialog --no-lines -y
 fi
 
 
@@ -53,10 +53,10 @@ network_21=0
 
 
 ############################################################
-# Menü
+# Menï¿½
 #
 
-cmd=(dialog --separate-output --checklist "Bitte waehlen Sie Ihre gewuenschten Optionen" 22 76 16)
+cmd=(dialog --no-lines --separate-output --checklist "Bitte waehlen Sie Ihre gewuenschten Optionen" 22 76 16)
 options=(1 "Systeminformationen" on
          2 "Netzwerk Benchmark" on
          3 "I/O Performance" on
@@ -70,8 +70,8 @@ do
 			do_informations=1
             ;;
         2)
-			cmd=(dialog --separate-output --checklist "Bitte waehlen Sie Ihre gewuenschten Standorte" 22 76 16)
-			options=(1  "OVH (FR)" on  
+			cmd=(dialog --no-lines --separate-output --checklist "Bitte waehlen Sie Ihre gewuenschten Standorte" 22 76 16)
+			options=(1  "OVH (FR)" on
 					 2  "IP-Projects (DE)" on
 					 3  "combahton (DE)" on
 					 4  "meerfabig (DE)" on
@@ -169,7 +169,7 @@ do
             do_io=1
             ;;
         4)
-			dialog --yesno "Um den CPU Benchmark ausfuehren zu koennen, muss ein Programm namens 'bc' installiert werden. Soll der CPU Benchmark nach wie vor ausgefuehrt und das Programm installiert werden?" 0 0
+			dialog --no-lines --yesno "Um den CPU Benchmark ausfuehren zu koennen, muss ein Programm namens 'bc' installiert werden. Soll der CPU Benchmark nach wie vor ausgefuehrt und das Programm installiert werden?" 0 0
 			choice=$?
 			clear
 			if [ $choice = 0 ]
@@ -194,12 +194,12 @@ then
 	then
 		apt-get install bc -y
 	fi
-	
+
 	if [ pmgr  = "yum" ]
 	then
 		yum install bc -y
 	fi
-	
+
 	clear
 fi
 
@@ -249,15 +249,15 @@ then
 	echo ""
 	echo -e "\033[32mInternet Service Provider:\033[0m"
 
-	
-	
+
+
 	#OVH (DE)
 	if [ $network_1 = 1 ]
 	then
 		result=$( wget -O /dev/null http://proof.ovh.net/files/100Mb.dat 2>&1 | awk '/\/dev\/null/ {speed=$3 $4} END {gsub(/\(|\)/,"",speed); print speed}' )
 		echo -e "\033[36mOVH(FR) - \033[33m100MB Testfile \033[0m: $result"
-	fi	
-	
+	fi
+
 	#IP Projects (DE)
 	if [ $network_2 = 1 ]
 	then
@@ -271,105 +271,105 @@ then
 		result=$( wget -O /dev/null http://lg.combahton.net/100MB.test 2>&1 | awk '/\/dev\/null/ {speed=$3 $4} END {gsub(/\(|\)/,"",speed); print speed}' )
 		echo -e "\033[36mcombahton(DE) - \033[33m100MB Testfile \033[0m: $result"
 	fi
-	
+
 	#meerfabig (DE)
 	if [ $network_4 = 1 ]
 	then
 		result=$( wget -O /dev/null http://mirror.meerfarbig.io/testfiles/1G 2>&1 | awk '/\/dev\/null/ {speed=$3 $4} END {gsub(/\(|\)/,"",speed); print speed}' )
 		echo -e "\033[36mmeerfabig(DE) - \033[33m1GB Testfile \033[0m: $result"
 	fi
-	
+
 	#myloc (DE)
 	if [ $network_5 = 1 ]
 	then
 		result=$( wget -O /dev/null http://speed.myloc.de/100MB.bin 2>&1 | awk '/\/dev\/null/ {speed=$3 $4} END {gsub(/\(|\)/,"",speed); print speed}' )
 		echo -e "\033[36mmyloc(DE) - \033[33m100MB Testfile \033[0m: $result"
 	fi
-	
+
 	#FSIT (CH)
 	if [ $network_6 = 1 ]
 	then
 		result=$( wget -O /dev/null http://fsit.ch/speed/100mebibyte.dat 2>&1 | awk '/\/dev\/null/ {speed=$3 $4} END {gsub(/\(|\)/,"",speed); print speed}' )
 		echo -e "\033[36mFSIT(CH) - \033[33m100MB Testfile \033[0m: $result"
 	fi
-	
+
 	#Leaseweb (DE)
 	if [ $network_7 = 1 ]
 	then
 		result=$( wget -O /dev/null http://mirror.de.leaseweb.net/speedtest/100mb.bin 2>&1 | awk '/\/dev\/null/ {speed=$3 $4} END {gsub(/\(|\)/,"",speed); print speed}' )
 		echo -e "\033[36mLeaseweb(DE) - \033[33m100MB Testfile \033[0m: $result"
 	fi
-	
+
 	#Leaseweb (US)
 	if [ $network_8 = 1 ]
 	then
 		result=$( wget -O /dev/null http://mirror.us.leaseweb.net/speedtest/100mb.bin 2>&1 | awk '/\/dev\/null/ {speed=$3 $4} END {gsub(/\(|\)/,"",speed); print speed}' )
 		echo -e "\033[36mLeaseweb(US) - \033[33m100MB Testfile \033[0m: $result"
 	fi
-	
+
 	#Leaseweb (NL)
 	if [ $network_9 = 1 ]
 	then
 		result=$( wget -O /dev/null http://mirror.nl.leaseweb.net/speedtest/100mb.bin 2>&1 | awk '/\/dev\/null/ {speed=$3 $4} END {gsub(/\(|\)/,"",speed); print speed}' )
 		echo -e "\033[36mLeaseweb(NL) - \033[33m100MB Testfile \033[0m: $result"
 	fi
-	
+
 	#Leaseweb (SG)
 	if [ $network_10 = 1 ]
 	then
 		result=$( wget -O /dev/null http://mirror.sg.leaseweb.net/speedtest/100mb.bin 2>&1 | awk '/\/dev\/null/ {speed=$3 $4} END {gsub(/\(|\)/,"",speed); print speed}' )
 		echo -e "\033[36mLeaseweb(SG) - \033[33m100MB Testfile \033[0m: $result"
 	fi
-	
+
 	#Softlayer (NL)
 	if [ $network_11 = 1 ]
 	then
 		result=$( wget -O /dev/null http://speedtest.ams01.softlayer.com/downloads/test100.zip 2>&1 | awk '/\/dev\/null/ {speed=$3 $4} END {gsub(/\(|\)/,"",speed); print speed}' )
 		echo -e "\033[36mSoftlayer(NL) - \033[33m100MB Testfile \033[0m: $result"
 	fi
-	
+
 	#Softlayer (CN)
 	if [ $network_12 = 1 ]
 	then
 		result=$( wget -O /dev/null http://speedtest.hkg02.softlayer.com/downloads/test100.zip 2>&1 | awk '/\/dev\/null/ {speed=$3 $4} END {gsub(/\(|\)/,"",speed); print speed}' )
 		echo -e "\033[36mSoftlayer(CN) - \033[33m100MB Testfile \033[0m: $result"
 	fi
-	
+
 	#Softlayer (GB)
 	if [ $network_13 = 1 ]
 	then
 		result=$( wget -O /dev/null http://speedtest.lon02.softlayer.com/downloads/test100.zip 2>&1 | awk '/\/dev\/null/ {speed=$3 $4} END {gsub(/\(|\)/,"",speed); print speed}' )
 		echo -e "\033[36mSoftlayer(GB) - \033[33m100MB Testfile \033[0m: $result"
 	fi
-	
+
 	#Softlayer (JP)
 	if [ $network_14 = 1 ]
 	then
 		result=$( wget -O /dev/null http://speedtest.tok02.softlayer.com/downloads/test100.zip 2>&1 | awk '/\/dev\/null/ {speed=$3 $4} END {gsub(/\(|\)/,"",speed); print speed}' )
 		echo -e "\033[36mSoftlayer(JP) - \033[33m100MB Testfile \033[0m: $result"
 	fi
-	
+
 	#Softlayer (US)
 	if [ $network_15 = 1 ]
 	then
 		result=$( wget -O /dev/null http://speedtest.wdc01.softlayer.com/downloads/test100.zip 2>&1 | awk '/\/dev\/null/ {speed=$3 $4} END {gsub(/\(|\)/,"",speed); print speed}' )
 		echo -e "\033[36mSoftlayer(US) - \033[33m100MB Testfile \033[0m: $result"
 	fi
-	
+
 	#Softlayer (CA)
 	if [ $network_16 = 1 ]
 	then
 		result=$( wget -O /dev/null http://speedtest.tor01.softlayer.com/downloads/test100.zip 2>&1 | awk '/\/dev\/null/ {speed=$3 $4} END {gsub(/\(|\)/,"",speed); print speed}' )
 		echo -e "\033[36mSoftlayer(CA) - \033[33m100MB Testfile \033[0m: $result"
 	fi
-	
+
 	#Softlayer (DE)
 	if [ $network_17 = 1 ]
 	then
 		result=$( wget -O /dev/null http://speedtest.fra02.softlayer.com/downloads/test100.zip 2>&1 | awk '/\/dev\/null/ {speed=$3 $4} END {gsub(/\(|\)/,"",speed); print speed}' )
 		echo -e "\033[36mSoftlayer(DE) - \033[33m100MB Testfile \033[0m: $result"
 	fi
-	
+
 	#EDIS (AT)
 	if [ $network_18 = 1 ]
 	then
@@ -383,15 +383,15 @@ then
 		result=$( wget -O /dev/null http://speedtest.frankfurt.linode.com/100MB-frankfurt.bin 2>&1 | awk '/\/dev\/null/ {speed=$3 $4} END {gsub(/\(|\)/,"",speed); print speed}' )
 		echo -e "\033[36mLinode Frankfurt(DE) - \033[33m100MB Testfile \033[0m: $result"
 	fi
-	
-	#CacheFly CDN 
+
+	#CacheFly CDN
 	if [ $network_20 = 1 ]
 	then
 		result=$( wget -O /dev/null http://cachefly.cachefly.net/100mb.test 2>&1 | awk '/\/dev\/null/ {speed=$3 $4} END {gsub(/\(|\)/,"",speed); print speed}' )
 		echo -e "\033[36mCacheFly CDN - \033[33m100MB Testfile \033[0m: $result"
 	fi
 
-	#Cloudflare CDN 
+	#Cloudflare CDN
 	if [ $network_21 = 1 ]
 	then
 		result=$( wget -O /dev/null http://playground.host/mini/speedtest/funny.jpg 2>&1 | awk '/\/dev\/null/ {speed=$3 $4} END {gsub(/\(|\)/,"",speed); print speed}' )
@@ -436,11 +436,11 @@ fi
 
 if [ $do_cpu = 1 ]
 then
-	
+
 	echo ""
 	echo -e "\033[35mCPU Benchmark\033[0m"
 	time echo "scale=4000; a(1)*4" | erg=$(bc -l)
 	echo ""
 	echo ""
-	
+
 fi
