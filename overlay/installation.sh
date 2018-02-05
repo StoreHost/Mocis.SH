@@ -9,6 +9,7 @@
 #   GNU General Public License for more details.
 ############################################################
 lamp_php7=0
+lamp_interactive=0
 docker=0
 goback=0
 nginx=0
@@ -21,8 +22,9 @@ trap "rm $INPUT; exit" SIGHUP SIGINT SIGTERM
 dialog --clear --backtitle "[ M.O.C.I.S ]" \
 --title "[ Installation menu ]" \
 --ascii-lines \
---menu "You can Install Apache, PHP, MySQL, and much more." 0 0 8 \
+--menu "You can Install Apache, PHP, MySQL, and much more." 0 0 9 \
 Lamp-PHP7 "PHP, MySQL, Apache" \
+Lamp-Interactive "Choose what you want" \
 Docker "Docker engine (experimental)" \
 Nginx "Webserver" \
 Apache "Webserver" \
@@ -34,13 +36,14 @@ menuitem=$(<"${INPUT}")
 [ -f $INPUT ] && rm $INPUT
 case $menuitem in
         Lamp-PHP7) lamp_php7=1;;
+        Lamp-Interactive) lamp_interactive=1;;
         Docker) docker=1;;
         Nginx) nginx=1;;
         Apache) apache2=1;;
         MySQL) mysql=1;;
         MariaDB) mariadb=1;;
 		    Back) goback=1;;
-        Exit) echo "Bye"; break;;
+        Exit) echo "Bye"; clear;;
 esac
 if [ $lamp_php7 = 1 ] ; then
 			dialog --yesno "This can damage your system !! Do you want to continue?" 0 0
@@ -63,6 +66,7 @@ if [ $lamp_php7 = 1 ] ; then
 fi
 if [ $goback = 1 ] ; then
 bash /usr/share/mocis/overlay/welcome.sh
+exit
 fi
 if [ $docker = 1 ] ; then
   apt-get install -y apt-transport-https ca-certificates curl gnupg2 software-properties-common > /dev/null
@@ -103,4 +107,7 @@ if [ $mariadb = 1 ] ; then
   mariadbversion=$(mariadb --version)
   dialog --ascii-lines --backtitle "[ M.O.C.I.S ]" --title "MariaDB Version" --msgbox "Check MaraiDB Version\n\n$mariadbversion" 0 0
   bash /usr/share/mocis/overlay/welcome.sh
+fi
+if [ $lamp_interactive = 1 ] ; then
+bash /usr/share/mocis/repo/apt/lamp_interactive.sh
 fi
