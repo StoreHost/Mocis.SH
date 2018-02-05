@@ -29,7 +29,7 @@ if [ $pmgr == "yum" ]; then
 fi
 if
 [ $UID -ne 0 ]; then
-		dialog --ascii-lines \
+		dialog --no-lines \
 		--title "[ M.O.C.I.S ]" --msgbox 'This script must be started as "root"!!"' 0 0
 		clear
 		exit
@@ -41,7 +41,7 @@ version=$(sed -n '1{p;q}' /usr/share/mocis/sys/version/version.txt)
 currentversion=$(sed -n '1{p;q}' /tmp/version.txt)
 dialog --title "Agreement" \
 --backtitle "Mocis.sh" \
---ascii-lines \
+--no-lines \
 --yesno "This script is still in development and therefore not yet stable. \n Please only use on your OWN risk!!! \n We can not be held responsible for any damage or damage that may be caused \n Please check our website www.mocis.sh for more info and updates.\n\n Would you like to proceed?  " 0 0
 response=$?
         case $response in

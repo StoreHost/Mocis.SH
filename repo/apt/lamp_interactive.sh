@@ -20,7 +20,7 @@ php5=0
 goback=0
 INPUT=save.$$
 trap "rm $INPUT; exit" SIGHUP SIGINT SIGTERM
-dialog --ascii-lines \
+dialog --no-lines \
 --nocancel \
 --backtitle "[ M.O.C.I.S ]" \
 --title "Webserver Selection" \
@@ -43,7 +43,7 @@ exit
 fi
 INPUT=save.$$
 trap "rm $INPUT; exit" SIGHUP SIGINT SIGTERM
-dialog --ascii-lines \
+dialog --no-lines \
 --nocancel \
 --backtitle "[ M.O.C.I.S ]" \
 --title "Database Server Selection" \
@@ -60,7 +60,7 @@ case $menuitem2 in
 esac
 INPUT=save.$$
 trap "rm $INPUT; exit" SIGHUP SIGINT SIGTERM
-dialog --ascii-lines \
+dialog --no-lines \
 --nocancel \
 --backtitle "[ M.O.C.I.S ]" \
 --title "PHP Selection" \
@@ -76,9 +76,11 @@ case $menuitem3 in
 		    Back) goback=1;;
         No-PHP) clear;;
 esac
+
+### Installation of PHP with Progressbar
 dialog --title "Last check before installing!!!" \
 --backtitle "[ M.O.C.I.S ]" \
---ascii-lines \
+--no-lines \
 --yesno "Are you sure to install: \n\n$menuitem \n$menuitem2 \n$menuitem3 \n \nIf you press Yes, the installer will do his work. " 0 0
 response=$?
         case $response in
@@ -102,20 +104,20 @@ response=$?
         fi
         if [ $php7 = 1 ] ; then
           if cat /etc/issue.net | grep 9; then
-            echo percentage | dialog --backtitle "[ M.O.C.I.S ]" --title "Installing $menuitem3" --ascii-lines --gauge "Please stand by while your Server is installing $menuitem3" 0 0 0
+            echo percentage | dialog --backtitle "[ M.O.C.I.S ]" --title "Installing $menuitem3" --no-lines --gauge "Please stand by while your Server is installing $menuitem3" 0 0 0
             sleep 2
             aptitude install -y php7.0 php-mbstring php7.0-mysql php7.0-mbstring php-gettext > /dev/null
             php1="php7.0 php-mbstring php7.0-mysql php7.0-mbstring php-gettext"
-            echo "20" | dialog --backtitle "[ M.O.C.I.S ]" --title "Installing $menuitem3" --ascii-lines --gauge "Please stand by while your Server is installing \n\n$php1" 0 0 0
+            echo "20" | dialog --backtitle "[ M.O.C.I.S ]" --title "Installing $menuitem3" --no-lines --gauge "Please stand by while your Server is installing \n\n$php1" 0 0 0
             aptitude install -y php7.0-cli php7.0-curl php7.0-gd php7.0-geoip php7.0-intl php7.0-json > /dev/null
             php2="php7.0-cli php7.0-curl php7.0-gd php7.0-geoip php7.0-intl php7.0-json"
-            echo "40" | dialog --backtitle "[ M.O.C.I.S ]" --title "Installing $menuitem3" --ascii-lines --gauge "Please stand by while your Server is installing \n\n$php2" 0 0 0
+            echo "40" | dialog --backtitle "[ M.O.C.I.S ]" --title "Installing $menuitem3" --no-lines --gauge "Please stand by while your Server is installing \n\n$php2" 0 0 0
             aptitude install -y php7.0-mbstring php7.0-mcrypt php7.0-mysql php7.0-opcache php7.0-readline > /dev/null
             php3="php7.0-mbstring php7.0-mcrypt php7.0-mysql php7.0-opcache php7.0-readline"
-            echo "60" | dialog --backtitle "[ M.O.C.I.S ]" --title "Installing $menuitem3" --ascii-lines --gauge "Please stand by while your Server is installing \n\n$php3" 0 0 0
+            echo "60" | dialog --backtitle "[ M.O.C.I.S ]" --title "Installing $menuitem3" --no-lines --gauge "Please stand by while your Server is installing \n\n$php3" 0 0 0
             aptitude install -y php7.0-xml php7.0-xsl php7.0-zip > /dev/null
             php4="php7.0-xml php7.0-xsl php7.0-zip"
-            echo "100" | dialog --backtitle "[ M.O.C.I.S ]" --title "Installing $menuitem3" --ascii-lines --gauge "Please stand by while your Server is installing \n\n$php4" 0 0 0
+            echo "100" | dialog --backtitle "[ M.O.C.I.S ]" --title "Installing $menuitem3" --no-lines --gauge "Please stand by while your Server is installing \n\n$php4" 0 0 0
           elif cat /etc/issue.net | grep 8; then
               echo 'deb http://packages.dotdeb.org jessie all' > /etc/apt/sources.list.d/dotdeb.list
               apt-get install -y apt-transport-https > /dev/null
@@ -134,7 +136,7 @@ response=$?
       then
         bash /usr/share/mocis/repo/apt/9/lamp_interactive.sh
       fi
-dialog --backtitle "[ M.O.C.I.S ]" --title "Installed $menuitem1 $menuitem2 $menuitem3" --ascii-lines --yesno "You wanna go back to the Menu?" 0 0
+dialog --backtitle "[ M.O.C.I.S ]" --title "Installed $menuitem1 $menuitem2 $menuitem3" --no-lines --yesno "You wanna go back to the Menu?" 0 0
 response=$?
 case $response in
 0) echo "starting";;

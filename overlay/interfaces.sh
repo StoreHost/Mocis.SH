@@ -20,7 +20,7 @@ INPUT=save.$$
 trap "rm $INPUT; exit" SIGHUP SIGINT SIGTERM
 dialog --clear --backtitle "[ M.O.C.I.S ]" \
 --title "[ Server Webinterfaces ]" \
---ascii-lines \
+--no-lines \
 --menu "You can use the UP/DOWN arrow keys, the first \n\
 letter of the choice as a hot key, or the \n\
 number keys 1-9 to choose an option.\n\

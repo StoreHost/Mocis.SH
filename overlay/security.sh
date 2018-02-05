@@ -14,7 +14,7 @@ INPUT=save.$$
 trap "rm $INPUT; exit" SIGHUP SIGINT SIGTERM
 dialog --clear --backtitle "[ M.O.C.I.S ]" \
 --title "[ #Security ]" \
---ascii-lines \
+--no-lines \
 --menu "Here you can Install an SSL certificate or later some tools.\n" 0 0 8 \
 SSL "Let's Encrypt whit certbot" \
 Back "Back to the Mainmenu" \

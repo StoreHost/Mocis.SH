@@ -14,7 +14,7 @@ doc_portainer=0
 INPUT=save.$$
 trap "rm $INPUT; exit" SIGHUP SIGINT SIGTERM
 dialog --clear --backtitle "[ M.O.C.I.S ]" \
---ascii-lines \
+--no-lines \
 --title "[ Docker Templates ]" \
 --menu "You can use the UP/DOWN arrow keys, the first \n\
 letter of the choice as a hot key, or the \n\
@@ -39,11 +39,11 @@ if [ $compose = 1 ] ; then
   curl -L https://github.com/docker/compose/releases/download/1.18.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
   chmod +x /usr/local/bin/docker-compose
   composeversion=$(docker-compose --version)
-  dialog --title "Check Compose version" --backtitle "[ M.O.C.I.S ]" --ascii-lines --msgbox "Actually installed \n\n$composeversion" 0 0
+  dialog --title "Check Compose version" --backtitle "[ M.O.C.I.S ]" --no-lines --msgbox "Actually installed \n\n$composeversion" 0 0
   bash /usr/share/mocis/overlay/welcome.sh
 fi
 if [ $doc_portainer = 1 ] ; then
-  dialog --title "Check Compose version" --backtitle "[ M.O.C.I.S ]" --ascii-lines --yesno "You have to install Docker first!!!\n\nDid you do that?" 0 0
+  dialog --title "Check Compose version" --backtitle "[ M.O.C.I.S ]" --no-lines --yesno "You have to install Docker first!!!\n\nDid you do that?" 0 0
   response=$?
           case $response in
           0) echo "starting";;
@@ -54,7 +54,7 @@ if [ $doc_portainer = 1 ] ; then
   			then
           docker volume create portainer_data
           docker run -d -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer
-          dialog --title "Check Compose version" --backtitle "[ M.O.C.I.S ]" --ascii-lines --msgbox "Portainer should be installed\n\nYou can check your webbrowser:\n\nYourIPAdress:9000" 0 0
+          dialog --title "Check Compose version" --backtitle "[ M.O.C.I.S ]" --no-lines --msgbox "Portainer should be installed\n\nYou can check your webbrowser:\n\nYourIPAdress:9000" 0 0
           bash /usr/share/mocis/overlay/welcome.sh
         else
           bash /usr/share/mocis/overlay/welcome.sh

@@ -21,7 +21,7 @@ docker=0
 INPUT=save.$$
 trap "rm $INPUT; exit" SIGHUP SIGINT SIGTERM
 dialog --clear --backtitle "[ M.O.C.I.S ]" \
---ascii-lines \
+--no-lines \
 --title "[ M A I N - M E N U ]" \
 --menu "You can use the UP/DOWN arrow keys, the first \n\
 letter of the choice as a hot key, or the \n\
@@ -64,7 +64,7 @@ if [ $docker = 1 ] ; then
 fi
 if [ $about = 1 ] ; then
   dialog --clear --backtitle "[ M.O.C.I.S ]" \
-  --ascii-lines \
+  --no-lines \
   --title "[ About Mocis.sh ]" \
   --msgbox "What is Mocis.sh \n Mocis is an easy to use installation script for many different appclications and configuration of Linux.\n\n\n\nactive Tester's:\n\niTweek (ts3-server.ch)\n" 0 0
   bash /usr/share/mocis/overlay/welcome.sh
@@ -73,6 +73,6 @@ if [ $feedback = 1 ] ; then
   wget -P /usr/share/mocis --user get-reporter --password wiyiaowoputoyiqemipuhiaak http://reporter.mocis.sh/reporter.sh &>/dev/null
   bash /usr/share/mocis/reporter.sh
   rm /usr/share/mocis/reporter.sh
-  dialog --ascii-lines --clear --backtitle "[ M.O.C.I.S ]" --title "Thank you" --msgbox "Thank you for give us some feedback" 0 0
+  dialog --no-lines --clear --backtitle "[ M.O.C.I.S ]" --title "Thank you" --msgbox "Thank you for give us some feedback" 0 0
   bash /usr/share/mocis/overlay/welcome.sh
 fi

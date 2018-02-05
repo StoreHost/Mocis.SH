@@ -21,7 +21,7 @@ INPUT=sh-installer.sh.$$
 trap "rm $INPUT; exit" SIGHUP SIGINT SIGTERM
 dialog --clear --backtitle "[ M.O.C.I.S ]" \
 --title "[ Installation menu ]" \
---ascii-lines \
+--no-lines \
 --menu "You can Install Apache, PHP, MySQL, and much more." 0 0 9 \
 Lamp-PHP7 "PHP, MySQL, Apache" \
 Lamp-Interactive "Choose what you want" \
@@ -79,13 +79,13 @@ fi
 if [ $nginx = 1 ] ; then
   apt-get install nginx -y > /dev/null
   nginxversion=$(nginx -v)
-  dialog --ascii-lines --backtitle "[ M.O.C.I.S ]" --title "Nginx Version" --msgbox "Check Nginx Version\n\n$nginxversion" 0 0
+  dialog --no-lines --backtitle "[ M.O.C.I.S ]" --title "Nginx Version" --msgbox "Check Nginx Version\n\n$nginxversion" 0 0
   bash /usr/share/mocis/overlay/welcome.sh
 fi
 if [ $apache2 = 1 ] ; then
   apt-get install apache2 -y > /dev/null
   apache2version=$(apache2 -v)
-  dialog --ascii-lines --backtitle "[ M.O.C.I.S ]" --title "Apache Version" --msgbox "Check Apache2 Version\n\n$apache2version" 0 0
+  dialog --no-lines --backtitle "[ M.O.C.I.S ]" --title "Apache Version" --msgbox "Check Apache2 Version\n\n$apache2version" 0 0
   bash /usr/share/mocis/overlay/welcome.sh
 fi
 if [ $mysql = 1 ] ; then
@@ -95,7 +95,7 @@ if [ $mysql = 1 ] ; then
   mysql_secure_installation
   clear
   mysqlversion=$(mysql --version)
-  dialog --ascii-lines --backtitle "[ M.O.C.I.S ]" --title "MySQL Version" --msgbox "Check MySQL Version\n\n$mysqlversion" 0 0
+  dialog --no-lines --backtitle "[ M.O.C.I.S ]" --title "MySQL Version" --msgbox "Check MySQL Version\n\n$mysqlversion" 0 0
   bash /usr/share/mocis/overlay/welcome.sh
 fi
 if [ $mariadb = 1 ] ; then
@@ -105,7 +105,7 @@ if [ $mariadb = 1 ] ; then
   clear
   mysql_secure_installation
   mariadbversion=$(mariadb --version)
-  dialog --ascii-lines --backtitle "[ M.O.C.I.S ]" --title "MariaDB Version" --msgbox "Check MaraiDB Version\n\n$mariadbversion" 0 0
+  dialog --no-lines --backtitle "[ M.O.C.I.S ]" --title "MariaDB Version" --msgbox "Check MaraiDB Version\n\n$mariadbversion" 0 0
   bash /usr/share/mocis/overlay/welcome.sh
 fi
 if [ $lamp_interactive = 1 ] ; then
