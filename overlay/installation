@@ -106,5 +106,5 @@ if [ $lamp_interactive = 1 ] ; then
 bash $Path/repo/apt/lamp_interactive.sh
 fi
 if [ $openvpn = 1 ] ; then
-bash $Path/repo/uni/openvpn-install.sh
+bash $Path/repo/uni/openvpn-install
 fi

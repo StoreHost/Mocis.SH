@@ -37,6 +37,7 @@ fi
 ############################################################
 # Erklaerung Datenverlust
 #
+DIRECTORY="/usr/share/mocis"
 version=$(sed -n '1{p;q}' /usr/share/mocis/sys/version/version.txt)
 currentversion=$(sed -n '1{p;q}' /tmp/version.txt)
 dialog --title "Agreement" \
@@ -54,8 +55,11 @@ response=$?
 				if [ $version = $currentversion ] ; then
  					bash /usr/share/mocis/overlay/welcome
 				else
-					echo "Removing old files..."
+
+					if [ -d $DIRECTORY ]; then
+				  echo "Removing old files..."
 					rm -R /usr/share/mocis/
+					fi
 					echo "Installing some nessesary binarys..."
 					apt-get install aptitude xmlstarlet git -y &>/dev/null
 					echo "Cloning newest version...."
