@@ -8,6 +8,7 @@
 #   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #   GNU General Public License for more details.
 ############################################################
+. /usr/share/mocis/sys/config/setup-vars
 goback=0
 docker=0
 compose=0
@@ -37,14 +38,14 @@ case $menuitem in
 esac
 
 if [ $goback = 1 ] ; then
-  bash /usr/share/mocis/overlay/welcome.sh
+  bash $Home
 fi
 if [ $compose = 1 ] ; then
   curl -L https://github.com/docker/compose/releases/download/1.18.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
   chmod +x /usr/local/bin/docker-compose
   composeversion=$(docker-compose --version)
   dialog --title "Check Compose version" --backtitle "[ M.O.C.I.S ]" --no-lines --msgbox "Actually installed \n\n$composeversion" 0 0
-  bash /usr/share/mocis/overlay/welcome.sh
+  bash $Home
 fi
 if [ $doc_portainer = 1 ] ; then
   dialog --title "Check Compose version" --backtitle "[ M.O.C.I.S ]" --no-lines --yesno "You have to install Docker first!!!\n\nDid you do that?" 0 0
@@ -59,7 +60,7 @@ if [ $doc_portainer = 1 ] ; then
           docker volume create portainer_data
           docker run -d -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer
           dialog --title "Check Compose version" --backtitle "[ M.O.C.I.S ]" --no-lines --msgbox "Portainer should be installed\n\nYou can check your webbrowser:\n\nYourIPAdress:9000" 0 0
-          bash /usr/share/mocis/overlay/welcome.sh
+          bash $Home
         else
           bash /usr/share/mocis/overlay/welcome.sh
         fi
@@ -70,5 +71,5 @@ if [ $docker = 1 ] ; then
   add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") $(lsb_release -cs) stable"
   apt-get update >/dev/null
   apt-get install docker-ce > /dev/null
-  bash /usr/share/mocis/overlay/welcome.sh
+  bash $Home
 fi

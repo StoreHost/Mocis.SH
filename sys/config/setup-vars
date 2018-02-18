@@ -22,3 +22,6 @@
 : ${SIG_QUIT=3}
 : ${SIG_KILL=9}
 : ${SIG_TERM=15}
+: ${Path="/usr/share/mocis"}
+: ${Home="/usr/share/mocis/overlay/welcome"}
+: ${Overlay="/usr/share/mocis/overlay"}

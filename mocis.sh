@@ -52,7 +52,7 @@ response=$?
 			if [ $response = 0 ]
 			then
 				if [ $version = $currentversion ] ; then
- 					bash /usr/share/mocis/overlay/welcome.sh
+ 					bash /usr/share/mocis/overlay/welcome
 				else
 					echo "Removing old files..."
 					rm -R /usr/share/mocis/
@@ -62,7 +62,7 @@ response=$?
 					git clone https://github.com/StoreHost/Mocis.SH.git /usr/share/mocis/
 					sleep 5
 					echo "porting to the main Menu..."
-					bash /usr/share/mocis/overlay/welcome.sh
+					bash /usr/share/mocis/overlay/welcome
 					rm /tmp/version.txt
 				fi
 			fi

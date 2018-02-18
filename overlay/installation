@@ -8,6 +8,7 @@
 #   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #   GNU General Public License for more details.
 ############################################################
+. /usr/share/mocis/sys/config/setup-vars
 lamp_php7=0
 lamp_interactive=0
 docker=0
@@ -57,11 +58,11 @@ if [ $lamp_php7 = 1 ] ; then
 			if [ $response = 0 ]
 			then
 				if cat /etc/issue.net | grep 9; then
-					chmod -+x /usr/share/mocis/repo/apt/9/LAMP-PHP7.deb9.pl
-					perl /usr/share/mocis/repo/apt/9/LAMP-PHP7.deb9.pl
+					chmod -+x $Path/repo/apt/9/LAMP-PHP7.deb9.pl
+					perl $Path/repo/apt/9/LAMP-PHP7.deb9.pl
 				else
-					chmod -+x /usr/share/mocis/repo/apt/8/LAMP-PHP7.deb.pl
-					perl /usr/share/mocis/repo/apt/8/LAMP-PHP7.deb.pl
+					chmod -+x $Path/repo/apt/8/LAMP-PHP7.deb.pl
+					perl $Path/repo/apt/8/LAMP-PHP7.deb.pl
 				fi
 			fi
 fi
@@ -73,13 +74,13 @@ if [ $nginx = 1 ] ; then
   apt-get install nginx -y > /dev/null
   nginxversion=$(nginx -v)
   dialog --no-lines --backtitle "[ M.O.C.I.S ]" --title "Nginx Version" --msgbox "Check Nginx Version\n\n$nginxversion" 0 0
-  bash /usr/share/mocis/overlay/welcome.sh
+  bash $Home
 fi
 if [ $apache2 = 1 ] ; then
   apt-get install apache2 -y > /dev/null
   apache2version=$(apache2 -v)
   dialog --no-lines --backtitle "[ M.O.C.I.S ]" --title "Apache Version" --msgbox "Check Apache2 Version\n\n$apache2version" 0 0
-  bash /usr/share/mocis/overlay/welcome.sh
+  bash $Home
 fi
 if [ $mysql = 1 ] ; then
   clear
@@ -89,7 +90,7 @@ if [ $mysql = 1 ] ; then
   clear
   mysqlversion=$(mysql --version)
   dialog --no-lines --backtitle "[ M.O.C.I.S ]" --title "MySQL Version" --msgbox "Check MySQL Version\n\n$mysqlversion" 0 0
-  bash /usr/share/mocis/overlay/welcome.sh
+  bash $Home
 fi
 if [ $mariadb = 1 ] ; then
   clear
@@ -99,11 +100,11 @@ if [ $mariadb = 1 ] ; then
   mysql_secure_installation
   mariadbversion=$(mariadb --version)
   dialog --no-lines --backtitle "[ M.O.C.I.S ]" --title "MariaDB Version" --msgbox "Check MaraiDB Version\n\n$mariadbversion" 0 0
-  bash /usr/share/mocis/overlay/welcome.sh
+  bash $Home
 fi
 if [ $lamp_interactive = 1 ] ; then
-bash /usr/share/mocis/repo/apt/lamp_interactive.sh
+bash $Path/repo/apt/lamp_interactive.sh
 fi
 if [ $openvpn = 1 ] ; then
-bash /usr/share/mocis/repo/uni/openvpn-install.sh
+bash $Path/repo/uni/openvpn-install.sh
 fi
