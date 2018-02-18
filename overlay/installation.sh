@@ -16,6 +16,7 @@ nginx=0
 apache2=0
 mysql=0
 mariadb=0
+openvpn=0
 hostname=0
 INPUT=sh-installer.sh.$$
 trap "rm $INPUT; exit" SIGHUP SIGINT SIGTERM
@@ -30,6 +31,7 @@ Nginx "Webserver" \
 Apache "Webserver" \
 MySQL "SQL Server" \
 MariaDB "SQL Server" \
+OpenVPN "Angristan installer" \
 Back "Back to the Main Menu" \
 Exit "Exit to the shell" 2>"${INPUT}"
 menuitem=$(<"${INPUT}")
@@ -42,6 +44,7 @@ case $menuitem in
         Apache) apache2=1;;
         MySQL) mysql=1;;
         MariaDB) mariadb=1;;
+        OpenVPN) openvpn=1;;
 		    Back) goback=1;;
         Exit) echo "Bye"; clear;;
 esac
@@ -110,4 +113,7 @@ if [ $mariadb = 1 ] ; then
 fi
 if [ $lamp_interactive = 1 ] ; then
 bash /usr/share/mocis/repo/apt/lamp_interactive.sh
+fi
+if [ $openvpn = 1 ] ; then
+bash /usr/share/mocis/repo/uni/openvpn-install.sh
 fi

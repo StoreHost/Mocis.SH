@@ -65,9 +65,8 @@ fi
 if [ $about = 1 ] ; then
   dialog --clear --backtitle "[ M.O.C.I.S ]" \
   --no-lines \
-  --colors \
   --title "[ About Mocis.sh ]" \
-  --msgbox "What is Mocis.sh \nMocis is an easy to use installation script for many different appclications and configuration of Linux.\n\n\n\nactive Tester's:\n\n\Z4iTweek (ts3-server.ch)\Zn\n\nExternal helpers:\n\Z4Tobias Jansen (Host4me)\Zn" 0 0
+  --msgbox "What is Mocis.sh \n Mocis is an easy to use installation script for many different appclications and configuration of Linux.\n\n\n\nactive Tester's:\n\niTweek (ts3-server.ch)\n" 0 0
   bash /usr/share/mocis/overlay/welcome.sh
 fi
 if [ $feedback = 1 ] ; then
