@@ -11,6 +11,7 @@
 . /usr/share/mocis/sys/config/setup-vars
 ensky_bench=0
 mocis_bench=0
+goback=0
 INPUT=save.$$
 trap "rm $INPUT; exit" SIGHUP SIGINT SIGTERM
 dialog --clear --backtitle "[ M.O.C.I.S ]" \
