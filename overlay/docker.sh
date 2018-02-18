@@ -29,7 +29,7 @@ Exit "Exit to the shell" 2>"${INPUT}"
 menuitem=$(<"${INPUT}")
 [ -f $INPUT ] && rm $INPUT
 case $menuitem in
-        Docker-CE) docker=1;;
+        Docker) docker=1;;
         Compose) compose=1;;
         Portainer) doc_portainer=1;;
         Back) goback=1;;
