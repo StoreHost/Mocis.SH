@@ -93,7 +93,7 @@ until ($quit4) {
     if ($input =~ /^[Y]?$/i) {      # Match Yy or blank
         print "Going Back to the Menu...\nPlease Wait...!\n";
 		sleep 2;
-		system ("bash /usr/share/mocis/overlay/welcome.sh");
+		system ("bash /usr/share/mocis/overlay/welcome");
 		sleep 2;
 		$quit4 = 1;
     } elsif ($input =~ /^[N]$/i) {  # Match Nn

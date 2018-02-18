@@ -11,6 +11,7 @@
 # Lamp Webserver installation
 #Variables
 #DIALOGRC=/usr/share/mocis/sys/config/dialog.conf
+. /usr/share/mocis/sys/config/setup-vars
 apache=0
 nginx=0
 mysql=0
@@ -134,7 +135,7 @@ response=$?
 			fi
       if [ $response = 1 ]
       then
-        bash /usr/share/mocis/repo/apt/9/lamp_interactive.sh
+        bash $Path/repo/apt/9/lamp_interactive.sh
       fi
 dialog --backtitle "[ M.O.C.I.S ]" --title "Installed $menuitem1 $menuitem2 $menuitem3" --no-lines --yesno "You wanna go back to the Menu?" 0 0
 response=$?
@@ -145,5 +146,5 @@ case $response in
 esac
 if [ $response = 0 ]
 then
-  bash /usr/share/mocis/overlay/welcome.sh
+  bash $Home
 fi
