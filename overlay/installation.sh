@@ -26,7 +26,6 @@ dialog --clear --backtitle "[ M.O.C.I.S ]" \
 --menu "You can Install Apache, PHP, MySQL, and much more." 0 0 9 \
 Lamp-PHP7 "PHP, MySQL, Apache" \
 Lamp-Interactive "Choose what you want" \
-Docker "Docker engine (experimental)" \
 Nginx "Webserver" \
 Apache "Webserver" \
 MySQL "SQL Server" \
@@ -39,7 +38,6 @@ menuitem=$(<"${INPUT}")
 case $menuitem in
         Lamp-PHP7) lamp_php7=1;;
         Lamp-Interactive) lamp_interactive=1;;
-        Docker) docker=1;;
         Nginx) nginx=1;;
         Apache) apache2=1;;
         MySQL) mysql=1;;
@@ -70,14 +68,6 @@ fi
 if [ $goback = 1 ] ; then
 bash /usr/share/mocis/overlay/welcome.sh
 exit
-fi
-if [ $docker = 1 ] ; then
-  apt-get install -y apt-transport-https ca-certificates curl gnupg2 software-properties-common > /dev/null
-  curl -fsSL https://download.docker.com/linux/$(. /etc/os-release; echo "$ID")/gpg | apt-key add -
-  add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") $(lsb_release -cs) stable"
-  apt-get update >/dev/null
-  apt-get install docker-ce > /dev/null
-  bash /usr/share/mocis/overlay/welcome.sh
 fi
 if [ $nginx = 1 ] ; then
   apt-get install nginx -y > /dev/null

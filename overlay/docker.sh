@@ -9,6 +9,7 @@
 #   GNU General Public License for more details.
 ############################################################
 goback=0
+docker=0
 compose=0
 doc_portainer=0
 INPUT=save.$$
@@ -20,6 +21,7 @@ dialog --clear --backtitle "[ M.O.C.I.S ]" \
 letter of the choice as a hot key, or the \n\
 number keys 1-9 to choose an option.\n\
 Choose the TASK" 0 0 8 \
+Docker "Docker Engine" \
 Compose "Docker Compose" \
 Portainer "Webinterface for Docker" \
 Back "Go back to the Menu" \
@@ -27,11 +29,13 @@ Exit "Exit to the shell" 2>"${INPUT}"
 menuitem=$(<"${INPUT}")
 [ -f $INPUT ] && rm $INPUT
 case $menuitem in
+        Docker-CE) docker=1;;
         Compose) compose=1;;
         Portainer) doc_portainer=1;;
         Back) goback=1;;
         Exit) echo "Bye"; break;;
 esac
+
 if [ $goback = 1 ] ; then
   bash /usr/share/mocis/overlay/welcome.sh
 fi
@@ -59,4 +63,12 @@ if [ $doc_portainer = 1 ] ; then
         else
           bash /usr/share/mocis/overlay/welcome.sh
         fi
+fi
+if [ $docker = 1 ] ; then
+  apt-get install -y apt-transport-https ca-certificates curl gnupg2 software-properties-common > /dev/null
+  curl -fsSL https://download.docker.com/linux/$(. /etc/os-release; echo "$ID")/gpg | apt-key add -
+  add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") $(lsb_release -cs) stable"
+  apt-get update >/dev/null
+  apt-get install docker-ce > /dev/null
+  bash /usr/share/mocis/overlay/welcome.sh
 fi
