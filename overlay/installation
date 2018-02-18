@@ -67,7 +67,7 @@ if [ $lamp_php7 = 1 ] ; then
 			fi
 fi
 if [ $goback = 1 ] ; then
-bash /usr/share/mocis/overlay/welcome.sh
+bash $Home
 exit
 fi
 if [ $nginx = 1 ] ; then
