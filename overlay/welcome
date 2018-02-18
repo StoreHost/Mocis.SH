@@ -68,7 +68,7 @@ if [ $about = 1 ] ; then
   --no-lines \
   --colors \
   --title "[ About Mocis.sh ]" \
-  --msgbox "What is Mocis.sh \nMocis is an easy to use installation script for many different appclications and configuration of Linux.\n\n\n\nactive Tester's:\n\n\Z4iTweek (ts3-server.ch)\Zn\n\nExternal helpers:\n\Z4Tobias Jansen (Host4me)\Zn" 0 0
+  --msgbox "What is Mocis.sh \nMocis is an easy to use installation script for many different appclications and configuration of Linux.\n\n\n\nactive Tester's:\n\Z4iTweek (ts3-server.ch)\Zn\n\n\Z4Thhunder \Zn\n\nExternal helpers:\n\Z4Tobias Jansen (Host4me)\Zn" 0 0
   bash $Home
 fi
 if [ $feedback = 1 ] ; then
