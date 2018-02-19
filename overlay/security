@@ -29,6 +29,7 @@ case $menuitem in
 esac
 if [ $sslperl = 1 ] ; then
 	perl $Path/repo/apt/9/letsencrypt.deb.pl
+  bash $Home
 fi
 if [ $goback = 1 ] ; then
 	bash $Home

@@ -62,7 +62,7 @@ if [ $doc_portainer = 1 ] ; then
           dialog --title "Check Compose version" --backtitle "[ M.O.C.I.S ]" --no-lines --msgbox "Portainer should be installed\n\nYou can check your webbrowser:\n\nYourIPAdress:9000" 0 0
           bash $Home
         else
-          bash /usr/share/mocis/overlay/welcome.sh
+          bash $Home
         fi
 fi
 if [ $docker = 1 ] ; then
