@@ -64,10 +64,8 @@ response=$?
 					apt-get install aptitude xmlstarlet git -y &>/dev/null
 					echo "Cloning newest version...."
 					git clone https://github.com/StoreHost/Mocis.SH.git /usr/share/mocis/
-					sleep 5
 					echo "porting to the main Menu..."
 					bash /usr/share/mocis/overlay/welcome
 					rm /tmp/version.txt
 				fi
 			fi
-
