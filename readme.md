@@ -6,14 +6,23 @@ Easy instalation of common and not so common Packages, Services and much more.
 
 Allredy included:
 ```
-Easy-WI         #Gameserver Interface
-LAMP            #PHP-7-MariaDB-Apache2
-LAMP            #PHP-5-MariaDB-Apache2
-Sinusbot        #Teamspeak 3 Musicbot
-Benchmark       #Ensky-Media
-IMSCP           #Webhosting Controll Panel
-Froxlor         #Webhosting Controll Panel
-Let's Encrypt   #SSL certificate generation
+
+  Benchmark             #Ensky-Media & Mocis
+  LAMP                  #Interactive instalation  
+  Docker                #DockerEngine
+  Nginx                 #Fast Webserver
+  Apache2               #Common Webserver
+  MySQL                 #MySQL Server
+  MariaDB               #MySQL Server
+  PHPmyAmin             #Webadministration for MySQL
+  Froxlor               #Webhosting Panel
+  IMSCP                 #Webhosting Panel
+  Easy-WI               #Gameserver Interface
+  Sinusbot              #Interface for Teamspeak Musicbots
+  Docker Compose        #Docker Composer
+  Docker Portainer      #Docker Webinterface   
+  Let's Encrypt         #Let's Encrypt SSL
+  TeamPass              #Online Password Management
 ```
 
 ## Getting Started
