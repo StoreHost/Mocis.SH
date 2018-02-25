@@ -72,6 +72,7 @@ if [ $about = 1 ] ; then
   bash $Home
 fi
 if [ $feedback = 1 ] ; then
+  apt-get install jq -y > /dev/null
   wget -P $Path --user get-reporter --password wiyiaowoputoyiqemipuhiaak http://reporter.mocis.sh/reporter.sh &>/dev/null
   bash $Path/reporter.sh
   rm $Path/reporter.sh
