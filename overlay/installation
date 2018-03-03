@@ -10,6 +10,7 @@
 ############################################################
 . /usr/share/mocis/sys/config/setup-vars
 lamp_php7=0
+pve=0
 lamp_interactive=0
 docker=0
 goback=0
@@ -32,6 +33,7 @@ Apache "Webserver" \
 MySQL "SQL Server" \
 MariaDB "SQL Server" \
 OpenVPN "Angristan installer" \
+Proxmox "Virtual Server Hosting" \
 Back "Back to the Main Menu" \
 Exit "Exit to the shell" 2>"${INPUT}"
 menuitem=$(<"${INPUT}")
@@ -44,6 +46,7 @@ case $menuitem in
         MySQL) mysql=1;;
         MariaDB) mariadb=1;;
         OpenVPN) openvpn=1;;
+        Proxmox) pve=1;;
 		    Back) goback=1;;
         Exit) echo "Bye"; clear;;
 esac
@@ -107,4 +110,7 @@ bash $Path/repo/apt/lamp_interactive.sh
 fi
 if [ $openvpn = 1 ] ; then
 bash $Path/repo/uni/openvpn-install
+fi
+if [ $pve = 1 ] ; then
+bash $Path/repo/apt/9/proxmox
 fi
