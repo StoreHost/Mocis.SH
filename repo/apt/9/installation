@@ -1,0 +1,64 @@
+#!/bin/bash
+########################################################################
+# Developed by Store-Host                                              #
+# Version 0.1                                                          #
+# Web: https://www.store-host.com                                      #
+# 	Mocis is distributed in the hope that it will be useful,           #
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of     #
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the      #
+#   GNU General Public License for more details.                       #
+########################################################################
+########################################################################
+# In this file are all installation which                              #
+# can be executed and installed under Debian 9 "Scretch".              #
+# Please only with caution and extreme caution commands                #
+# or change functions.                                                 #
+########################################################################
+########################################################################
+#Importing Dialog Variables from the exectuted Menu                    #
+########################################################################
+#source '/path/scriptname'                                             #
+########################################################################
+########################################################################
+#Importing Error handler and stuff to protect                          #
+########################################################################
+source '/usr/share/mocis/sys/lib/lib.errortrap.sh'                     #
+########################################################################
+#Virtualisation Hypervisors                                            #
+########################################################################
+function proxmoxhyper {
+  if [ $1 = start_pvehyper ]; then
+    echo "deb http://download.proxmox.com/debian/pve stretch pve-no-subscription" > /etc/apt/sources.list.d/pve-install-repo.list
+    wget http://download.proxmox.com/debian/proxmox-ve-release-5.x.gpg -O /etc/apt/trusted.gpg.d/proxmox-ve-release-5.x.gpg
+    apt-get update -y && apt-get dist-upgrade -y
+    apt-get install proxmox-ve open-iscsi -y
+    apt-get install postfix -y
+    apt-get remove os-prober -y
+    echo "Please check for error's if some oncurred"
+    sleep 1
+    echo "If no errors onccured the interface should be\navailible under 'https://youripaddress:8006'"
+    sleep 10
+  return 0
+fi
+}
+########################################################################
+#Mail safety Installations                                             #
+########################################################################
+function proxmoxmailgw {
+  if [ $1 = start_pvegw ]; then
+  echo "Installing proxmox mail gateway"
+  sleep 2
+  source '/usr/share/mocis/sys/config/setup-vars'
+  source '/usr/share/mocis/sys/lib/lib.errortrap.sh'
+  echo "deb http://download.proxmox.com/debian/pmg stretch pmg-no-subscription" > /etc/apt/sources.list.d/pve-install-repo.list
+  wget http://download.proxmox.com/debian/proxmox-ve-release-5.x.gpg -O /etc/apt/trusted.gpg.d/proxmox-ve-release-5.x.gpg
+  apt-get update -y
+  apt-get install proxmox-mailgateway -y
+  echo "If no errors onccured the interface should be\navailible under 'https://youripaddress:8006'"
+  sleep 5
+  return 0
+fi
+}
+########################################################################
+#Some other stuff maybe :D                                             #
+########################################################################

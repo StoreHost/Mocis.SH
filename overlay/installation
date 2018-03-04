@@ -9,8 +9,10 @@
 #   GNU General Public License for more details.
 ############################################################
 . /usr/share/mocis/sys/config/setup-vars
+source $Path/repo/apt/9/installation
 lamp_php7=0
 pve=0
+do_pvegw=0
 lamp_interactive=0
 docker=0
 goback=0
@@ -71,6 +73,14 @@ if [ $lamp_php7 = 1 ] ; then
 				fi
 			fi
 fi
+if [ $pve = 1 ] ; then
+  proxmoxhyper start_pvehyper
+  goback=1
+fi
+if [ $do_pvegw = 1 ]; then
+  proxmoxmailgw start_pvegw
+  goback=1
+fi
 if [ $goback = 1 ] ; then
 bash $Home
 exit
@@ -112,10 +122,4 @@ bash $Path/repo/apt/lamp_interactive.sh
 fi
 if [ $openvpn = 1 ] ; then
 bash $Path/repo/uni/openvpn-install
-fi
-if [ $pve = 1 ] ; then
-bash $Path/repo/apt/9/proxmox
-fi
-if [ $do_pvegw = 1 ] ; then
-  bash $Path/repo/apt/9/pve_mail_gw
 fi
