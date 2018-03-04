@@ -2,8 +2,6 @@
 
 # Secure OpenVPN server installer for Debian, Ubuntu, CentOS and Arch Linux
 # https://github.com/Angristan/OpenVPN-install
-
-
 if [[ "$EUID" -ne 0 ]]; then
 	echo "Sorry, you need to run this as root"
 	exit 1

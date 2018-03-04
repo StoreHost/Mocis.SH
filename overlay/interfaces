@@ -26,10 +26,10 @@ dialog --clear --backtitle "[ M.O.C.I.S ]" \
 letter of the choice as a hot key, or the \n\
 number keys 1-9 to choose an option.\n\
 Choose the TASK" 0 0 8 \
-Froxlor "Webhosting Controll Panel" \
-PHPmyAdmin "MySQL Webaccess" \
-IMSCP "Webhosting Controll Panel" \
 Easy-Wi "Gameserver Webinterface" \
+Froxlor "Webhosting Controll Panel" \
+IMSCP "Webhosting Controll Panel" \
+PHPmyAdmin "MySQL Webaccess" \
 Sinusbot "Teamspeak Musicbot" \
 Back "Back to the Mainmenu" \
 Exit "Exit to the shell" 2>"${INPUT}"

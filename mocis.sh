@@ -9,6 +9,7 @@
 #   GNU General Public License for more details.
 ############################################################
 # Installation von "dialog
+echo "Installing some nessesary tools"
 if [ -d "/etc/apt" ]; then
 	pmgr=apt
 fi
@@ -37,6 +38,7 @@ fi
 ############################################################
 # Erklaerung Datenverlust
 #
+LOGDIR="/root/mocis_log"
 DIRECTORY="/usr/share/mocis"
 version=$(sed -n '1{p;q}' /usr/share/mocis/sys/version/version.txt)
 currentversion=$(sed -n '1{p;q}' /tmp/version.txt)
@@ -52,8 +54,14 @@ response=$?
 		esac
 			if [ $response = 0 ]
 			then
+				if [[ -d $LOGDIR ]]; then
+					echo ""
+				else
+					mkdir $LOGDIR
+				fi
 				if [ "$version" = "$currentversion" ]; then
  					bash /usr/share/mocis/overlay/welcome
+
 				else
 
 					if [ -d $DIRECTORY ]; then

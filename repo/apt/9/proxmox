@@ -11,29 +11,16 @@
 # Vars
 #
 . /usr/share/mocis/sys/config/setup-vars
+#source '/usr/share/mocis/sys/lib/lib.errortrap.sh'
 function finish {
   clear
-  $HOME
+  bash $Home
 }
-mkdir /root/mocis_log
-touch /root/mocis_log/proxmox-$$.log
-Logfile="/root/mocis_log/proxmox-$$.log"
-if [ -f $Logfile ]
-then
-rm $Logfile
-
-else
-
-touch $Logfile
-echo "Generating The Logfile for the proxmox installation." >> $Logfile
-
-fi
-
 dialog --title "Last chance" \
 --backtitle "Mocis.sh" \
 --no-lines \
 --yesno "Are you sure you want to install Proxmox VE?" 0 0
-response=$? >> $Logfile
+response=$?
         case $response in
         0) echo "";;
         1) clear exit;;
@@ -42,23 +29,23 @@ response=$? >> $Logfile
 			if [ $response = 0 ]
 			then
 				echo "deb http://download.proxmox.com/debian/pve stretch pve-no-subscription" > /etc/apt/sources.list.d/pve-install-repo.list
-        wget http://download.proxmox.com/debian/proxmox-ve-release-5.x.gpg -O /etc/apt/trusted.gpg.d/proxmox-ve-release-5.x.gpg >> $Logfile
-        apt-get update -y && apt-get dist-upgrade -y  >> $Logfile
-        apt-get install proxmox-ve open-iscsi -y  >> $Logfile
+        wget http://download.proxmox.com/debian/proxmox-ve-release-5.x.gpg -O /etc/apt/trusted.gpg.d/proxmox-ve-release-5.x.gpg
+        apt-get update -y && apt-get dist-upgrade -y
+        apt-get install proxmox-ve open-iscsi -y
         apt-get install postfix -y
         dialog --title "OS Prober" \
         --backtitle "Mocis.sh" \
         --no-lines \
         --yesno "Recommended: remove the os-prober package \nThe os-prober package scans all the partitions of your host including those of you guests VMs to create dual-boot GRUB entries. If you didn't install Proxmox VE as a dual boot besides another Operating System you can safely remove the os-prober package." 0 0
-        response=$? >> $Logfile
+        response=$?
                 case $response in
                 0) echo "";;
-                1) clear exit;;
+                1) clear ;;
                 255) clear echo "[ESC] key pressed.";;
         		esac
         			if [ $response = 0 ];
               then
-                apt-get remove os-prober -y >> $Logfile
+                apt-get remove os-prober -y
               else
                 echo ""
               fi
@@ -69,17 +56,16 @@ response=$? >> $Logfile
               response=$?
                       case $response in
                       0) echo "";;
-                      1) clear exit;;
+                      1) clear ;;
                       255) clear echo "[ESC] key pressed.";;
               		esac
               			if [ $response = 0 ];
               			then
-                      shutdown -r -t 1 >> $Logfile
+                      shutdown -r -t 1
                     else
                     echo ""
                     fi
 fi
-echo "Saved Log under $Logfile"  >> $Logfile
-echo "Please check for error's if some oncurred"  >> $Logfile
+echo "Please check for error's if some oncurred"
 sleep 1
-trap finish EXIT >> $Logfile
+trap finish EXIT

@@ -40,9 +40,9 @@ menuitem=$(<"${INPUT}")
 [ -f $INPUT ] && rm $INPUT
 case $menuitem in
         Benchmarking) benchmark=1;;
+        Docker) docker=1;;
         Installations) installer=1;;
         Interfaces) interfaces=1;;
-        Docker) docker=1;;
         Security) security=1;;
         About) about=1;;
         Feedback) feedback=1;;

@@ -26,12 +26,12 @@ dialog --clear --backtitle "[ M.O.C.I.S ]" \
 --title "[ Installation menu ]" \
 --no-lines \
 --menu "You can Install Apache, PHP, MySQL, and much more." 0 0 9 \
+Apache "Webserver" \
 Lamp-PHP7 "PHP, MySQL, Apache" \
 Lamp-Interactive "Choose what you want" \
-Nginx "Webserver" \
-Apache "Webserver" \
 MySQL "SQL Server" \
 MariaDB "SQL Server" \
+Nginx "Webserver" \
 OpenVPN "Angristan installer" \
 Proxmox "Virtual Server Hosting" \
 Back "Back to the Main Menu" \
@@ -39,12 +39,12 @@ Exit "Exit to the shell" 2>"${INPUT}"
 menuitem=$(<"${INPUT}")
 [ -f $INPUT ] && rm $INPUT
 case $menuitem in
+        Apache) apache2=1;;
         Lamp-PHP7) lamp_php7=1;;
         Lamp-Interactive) lamp_interactive=1;;
-        Nginx) nginx=1;;
-        Apache) apache2=1;;
         MySQL) mysql=1;;
         MariaDB) mariadb=1;;
+        Nginx) nginx=1;;
         OpenVPN) openvpn=1;;
         Proxmox) pve=1;;
 		    Back) goback=1;;

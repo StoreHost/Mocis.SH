@@ -22,16 +22,16 @@ dialog --clear --backtitle "[ M.O.C.I.S ]" \
 letter of the choice as a hot key, or the \n\
 number keys 1-9 to choose an option.\n\
 Choose the TASK" 0 0 8 \
-Docker "Docker Engine" \
 Compose "Docker Compose" \
+Docker "Docker Engine" \
 Portainer "Webinterface for Docker" \
 Back "Go back to the Menu" \
 Exit "Exit to the shell" 2>"${INPUT}"
 menuitem=$(<"${INPUT}")
 [ -f $INPUT ] && rm $INPUT
 case $menuitem in
-        Docker) docker=1;;
         Compose) compose=1;;
+        Docker) docker=1;;
         Portainer) doc_portainer=1;;
         Back) goback=1;;
         Exit) echo "Bye"; break;;
