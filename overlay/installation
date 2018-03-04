@@ -34,6 +34,7 @@ MariaDB "SQL Server" \
 Nginx "Webserver" \
 OpenVPN "Angristan installer" \
 Proxmox "Virtual Server Hosting" \
+PVEMail "Proxmox Mail Gateway" \
 Back "Back to the Main Menu" \
 Exit "Exit to the shell" 2>"${INPUT}"
 menuitem=$(<"${INPUT}")
@@ -47,6 +48,7 @@ case $menuitem in
         Nginx) nginx=1;;
         OpenVPN) openvpn=1;;
         Proxmox) pve=1;;
+        PVEMail) do_pvegw=1;;
 		    Back) goback=1;;
         Exit) echo "Bye"; clear;;
 esac
@@ -113,4 +115,7 @@ bash $Path/repo/uni/openvpn-install
 fi
 if [ $pve = 1 ] ; then
 bash $Path/repo/apt/9/proxmox
+fi
+if [ $do_pvegw = 1 ] ; then
+  bash $Path/repo/apt/9/pve_mail_gw
 fi
