@@ -15,16 +15,16 @@
 # or change functions.                                                 #
 ########################################################################
 ########################################################################
-#Importing Dialog Variables from the exectuted Menu                    #
+#   Importing Dialog Variables from the exectuted Menu                 #
 ########################################################################
-#source '/path/scriptname'                                             #
+#   source '/path/scriptname'                                          #
 ########################################################################
 ########################################################################
-#Importing Error handler and stuff to protect                          #
+#   Importing Error handler and stuff to protect                       #
 ########################################################################
 source '/usr/share/mocis/sys/lib/lib.errortrap.sh'                     #
 ########################################################################
-#Virtualisation Hypervisors                                            #
+#   Virtualisation Hypervisors                                         #
 ########################################################################
 function proxmoxhyper {
   if [ $1 = start_pvehyper ]; then
@@ -42,7 +42,7 @@ function proxmoxhyper {
 fi
 }
 ########################################################################
-#Mail safety Installations                                             #
+#   Mail safety Installations                                          #
 ########################################################################
 function proxmoxmailgw {
   if [ $1 = start_pvegw ]; then
@@ -58,6 +58,40 @@ function proxmoxmailgw {
   sleep 5
   return 0
 fi
+}
+########################################################################
+#   Network Storage                                                    #
+########################################################################
+function nfs_server {
+  if [ $1 = start_nfs_server ]; then
+    echo "Starting the installation of NFS"
+    apt-get install nfs-kernel-server
+    echo "creating export directory"
+    sleep 1
+    if [[ -d /var/nfs-export ]]; then
+      echo ""
+    else
+      mkdir /var/nfs-export
+    fi
+    echo -n "Enter your IP-adress from the client Server and press [ENTER]: "
+    read ipaddress
+    echo -n "where you wanna store the Data? (we will create an folder on /mnt/ eg. 'networkstorage'): "
+    read nfs_path
+    echo "$ipaddress , $nfs_path"
+    echo "is this correct?"
+    sleep 3
+    if [[ -d $nfs_path ]]; then
+      echo ""
+    else
+      mkdir /mnt/$nfs_path
+    fi
+    echo "/mnt/$nfs_path $ipaddress(rw,sync,no_subtree_check,no_root_squash)" >> /etc/exports
+    echo "reloading all NFS exports"
+    sleep 2
+    exportfs -a
+    systemctl enable nfs-kernel-server
+    return 0
+  fi
 }
 ########################################################################
 #Some other stuff maybe :D                                             #
