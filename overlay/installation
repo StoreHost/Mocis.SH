@@ -77,16 +77,55 @@ if [ $lamp_php7 = 1 ] ; then
 			fi
 fi
 if [ $pve = 1 ] ; then
-  proxmoxhyper start_pvehyper
-  goback=1
+  dialog --title "Agreement" \
+  --backtitle "Mocis.sh" \
+  --no-lines \
+  --yesno "Are you sure, you want to install Proxmox Virual Server Providing?  " 0 0
+  response=$?
+          case $response in
+          0) echo "starting";;
+          1) bash $Home;;
+          255) clear echo "[ESC] key pressed.";;
+  		esac
+  			if [ $response = 0 ]
+  			then
+          proxmoxhyper start_pvehyper
+          goback=1
+        fi
 fi
 if [ $do_pvegw = 1 ]; then
-  proxmoxmailgw start_pvegw
-  goback=1
+  dialog --title "Agreement" \
+  --backtitle "Mocis.sh" \
+  --no-lines \
+  --yesno "Are you sure, you want to install Proxmox Mail Gateway?  " 0 0
+  response=$?
+          case $response in
+          0) echo "starting";;
+          1) bash $Home;;
+          255) clear echo "[ESC] key pressed.";;
+      esac
+        if [ $response = 0 ]
+        then
+          proxmoxmailgw start_pvegw
+          goback=1
+        fi
 fi
 if [ $do_nfs_server = 1 ]; then
-  nfs_server start_nfs_server
-  goback=1
+  dialog --title "Agreement" \
+  --backtitle "Mocis.sh" \
+  --no-lines \
+  --yesno "Are you sure, you want to install NFS (Network Storage System)?" 0 0
+  response=$?
+          case $response in
+          0) echo "starting";;
+          1)bash $Home;;
+          255) clear echo "[ESC] key pressed.";;
+      esac
+        if [ $response = 0 ]
+        then
+          nfs_server start_nfs_server
+          goback=1
+        fi
 fi
 if [ $goback = 1 ] ; then
 bash $Home
