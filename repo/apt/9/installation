@@ -17,7 +17,12 @@
 ########################################################################
 #   Importing Dialog Variables from the exectuted Menu                 #
 ########################################################################
-#   source '/path/scriptname'                                          #
+#                                                                      #
+########################################################################
+########################################################################
+#   improtecting color codes                                           #
+########################################################################
+source '/usr/share/mocis/sys/lib/lib.color'                            #
 ########################################################################
 ########################################################################
 #   Importing Error handler and stuff to protect                       #
@@ -34,9 +39,10 @@ function proxmoxhyper {
     apt-get install proxmox-ve open-iscsi -y
     apt-get install postfix -y
     apt-get remove os-prober -y
-    echo "Please check for error's if some oncurred"
+    red "Please check for error's if some oncurred"
     sleep 1
-    echo "If no errors onccured the interface should be\navailible under 'https://youripaddress:8006'"
+    red "If no errors onccured the interface should be\navailible under:"
+    green "'https://youripaddress:8006'"
     sleep 10
   return 0
 fi
@@ -46,15 +52,13 @@ fi
 ########################################################################
 function proxmoxmailgw {
   if [ $1 = start_pvegw ]; then
-  echo "Installing proxmox mail gateway"
+  green "Installing proxmox mail gateway"
   sleep 2
-  source '/usr/share/mocis/sys/config/setup-vars'
-  source '/usr/share/mocis/sys/lib/lib.errortrap.sh'
   echo "deb http://download.proxmox.com/debian/pmg stretch pmg-no-subscription" > /etc/apt/sources.list.d/pve-install-repo.list
   wget http://download.proxmox.com/debian/proxmox-ve-release-5.x.gpg -O /etc/apt/trusted.gpg.d/proxmox-ve-release-5.x.gpg
   apt-get update -y
   apt-get install proxmox-mailgateway -y
-  echo "If no errors onccured the interface should be\navailible under 'https://youripaddress:8006'"
+  green "If no errors onccured the interface should be\navailible under 'https://youripaddress:8006'"
   sleep 5
   return 0
 fi
@@ -64,21 +68,22 @@ fi
 ########################################################################
 function nfs_server {
   if [ $1 = start_nfs_server ]; then
-    echo "Starting the installation of NFS"
-    apt-get install nfs-kernel-server
-    echo "creating export directory"
-    sleep 1
+    green "Starting the installation of NFS"
+    redb "Enter your IP-adress from the client Server and press [ENTER]:"
+    read ipaddress
+    redb  "where you wanna store the Data? (we will create an folder on /mnt/ eg. 'networkstorage'):"
+    read nfs_path
+    echo "$ipaddress , $nfs_path"
+    green "installing..."
+    sleep 3
+    apt-get install nfs-kernel-server -y
+    green "creating export directory"
+    sleep 3
     if [[ -d /var/nfs-export ]]; then
       echo ""
     else
       mkdir /var/nfs-export
     fi
-    echo -n "Enter your IP-adress from the client Server and press [ENTER]: "
-    read ipaddress
-    echo -n "where you wanna store the Data? (we will create an folder on /mnt/ eg. 'networkstorage'): "
-    read nfs_path
-    echo "$ipaddress , $nfs_path"
-    echo "is this correct?"
     sleep 3
     if [[ -d $nfs_path ]]; then
       echo ""
@@ -86,10 +91,12 @@ function nfs_server {
       mkdir /mnt/$nfs_path
     fi
     echo "/mnt/$nfs_path $ipaddress(rw,sync,no_subtree_check,no_root_squash)" >> /etc/exports
-    echo "reloading all NFS exports"
+    green "reloading all NFS exports"
     sleep 2
     exportfs -a
     systemctl enable nfs-kernel-server
+    yellowb "Installation successfuly finished."
+    sleep 10
     return 0
   fi
 }

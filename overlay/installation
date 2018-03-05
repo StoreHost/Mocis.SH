@@ -24,7 +24,7 @@ mariadb=0
 openvpn=0
 hostname=0
 INPUT=sh-installer.sh.$$
-trap "rm $INPUT; exit" SIGHUP SIGINT SIGTERM
+
 dialog --clear --backtitle "[ M.O.C.I.S ]" \
 --title "[ Installation menu ]" \
 --no-lines \
@@ -130,3 +130,4 @@ fi
 if [ $openvpn = 1 ] ; then
 bash $Path/repo/uni/openvpn-install
 fi
+trap "rm $INPUT; exit" SIGHUP SIGINT SIGTERM
