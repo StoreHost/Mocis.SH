@@ -42,10 +42,7 @@ Debian
 ```
 aptitude install wget
 ```
-RPM Systems
-```
-yum install wget
-```
+
 ### Installing
 
 Download the Installer:
