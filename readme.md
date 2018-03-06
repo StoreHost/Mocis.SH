@@ -8,17 +8,22 @@ Allredy included:
 ```
 
   Benchmark             #Ensky-Media & Mocis
+  Webmin                #Server Webadministration
+  NFS                   #networkstorage
+  OpenMediaVault        #networkstorage
+  Open VPN              #Virual private network
+  Proxmox Mail          #Mail gateway form proxmox
+  Promox Hypervisor     #Proxmox KVM/LXC Hosting solution
+  Teampass              #
   LAMP                  #Interactive instalation  
-  Docker                #DockerEngine
   Nginx                 #Fast Webserver
   Apache2               #Common Webserver
   MySQL                 #MySQL Server
   MariaDB               #MySQL Server
   PHPmyAmin             #Webadministration for MySQL
-  Froxlor               #Webhosting Panel
-  IMSCP                 #Webhosting Panel
   Easy-WI               #Gameserver Interface
   Sinusbot              #Interface for Teamspeak Musicbots
+  Docker                #DockerEngine
   Docker Compose        #Docker Composer
   Docker Portainer      #Docker Webinterface   
   Let's Encrypt         #Let's Encrypt SSL
@@ -27,11 +32,11 @@ Allredy included:
 
 ## Getting Started
 
-Download the mocis.sh file and execute it. The instalation is from this point self-explanatory.
+Download the mocis.sh file and execute it. The installation is from this point self-explanatory.
 
 ### Prerequisites
 
-This Sript requiers only Perl Basic and wget
+This Script requires only Perl Basic and wget
 
 Debian
 

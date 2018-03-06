@@ -34,7 +34,7 @@ letter of the choice as a hot key, or the \n\
 number keys 1-9 to choose an option.\n\
 Choose the TASK" 0 0 8 \
 Easy-Wi "Gameserver Webinterface" \
-Ajenti "System management" \
+Webmin "System management" \
 PHPmyAdmin "MySQL Webaccess" \
 Sinusbot "Teamspeak Musicbot" \
 Back "Back to the Mainmenu" \
