@@ -27,14 +27,14 @@ source '/usr/share/mocis/sys/lib/lib.color'
 ########################################################################
 #   Importing Error handler and stuff to protect                       #
 ########################################################################
-function errohandling {
+function errorhandling {
   source '/usr/share/mocis/sys/lib/lib.errortrap.sh'
 }
 ########################################################################
 #   Virtualisation Hypervisors                                         #
 ########################################################################
 function proxmoxhyper {
-  errohandling
+  errorhandling
   if [ $1 = start_pvehyper ]; then
     echo "deb http://download.proxmox.com/debian/pve stretch pve-no-subscription" > /etc/apt/sources.list.d/pve-install-repo.list
     wget http://download.proxmox.com/debian/proxmox-ve-release-5.x.gpg -O /etc/apt/trusted.gpg.d/proxmox-ve-release-5.x.gpg
@@ -54,7 +54,7 @@ fi
 #   Mail safety Installations                                          #
 ########################################################################
 function proxmoxmailgw {
-  errohandling
+  errorhandling
   if [ $1 = start_pvegw ]; then
   green "Installing proxmox mail gateway"
   sleep 2
@@ -71,7 +71,7 @@ fi
 #   Network Storage                                                    #
 ########################################################################
 function nfs_server {
-  errohandling
+  errorhandling
   if [ $1 = start_nfs_server ]; then
     green "Starting the installation of NFS"
     redb "Enter your IP-adress from the client Server and press [ENTER]:"
@@ -106,5 +106,66 @@ function nfs_server {
   fi
 }
 ########################################################################
-#Some other stuff maybe :D                                             #
+#  Teampass Online Password Safe                                       #
+########################################################################
+function F_teampass {
+  green "loading errorhandling..."
+  errorhandling
+  if [[ $1 = start_teampass ]]; then
+    if ! which nginx > /dev/null 2>&1; then
+      green "Perfect... Nginx not installed"
+      sleep 5
+    else
+      red "Nginx is not supported. Please install Apache2 or disable Nginx"
+    fi
+    if ! which apache2 > /dev/null 2>&1; then
+      apt-get install apache2 -y > /dev/null
+    fi
+    if ! which mysql > /dev/null 2>&1; then
+      green "installing Mysql Server"
+      apt-get install mariadb-server -y > /dev/null
+      mysql_secure_installation
+    else
+      red "MySQL is Installed continue whit installation"
+    fi
+    apt-get install php7.0 php7.0-ldap php7.0-mysql php7.0-mcrypt php7.0-mbstring php7.0-fpm php7.0-common php7.0-xml php7.0-gd openssl php7.0-mysql php7.0-curl php7.0-bcmath -y > /dev/null
+    service apache2 restart
+    if ! which phpmyadmin > /dev/null 2>&1; then
+        yellow "PHPmyAdmin is not installed"
+        apt-get install phpmyadmin -y
+        green  "Please navigate to your PHPmyAdmin. There create a new Database and User."
+        sleep 10
+        apt-get install zip -y > /dev/null
+        wget --no-check-certificate https://github.com/nilsteampassnet/TeamPass/archive/master.zip &>/dev/null
+        unzip master.zip
+        rm master.zip
+        mv TeamPass-master/ /var/www/html/teampass
+        chmod -R 0777 /var/www/html/teampass/includes/config
+        chmod -R 0777 /var/www/html/teampass/includes/avatars
+        chmod -R 0777 /var/www/html/teampass/includes/libraries/csrfp/libs
+        chmod -R 0777 /var/www/html/teampass/includes/libraries/csrfp/log
+        chmod -R 0777 /var/www/html/teampass/includes/libraries/csrfp/js
+        chmod -R 0777 /var/www/html/teampass/backups
+        chmod -R 0777 /var/www/html/teampass/files
+        chmod -R 0777 /var/www/html/teampass/includes
+        chmod -R 0777 /var/www/html/teampass/install
+        chmod -R 0777 /var/www/html/teampass/upload
+        green  "You can now navigate to: yourip/teampass."
+        sleep 10
+    fi
+    return 0
+fi
+}
+########################################################################
+# Auto Update                                                          #
+########################################################################
+function F_autoupdate {
+  green "Loading errorhandling..."
+  errorhandling
+  green "loaded... & starting now"
+  red "is not implemented at the moment!!!"
+    return 0
+}
+########################################################################
+# What else                                                            #
 ########################################################################

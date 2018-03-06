@@ -8,7 +8,16 @@
 #   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #   GNU General Public License for more details.
 ############################################################
-. /usr/share/mocis/sys/config/setup-vars
+#   Loading the Setup variables                            #
+############################################################
+source /usr/share/mocis/sys/config/setup-vars
+############################################################
+#   loading installation functions                         #
+############################################################
+source $Path/repo/apt/9/installation
+############################################################
+#   Dialog for all Installations                           #
+############################################################
 goback=0
 sslperl=0
 teampass=0
@@ -34,55 +43,24 @@ if [ $sslperl = 1 ] ; then
 	perl $Path/repo/apt/9/letsencrypt.deb.pl
   bash $Home
 fi
-if [ teampass = 1 ]; then
-  if ! which nginx > /dev/null 2>&1; then
-      echo "Nginx is not supported. Please install Apache2"
-      exit
-  fi
-else
-  echo "Perfect... Nginx not installed"
+if [ $teampass = 1 ]; then
+  dialog --title "Agreement" \
+  --backtitle "Mocis.sh" \
+  --no-lines \
+  --yesno "Are you sure, you want to install Teampass Online Password Storage?  " 0 0
+  response=$?
+          case $response in
+          0) echo "starting";;
+          1) bash $Home;;
+          255) clear echo "[ESC] key pressed.";;
+  		esac
+  			if [ $response = 0 ]
+  			then
+          F_teampass start_teampass
+          goback=1
+        fi
 fi
-if ! which apache2 > /dev/null 2>&1; then
-  apt-get install apache2 -y > /dev/null
-fi
-if ! which mysql > /dev/null 2>&1; then
-  echo "installing Mysql Server"
-  apt-get install mariadb-server -y > /dev/null
-  mysql_secure_installation
-else
-  echo "MySQL is Installed continue whit installation"
-fi
-apt-get install php7.0 php7.0-ldap php7.0-mysql php7.0-mcrypt php7.0-mbstring php7.0-fpm php7.0-common php7.0-xml php7.0-gd openssl php7.0-mysql php7.0-curl php7.0-bcmath -y > /dev/null
-service apache2 restart
-if ! which phpmyadmin > /dev/null 2>&1; then
-    echo "PHPmyAdmin is not installed"
-    apt-get install phpmyadmin -y
-    dialog --no-lines \
-    --title "M.O.C.I.S" \
-    --msgbox  "Please navigate to your PHPmyAdmin.\n.There create a new Database and User." 0 0
-    apt-get install zip -y > /dev/null
-    wget --no-check-certificate https://github.com/nilsteampassnet/TeamPass/archive/master.zip &>/dev/null
-    unzip master.zip
-    rm master.zip
-    mv TeamPass-master/ /var/www/html/teampass
-    chmod -R 0777 /var/www/html/teampass/includes/config
-    chmod -R 0777 /var/www/html/teampass/includes/avatars
-    chmod -R 0777 /var/www/html/teampass/includes/libraries/csrfp/libs
-    chmod -R 0777 /var/www/html/teampass/includes/libraries/csrfp/log
-    chmod -R 0777 /var/www/html/teampass/includes/libraries/csrfp/js
-    chmod -R 0777 /var/www/html/teampass/backups
-    chmod -R 0777 /var/www/html/teampass/files
-    chmod -R 0777 /var/www/html/teampass/includes
-    chmod -R 0777 /var/www/html/teampass/install
-    chmod -R 0777 /var/www/html/teampass/upload
-    dialog --no-lines \
-    --title "M.O.C.I.S" \
-    --msgbox  "You can now navigate to: yourip/teampass." 0 0
-    sleep 10
-    bash $Home
-fi
-  bash $Home
-fi
+
 if [ $goback = 1 ] ; then
 	bash $Home
 fi
