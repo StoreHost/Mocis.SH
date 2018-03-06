@@ -18,6 +18,7 @@ docker=0
 goback=0
 nginx=0
 do_nfs_server=0
+omv=0
 apache2=0
 mysql=0
 mariadb=0
@@ -35,7 +36,8 @@ Lamp-Interactive "Choose what you want" \
 MySQL "SQL Server" \
 MariaDB "SQL Server" \
 Nginx "Webserver" \
-NFS-Server "Network drive" \
+NFS-Server "Network storage" \
+Openmediavault "Network storage" \
 OpenVPN "Angristan installer" \
 Proxmox "Virtual Server Hosting" \
 PVEMail "Proxmox Mail Gateway" \
@@ -51,6 +53,7 @@ case $menuitem in
         MariaDB) mariadb=1;;
         Nginx) nginx=1;;
         NFS-Server) do_nfs_server=1;;
+        Openmediavault) omv=1;;
         OpenVPN) openvpn=1;;
         Proxmox) pve=1;;
         PVEMail) do_pvegw=1;;
@@ -124,6 +127,23 @@ if [ $do_nfs_server = 1 ]; then
         if [ $response = 0 ]
         then
           nfs_server start_nfs_server
+          goback=1
+        fi
+fi
+if [[ $omv = 1 ]]; then
+  dialog --title "Agreement" \
+  --backtitle "Mocis.sh" \
+  --no-lines \
+  --yesno "Are you sure, you want to install OpenMediaVault?" 0 0
+  response=$?
+          case $response in
+          0) echo "starting";;
+          1)bash $Home;;
+          255) clear echo "[ESC] key pressed.";;
+      esac
+        if [ $response = 0 ]
+        then
+          F_openmediavault start_openmedia
           goback=1
         fi
 fi

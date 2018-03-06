@@ -8,12 +8,19 @@
 #   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #   GNU General Public License for more details.
 ############################################################
-# Interfaces-Installer Menu
-#
-. /usr/share/mocis/sys/config/setup-vars
-forxlore=0
+############################################################
+#   Loading the Setup variables                            #
+############################################################
+source /usr/share/mocis/sys/config/setup-vars
+############################################################
+#   loading installation functions                         #
+############################################################
+source $Path/repo/apt/9/installation
+############################################################
+#   Dialog for all Installations                           #
+############################################################
 phpmyadmin=0
-imscp=0
+webmin=0
 easywi=0
 goback=0
 sinusbot=0
@@ -27,8 +34,7 @@ letter of the choice as a hot key, or the \n\
 number keys 1-9 to choose an option.\n\
 Choose the TASK" 0 0 8 \
 Easy-Wi "Gameserver Webinterface" \
-Froxlor "Webhosting Controll Panel" \
-IMSCP "Webhosting Controll Panel" \
+Ajenti "System management" \
 PHPmyAdmin "MySQL Webaccess" \
 Sinusbot "Teamspeak Musicbot" \
 Back "Back to the Mainmenu" \
@@ -37,68 +43,33 @@ menuitem=$(<"${INPUT}")
 [ -f $INPUT ] && rm $INPUT
 # make decision
 case $menuitem in
-        Froxlor) forxlore=1;;
         PHPmyAdmin) phpmyadmin=1;;
-        IMSCP) imscp=1;;
+        Webmin) webmin=1;;
 		    Easy-Wi) easywi=1;;
         Back) goback=1;;
         Sinusbot) sinusbot=1;;
         Exit) echo "Bye"; break;;
 esac
-if [ $forxlore = 1 ] ; then
-        dialog --yesno "This can damage your system !! Do you want to continue?" 0 0
-                response=$?
-                case $response in
-                0) echo "Starting";;
-                1) echo exit;;
-                255) echo "[ESC] key pressed.";;
-                esac
-                        if [ $response = 0 ]
-                        then
-                                if cat /etc/issue.net | grep 9; then
-                                        dialog --backtitle "[ M.O.C.I.S ]" --title "Error" --msgbox 'Froxlor is not supported for Debian 9 "Stretch"' 0 0
-                                        bash $Home
-                                else
-                                        touch /etc/apt/sources.list.d/froxlor.list
-                                        echo 'deb http://debian.froxlor.org jessie main' > /etc/apt/sources.list.d/froxlor.list &>/dev/null
-                                        apt-key adv --keyserver pool.sks-keyservers.net --recv-key FD88018B6F2D5390D051343FF6B4A8704F9E9BBC &>/dev/null
-                                        apt-get update && apt-get upgrade -y
-                                        apt-get install php-curl
-                                        apt-get install froxlor phpmyadmin -y
-                                        sed -i 's/html/froxlor/g' /etc/apache2/sites-enabled/000-default.conf
-                                        service apache2 restart
-                                        echo "Please enter your domain or IP address in the browser"
-                                        echo "Froxlor can now be set up"
-                                        bash $Home
-                                fi
-                        fi
-fi
+
 if [ $phpmyadmin = 1 ] ; then
 	apt-get install phpmyadmin -y
 fi
-if [ $imscp = 1 ] ; then
-                dialog --yesno "This can damage your system !! Do you want to continue?" 0 0
-                response=$?
-                case $response in
-                0) echo "Starting";;
-                1) echo exit;;
-                255) echo "[ESC] key pressed.";;
-                esac
-                        if [ $response = 0 ]
-                        then
-                                if cat /etc/issue.net | grep 9; then
-                                  dialog --backtitle "[ M.O.C.I.S ]" --title "Error" --msgbox 'I-MSCP is not supported for Debian 9 "Stretch"' 0 0
-                                  bash $Home
-                                else
-                                    apt-get update -y && apt-get upgrade -y
-                                    apt-get install ca-certificates perl wget whiptail
-                                    wget https://github.com/i-MSCP/imscp/archive/1.6.x.tar.gz -P $Path
-                                    cd /usr/share/mocis/
-                                    tar -xzf 1.6.x.tar.gz
-                                    perl imscp-1.6.x/imscp-installer
-                                    bash $Home
-                                fi
-                        fi
+if [[ $webmin = 1 ]]; then
+  dialog --title "Agreement" \
+  --backtitle "Mocis.sh" \
+  --no-lines \
+  --yesno "Are you sure, you want to install Webmin (Online system overview)?" 0 0
+  response=$?
+          case $response in
+          0) echo "starting";;
+          1)bash $Home;;
+          255) clear echo "[ESC] key pressed.";;
+      esac
+        if [ $response = 0 ]
+        then
+          F_webmin start_webmin
+          goback=1
+        fi
 fi
 if [ $easywi = 1 ] ; then
 				dialog --yesno "This can damage your system !! Do you want to continue?" 0 0

@@ -167,5 +167,77 @@ function F_autoupdate {
     return 0
 }
 ########################################################################
-# What else                                                            #
+# Webmin Online System Management                                      #
+########################################################################
+function F_webmin {
+  green "importing errortrap..."
+  errorhandling
+  green "loaded & starting now..."
+  sleep 2
+  if [[ $1 = start_webmin ]]; then
+    if [[ ! -f /etc/apt/sources.list.d/webmin.list  ]]; then
+      sh -c 'echo "deb http://download.webmin.com/download/repository sarge contrib" > /etc/apt/sources.list.d/webmin.list'
+    else
+      red "File alredy there..."
+    fi
+    green "downloading the key"
+    sleep 2
+    wget -qO - http://www.webmin.com/jcameron-key.asc | apt-key add -
+    apt-get update -y
+    green "installing webmin"
+    sleep 2
+    apt-get install webmin -y
+    green "you should now be able to use webmin"
+    green "check youripaddress:10000"
+    sleep 10
+    return 0
+  fi
+}
+########################################################################
+# Open Media Vault                                                     #
+########################################################################
+function F_openmediavault {
+  green "importing errortrap..."
+  errorhandling
+  green "loaded & starting now..."
+  sleep 2
+  if [[ $1 = start_openmedia ]]; then
+    if [[ ! -f /etc/apt/sources.list.d/openmediavault.list  ]]; then
+      cat <<EOF >> /etc/apt/sources.list.d/openmediavault.list
+deb http://packages.openmediavault.org/public arrakis main
+# deb http://downloads.sourceforge.net/project/openmediavault/packages arrakis main
+## Uncomment the following line to add software from the proposed repository.
+# deb http://packages.openmediavault.org/public arrakis-proposed main
+# deb http://downloads.sourceforge.net/project/openmediavault/packages arrakis-proposed main
+## This software is not part of OpenMediaVault, but is offered by third-party
+## developers as a service to OpenMediaVault users.
+# deb http://packages.openmediavault.org/public arrakis partner
+# deb http://downloads.sourceforge.net/project/openmediavault/packages arrakis partner
+EOF
+    export LANG=C
+    export DEBIAN_FRONTEND=noninteractive
+    export APT_LISTCHANGES_FRONTEND=none
+    apt-get update
+    apt-get --allow-unauthenticated install openmediavault-keyring
+    apt-get update
+    apt-get --yes --auto-remove --show-upgraded \
+      --allow-downgrades --allow-change-held-packages \
+      --no-install-recommends \
+      --option Dpkg::Options::="--force-confdef" \
+      --option DPkg::Options::="--force-confold" \
+      install postfix openmediavault
+      # Initialize the system and database.
+      omv-initsystem
+    else
+      red "alredy installed..."
+    fi
+    clear
+    green "default username:'admin'"
+    green "default password: 'openmediavault'"
+    sleep 10
+      return 0
+  fi
+}
+########################################################################
+# Next stuff                                                           #
 ########################################################################
