@@ -2,32 +2,31 @@
 Welcome to the M.O.C.I.S Installer.
 
 # For what is our Script Designed?
-Easy instalation of common and not so common Packages, Services and much more.
+Easy installation of common and not so common Packages, Services and much more.
 
 Allredy included:
 ```
 
   Benchmark             #Ensky-Media & Mocis
-  Webmin                #Server Webadministration
-  NFS                   #networkstorage
-  OpenMediaVault        #networkstorage
-  Open VPN              #Virual private network
-  Proxmox Mail          #Mail gateway form proxmox
+  Webmin                #Server Web administration
+  NFS                   #network storage
+  OpenMediaVault        #network storage
+  Open VPN              #Virtual private network
+  Proxmox Mail          #Mail gateway form Proxmox
   Promox Hypervisor     #Proxmox KVM/LXC Hosting solution
-  Teampass              #
-  LAMP                  #Interactive instalation  
+  Teampass              #Online password manager
+  LAMP                  #Interactive installation  
   Nginx                 #Fast Webserver
   Apache2               #Common Webserver
   MySQL                 #MySQL Server
   MariaDB               #MySQL Server
-  PHPmyAmin             #Webadministration for MySQL
+  PHPmyAmin             #Web administration for MySQL
   Easy-WI               #Gameserver Interface
-  Sinusbot              #Interface for Teamspeak Musicbots
-  Docker                #DockerEngine
+  Sinusbot              #Interface for TeamSpeak Musicbots
+  Docker                #Docker Engine
   Docker Compose        #Docker Composer
-  Docker Portainer      #Docker Webinterface   
+  Docker Portainer      #Docker Web interface   
   Let's Encrypt         #Let's Encrypt SSL
-  TeamPass              #Online Password Management
 ```
 
 ## Getting Started
