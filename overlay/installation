@@ -147,10 +147,6 @@ if [[ $omv = 1 ]]; then
           goback=1
         fi
 fi
-if [ $goback = 1 ] ; then
-bash $Home
-exit
-fi
 if [ $nginx = 1 ] ; then
   apt-get install nginx -y > /dev/null
   nginxversion=$(nginx -v)
@@ -174,19 +170,19 @@ if [ $mysql = 1 ] ; then
   bash $Home
 fi
 if [ $mariadb = 1 ] ; then
-  clear
-  echo "Please wait installing in background\nThis can take some time"
-  apt-get install mariadb-server -y > /dev/null
-  clear
-  mysql_secure_installation
-  mariadbversion=$(mariadb --version)
-  dialog --no-lines --backtitle "[ M.O.C.I.S ]" --title "MariaDB Version" --msgbox "Check MaraiDB Version\n\n$mariadbversion" 0 0
-  bash $Home
+    F_mariadb start_mariadb
+    mariadbversion=$(mariadb --version)
+    dialog --no-lines --backtitle "[ M.O.C.I.S ]" --title "MariaDB Version" --msgbox "Check MaraiDB Version\n\n$mariadbversion" 0 0
+    goback=1
 fi
 if [ $lamp_interactive = 1 ] ; then
 bash $Path/repo/apt/lamp_interactive.sh
 fi
 if [ $openvpn = 1 ] ; then
 bash $Path/repo/uni/openvpn-install
+fi
+if [ $goback = 1 ] ; then
+bash $Home
+exit
 fi
 trap "rm $INPUT; exit" SIGHUP SIGINT SIGTERM

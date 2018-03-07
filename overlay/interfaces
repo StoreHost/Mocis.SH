@@ -21,6 +21,7 @@ source $Path/repo/apt/9/installation
 ############################################################
 phpmyadmin=0
 webmin=0
+nextcloud=0
 easywi=0
 goback=0
 sinusbot=0
@@ -35,6 +36,7 @@ number keys 1-9 to choose an option.\n\
 Choose the TASK" 0 0 8 \
 Easy-Wi "Gameserver Webinterface" \
 Webmin "System management" \
+Nextcloud "Online Cloud" \
 PHPmyAdmin "MySQL Webaccess" \
 Sinusbot "Teamspeak Musicbot" \
 Back "Back to the Mainmenu" \
@@ -45,6 +47,7 @@ menuitem=$(<"${INPUT}")
 case $menuitem in
         PHPmyAdmin) phpmyadmin=1;;
         Webmin) webmin=1;;
+        Nextcloud) nextcloud=1;;
 		    Easy-Wi) easywi=1;;
         Back) goback=1;;
         Sinusbot) sinusbot=1;;
@@ -68,6 +71,23 @@ if [[ $webmin = 1 ]]; then
         if [ $response = 0 ]
         then
           F_webmin start_webmin
+          goback=1
+        fi
+fi
+if [[ $nextcloud = 1 ]]; then
+  dialog --title "Agreement" \
+  --backtitle "Mocis.sh" \
+  --no-lines \
+  --yesno "Are you sure, you want to install Nextcloud (Online Cloud Storage)?" 0 0
+  response=$?
+          case $response in
+          0) echo "starting";;
+          1)bash $Home;;
+          255) clear echo "[ESC] key pressed.";;
+      esac
+        if [ $response = 0 ]
+        then
+          F_nextcloud start_netxtcloud
           goback=1
         fi
 fi

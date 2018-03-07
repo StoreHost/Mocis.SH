@@ -31,6 +31,102 @@ function errorhandling {
   source '/usr/share/mocis/sys/lib/lib.errortrap.sh'
 }
 ########################################################################
+#   MySQL MariaDB                                                      #
+########################################################################
+function F_mariadb {
+  red "importing errortrap..."
+  errorhandling
+  red "loaded & starting now..."
+  sleep 2
+  if [ $1 = start_mariadb ]; then
+    UP=$(pgrep mysql | wc -l);
+    if [ "$UP" = 0 ];
+    then
+        red "MariaDB is not installed...";
+        apt-get install mariadb-server -y > /dev/null
+        clear
+        mysql_secure_installation
+      else
+        green "MySQL server is allredy installed"
+      fi
+  return 0
+fi
+}
+########################################################################
+#   Nextcloud                                                          #
+########################################################################
+function F_nextcloud {
+  if [[ $1 = start_netxtcloud ]]; then
+      UP=$(pgrep mysql | wc -l);
+      if [ "$UP" = 0 ];
+      then
+        red "MariaDB is not installed..."
+        sleep 2
+        apt-get install mariadb-server -y
+        clear
+        mysql_secure_installation
+      else
+        green "MySQL server is allredy installed"
+        sleep 2
+      fi
+      UP=$(pgrep apache2 | wc -l);
+      if [ "$UP" = 0 ];
+      then
+        red "Apache is not installed..."
+        sleep 2
+        apt-get install apache2 -y
+      else
+        green "Apache server is allredy installed"
+        sleep 2
+      fi
+      green "importing errortrap..."
+      errorhandling
+      green "loaded & starting now..."
+      sleep 2
+      green "Installing PHP extencions"
+    	apt-get install php7.0-xml php7.0 php7.0-cgi php7.0-cli php7.0-gd -y
+      apt-get install php7.0-curl php7.0-zip php7.0-mysql -y
+      apt-get install libapache2-mod-php php7.0-mbstring unzip -y
+      red "Please enter this phrase after the mysql login"
+      green "CREATE USER 'nextcloud'@'localhost' IDENTIFIED BY 'YOUR-PASSWORD';"
+      green "GRANT ALL PRIVILEGES ON nextclouddb.* TO 'nextcloud'@'localhost';"
+      green "FLUSH PRIVILEGES;"
+      green "quit"
+      sleep 10
+      mysql -u root -p
+      wget https://download.nextcloud.com/server/releases/nextcloud-13.0.0.zip
+      unzip nextcloud-13.0.0.zip
+      mv nextcloud /var/www/html/
+      chown -R www-data:www-data /var/www/html/nextcloud
+      cat <<EOF >> /etc/apache2/sites-available/nextcloud.conf
+      <VirtualHost *:80>
+      ServerAdmin admin@example.com
+      DocumentRoot "/var/www/html/nextcloud"
+      <Directory "/var/www/html/nextcloud/">
+      Options MultiViews FollowSymlinks
+
+      AllowOverride All
+      Order allow,deny
+      Allow from all
+      </Directory>
+      TransferLog /var/log/apache2/nextcloud_access.log
+      ErrorLog /var/log/apache2/nextcloud_error.log
+      </VirtualHost>
+EOF
+  a2ensite nextcloud
+  systemctl restart apache2
+  clear
+  green "Nextcloud should be online now"
+  echo ""
+  green "Your MySQL Username: 'nextcloud'"
+  green "Your MySQL Database: 'nextclouddb'"
+  green "your MySQL Password: 'YOUR-PASSWORD' if not changed"
+  green "check out http://yourip/nextcloud"
+  sleep 20
+  return 0
+  fi
+}
+########################################################################
 #   Virtualisation Hypervisors                                         #
 ########################################################################
 function proxmoxhyper {

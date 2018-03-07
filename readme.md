@@ -21,12 +21,13 @@ Allredy included:
   MySQL                 #MySQL Server
   MariaDB               #MySQL Server
   PHPmyAmin             #Web administration for MySQL
-  Easy-WI               #Gameserver Interface
+  Easy-WI               #Game server Interface
   Sinusbot              #Interface for TeamSpeak Musicbots
   Docker                #Docker Engine
   Docker Compose        #Docker Composer
   Docker Portainer      #Docker Web interface   
   Let's Encrypt         #Let's Encrypt SSL
+  Nextcloud             #Online Cloud
 ```
 
 ## Getting Started
