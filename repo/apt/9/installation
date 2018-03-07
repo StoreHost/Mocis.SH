@@ -20,7 +20,7 @@
 #                                                                      #
 ########################################################################
 ########################################################################
-#   improtecting color codes                                           #
+#   importing color codes                                              #
 ########################################################################
 source '/usr/share/mocis/sys/lib/lib.color'
 ########################################################################
@@ -288,6 +288,29 @@ function F_webmin {
     sleep 10
     return 0
   fi
+}
+########################################################################
+# Gitlab                                                               #
+########################################################################
+function F_gitlab {
+  if [[ $1 = start_gitlab ]]; then
+    green "importing errortrap..."
+    errorhandling
+    green "loaded & starting now..."
+    sleep 2
+    green "installing curl openssh postfix and ca-certificate"
+    sleep 2
+    apt install curl openssh-server ca-certificates postfix -y
+    curl -sS https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.deb.sh | bash
+    green "installing gitlab"
+    apt install gitlab-ce -y
+    green "reconfigure gitlab"
+    gitlab-ctl reconfigure
+    green "gitlab should be installed now"
+    red "going back to the menu"
+    sleep 5
+  fi
+  return 0
 }
 ########################################################################
 # Open Media Vault                                                     #

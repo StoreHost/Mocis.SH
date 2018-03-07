@@ -11,6 +11,7 @@
 . /usr/share/mocis/sys/config/setup-vars
 source $Path/repo/apt/9/installation
 lamp_php7=0
+gitlab=0
 pve=0
 do_pvegw=0
 lamp_interactive=0
@@ -31,6 +32,7 @@ dialog --clear --backtitle "[ M.O.C.I.S ]" \
 --no-lines \
 --menu "You can Install Apache, PHP, MySQL, and much more." 0 0 9 \
 Apache "Webserver" \
+Gitlab "Gitlab" \
 Lamp-PHP7 "PHP, MySQL, Apache" \
 Lamp-Interactive "Choose what you want" \
 MySQL "SQL Server" \
@@ -47,6 +49,7 @@ menuitem=$(<"${INPUT}")
 [ -f $INPUT ] && rm $INPUT
 case $menuitem in
         Apache) apache2=1;;
+        Gitlab) gitlab=1;;
         Lamp-PHP7) lamp_php7=1;;
         Lamp-Interactive) lamp_interactive=1;;
         MySQL) mysql=1;;
@@ -110,6 +113,23 @@ if [ $do_pvegw = 1 ]; then
         if [ $response = 0 ]
         then
           proxmoxmailgw start_pvegw
+          goback=1
+        fi
+fi
+if [ $gitlab = 1 ]; then
+  dialog --title "Agreement" \
+  --backtitle "Mocis.sh" \
+  --no-lines \
+  --yesno "Are you sure, you want to install Gitlab?  " 0 0
+  response=$?
+          case $response in
+          0) echo "starting";;
+          1) bash $Home;;
+          255) clear echo "[ESC] key pressed.";;
+      esac
+        if [ $response = 0 ]
+        then
+          F_gitlab start_gitlab
           goback=1
         fi
 fi

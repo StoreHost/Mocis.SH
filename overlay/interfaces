@@ -26,7 +26,6 @@ easywi=0
 goback=0
 sinusbot=0
 INPUT=save.$$
-trap "rm $INPUT; exit" SIGHUP SIGINT SIGTERM
 dialog --clear --backtitle "[ M.O.C.I.S ]" \
 --title "[ Server Webinterfaces ]" \
 --no-lines \
