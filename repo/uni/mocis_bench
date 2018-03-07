@@ -189,7 +189,7 @@ do
             do_io=1
             ;;
         4)
-			dialog --no-lines --yesno "Um den CPU Benchmark ausfuehren zu koennen, muss ein Programm namens 'bc' installiert werden. Soll der CPU Benchmark nach wie vor ausgefuehrt und das Programm installiert werden?" 0 0
+			dialog --no-lines --yesno "To meet the CPU benchmark, a program name 'bc' must be installed. Do you still want to run the CPU benchmark and install the program?" 0 0
 			choice=$?
 			clear
 			if [ $choice = 0 ]
@@ -209,7 +209,7 @@ for i in 5 10 20 30 40 50 60 70 80 90 100
 do
 $DIALOG \
   --colors --title "Benchmark Overview" \
-	--mixedgauge "Tipp: \nAn updated Operatingsystem is more worth than no Operatingsystem." \
+	--mixedgauge "Tipp: \nAn updated Operating System is more worth than no Operating System." \
 		0 0 10 \
     "Updating System"	  "$sysupdate" \
         ""		          "8" \
@@ -244,7 +244,7 @@ for i in 5 10 20 30 40 50 60 70 80 90 100
 do
 $DIALOG \
   --colors --title "Benchmark Overview" \
-	--mixedgauge "This is a prompt message,\nand this is the second line." \
+	--mixedgauge "Did you know that your system is sometimes lonely without any task?" \
 		0 0 25 \
     "Updating System"	  "$sysupdate" \
         ""		          "8" \
@@ -289,7 +289,7 @@ for i in 5 10 20 30 40 50 60 70 80 90 100
 do
 $DIALOG \
   --colors --title "Benchmark Overview" \
-	--mixedgauge "This is a prompt message,\nand this is the second line." \
+	--mixedgauge "Error: keyboard not connected. Please press the F1 key!" \
 		0 0 35 \
     "Updating System"	  "$sysupdate" \
         ""		          "8" \
@@ -510,7 +510,7 @@ for i in 5 10 20 30 40 50 60 70 80 90 100
 do
 $DIALOG \
   --colors --title "Benchmark Overview" \
-	--mixedgauge "This is a prompt message,\nand this is the second line." \
+	--mixedgauge "It is very easy to write a program that will NOT solve a given problem within a short time and with little storage space." \
 		0 0 50 \
     "Updating System"	  "$sysupdate" \
         ""		          "8" \
@@ -559,7 +559,7 @@ for i in 5 10 20 30 40 50 60 70 80 90 100
 do
 $DIALOG \
   --colors --title "Benchmark Overview" \
-	--mixedgauge "This is a prompt message,\nand this is the second line." \
+	--mixedgauge "Computers are becoming smaller and smaller, soon they will disappear completely." \
 		0 0 65 \
     "Updating System"	  "$sysupdate" \
         ""		          "8" \
@@ -599,7 +599,7 @@ for i in 5 10 20 30 40 50 60 70 80 90 100
 do
 $DIALOG \
   --colors --title "Benchmark Overview" \
-	--mixedgauge "This is a prompt message,\nand this is the second line." \
+	--mixedgauge "Software is like Sex, it's best if it's free." \
 		0 0 90 \
     "Updating System"	  "$sysupdate" \
         ""		          "8" \
@@ -674,7 +674,7 @@ for i in 5 10 20 30 40 50 60 70 80 90 100
 do
 $DIALOG \
   --colors --title "Benchmark Overview" \
-	--mixedgauge "This is a prompt message,\nand this is the second line." \
+	--mixedgauge "Programming is similar to sex. If you make a mistake, you have to support it for the rest of your life. \nSo we hope that so far no errors have arisen" \
 		0 0 100 \
     "Updating System"	  "$sysupdate" \
         ""		          "8" \
