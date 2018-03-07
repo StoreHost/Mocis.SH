@@ -28,6 +28,7 @@ Allredy included:
   Docker Portainer      #Docker Web interface   
   Let's Encrypt         #Let's Encrypt SSL
   Nextcloud             #Online Cloud
+  Gitlab                #Gitlab
 ```
 
 ## Getting Started
