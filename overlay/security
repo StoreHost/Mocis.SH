@@ -21,6 +21,7 @@ source $Path/repo/apt/9/installation
 goback=0
 sslperl=0
 teampass=0
+smart=0
 INPUT=save.$$
 trap "rm $INPUT; exit" SIGHUP SIGINT SIGTERM
 dialog --clear --backtitle "[ M.O.C.I.S ]" \
@@ -29,6 +30,7 @@ dialog --clear --backtitle "[ M.O.C.I.S ]" \
 --menu "Here you can Install an SSL certificate or later some tools.\n" 0 0 8 \
 SSL "Let's Encrypt whit certbot" \
 TeamPass "Password Management" \
+SMART "Read the S.M.A.R.T values" \
 Back "Back to the Mainmenu" \
 Exit "Exit to the shell" 2>"${INPUT}"
 menuitem=$(<"${INPUT}")
@@ -36,6 +38,7 @@ menuitem=$(<"${INPUT}")
 case $menuitem in
         SSL) sslperl=1;;
         TeamPass) teampass=1;;
+        SMART) smart=1;;
         Back) goback=1;;
         Exit) echo "Bye"; clear;
 esac
@@ -60,7 +63,10 @@ if [ $teampass = 1 ]; then
           goback=1
         fi
 fi
-
+if [ $smart = 1 ] ; then
+	_printPoweredBy
+  
+fi
 if [ $goback = 1 ] ; then
 	bash $Home
 fi

@@ -31,6 +31,150 @@ function errorhandling {
   source '/usr/share/mocis/sys/lib/lib.errortrap.sh'
 }
 ########################################################################
+#   Spinner                                                            #
+########################################################################
+spin() {
+   local -a marks=( '/' '-' '\' '|' )
+   while [[ 1 ]]; do
+     printf '%s\r' "${marks[i++ % ${#marks[@]}]}"
+     sleep 1
+   done
+ }
+########################################################################
+#   Powered by                                                         #
+########################################################################
+
+function _printPoweredBy()
+{
+    cat <<"EOF"
+
+    Powered By:
+    __  __            _        _____ _    _
+   |  \/  |          (_)      / ____| |  | |
+   | \  / | ___   ___ _ ___  | (___ | |__| |
+   | |\/| |/ _ \ / __| / __|  \___ \|  __  |
+   | |  | | (_) | (__| \__ \_ ____) | |  | |
+   |_|  |_|\___/ \___|_|___(_)_____/|_|  |_|
+
+
+   >> Web: https://mocis.sh
+   >> Store: https://www.store-host.com
+
+  ################################################################
+EOF
+}
+
+########################################################################
+#   S.M.A.R.T HDD Check                                                #
+########################################################################
+function F_smartctl {
+  if [[ $1 = start_smartctl ]]; then
+    _printPoweredBy
+  fi
+}
+########################################################################
+#   Wordpress Installation                                             #
+########################################################################
+function F_wordpress {
+    if [[ $1 = start_wpinstall ]]; then
+  clear
+  _printPoweredBy
+  sleep 5
+  wpapache=apache2
+  wpnginx=nginx
+  if (( $(ps -ef | grep -v grep | grep $wpapache | wc -l) > 0 ))
+  then
+    echo "$wpapache is running!!!"
+    apacheinstalled=1
+  else
+    echo "$wpapache is offline!!! or not installed"
+    apacheinstalled=2
+  fi
+  if (( $(ps -ef | grep -v grep | grep $wpnginx | wc -l) > 0 ))
+  then
+    echo "$wpnginx is running!!!"
+    nginxinstalled=1
+  else
+    echo "$wpnginx is offline!!! or not installed"
+    nginxinstalled=2
+  fi
+  if [[ $apacheinstalled = 1 && $nginxinstalled = 2 ]]; then
+    green "Perfect continue..."
+  elif [[ $apacheinstalled = 2 && $nginxinstalled = 1 ]]; then
+    yellow "nginx is used instead of apache"
+  elif [[ $apacheinstalled = 2 && $nginxinstalled = 2 ]]; then
+    yellow "installing apache2..."
+    apt install apache2 -y
+  else
+    red "can't find out what is installed..."
+  fi
+  yellow "installing all php extencions"
+  aptitude install -y php7.0 php7.0-common php7.0-fpm php7.0-cli php7.0-json
+  aptitude install -y php7.0-curl php7.0-intl php7.0-mcrypt php-pear php7.0-mysql
+  aptitude install -y php7.0-gd php7.0-zip php7.0-xml php7.0-mbstring
+  a2enmod proxy_fcgi setenvif
+  a2enconf php7.0-fpm
+  service apache2 restart
+  yellow "Checking if MariaDB is installed"
+  UP=$(pgrep mysqld | wc -l);
+  if [ "$UP" = 0 ];
+  then
+    red "MariaDB is not installed...";
+    yellow "Installing it in the background..."
+    apt-get install mariadb-server -y >> /dev/null
+    clear
+    mysql_secure_installation <<EOF
+y
+secret
+secret
+y
+y
+y
+y
+EOF
+clear
+_printPoweredBy
+  else
+    green "MySQL server is allredy installed"
+  fi
+  green "creating MySQL Databasename"
+  green "creating MySQL User"
+  green "creating MySQL Password"
+sleep 2
+  mysqldbname="mswp$$"
+  mysqlusername=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 5 ; echo '')
+  mysqlpw=wp$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 13 ; echo '')
+yellow "create database whit password and name"
+mysql -u root -psecret -e "CREATE DATABASE ${mysqldbname} /*\!40100 DEFAULT CHARACTER SET utf8 */;"
+mysql -u root -psecret -e "CREATE USER ${mysqlusername}@localhost IDENTIFIED BY '${mysqlpw}';"
+mysql -u root -psecret -e "GRANT ALL PRIVILEGES ON ${mysqldbname}.* TO '${mysqlusername}'@'localhost';"
+mysql -u root -psecret -e "FLUSH PRIVILEGES;"
+green "preparing Wordpress..."
+sleep 2
+aptitude install zip -y >> /dev/null
+wget https://wordpress.org/latest.zip -P /var/www/html
+cd /var/www/html
+unzip latest.zip >> /dev/null
+rm latest.zip
+cd /root
+chown -R www-data:www-data /var/www/html/wordpress
+cat <<EOF >>WP-Settings.txt
+##############################
+Databasename: $mysqldbname
+Databasename: $mysqlusername
+DB-Password: $mysqlpw
+##############################
+EOF
+yellow "Databasename: $mysqldbname"
+yellow "Databasename: $mysqlusername"
+yellow "DB-Password: $mysqlpw"
+red "Your MySQL information is also available in / root WP-Settings.TXT."
+red "Please call the URL of your server to complete the installation."
+sleep 10
+return 0
+fi
+}
+########################################################################
 #   MySQL MariaDB                                                      #
 ########################################################################
 function F_mariadb {
@@ -43,9 +187,11 @@ function F_mariadb {
     if [ "$UP" = 0 ];
     then
         red "MariaDB is not installed...";
-        apt-get install mariadb-server -y > /dev/null
+        apt-get install mariadb-server -y
+
         clear
         mysql_secure_installation
+
       else
         green "MySQL server is allredy installed"
       fi
@@ -168,6 +314,7 @@ fi
 ########################################################################
 function nfs_server {
   errorhandling
+  _printPoweredBy
   if [ $1 = start_nfs_server ]; then
     green "Starting the installation of NFS"
     redb "Enter your IP-adress from the client Server and press [ENTER]:"
@@ -323,15 +470,15 @@ function F_openmediavault {
   if [[ $1 = start_openmedia ]]; then
     if [[ ! -f /etc/apt/sources.list.d/openmediavault.list  ]]; then
       cat <<EOF >> /etc/apt/sources.list.d/openmediavault.list
-deb http://packages.openmediavault.org/public arrakis main
-# deb http://downloads.sourceforge.net/project/openmediavault/packages arrakis main
-## Uncomment the following line to add software from the proposed repository.
-# deb http://packages.openmediavault.org/public arrakis-proposed main
-# deb http://downloads.sourceforge.net/project/openmediavault/packages arrakis-proposed main
-## This software is not part of OpenMediaVault, but is offered by third-party
-## developers as a service to OpenMediaVault users.
-# deb http://packages.openmediavault.org/public arrakis partner
-# deb http://downloads.sourceforge.net/project/openmediavault/packages arrakis partner
+      deb http://packages.openmediavault.org/public arrakis main
+      # deb http://downloads.sourceforge.net/project/openmediavault/packages arrakis main
+      ## Uncomment the following line to add software from the proposed repository.
+      # deb http://packages.openmediavault.org/public arrakis-proposed main
+      # deb http://downloads.sourceforge.net/project/openmediavault/packages arrakis-proposed main
+      ## This software is not part of OpenMediaVault, but is offered by third-party
+      ## developers as a service to OpenMediaVault users.
+      # deb http://packages.openmediavault.org/public arrakis partner
+      # deb http://downloads.sourceforge.net/project/openmediavault/packages arrakis partner
 EOF
     export LANG=C
     export DEBIAN_FRONTEND=noninteractive
