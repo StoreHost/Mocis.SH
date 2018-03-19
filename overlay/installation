@@ -26,6 +26,8 @@ mariadb=0
 openvpn=0
 hostname=0
 wordpress=0
+drupal=0
+joomla=0
 INPUT=sh-installer.sh.$$
 
 dialog --clear --backtitle "[ M.O.C.I.S ]" \
@@ -45,6 +47,8 @@ OpenVPN "Angristan installer" \
 Proxmox "Virtual Server Hosting" \
 PVEMail "Proxmox Mail Gateway" \
 Wordpress "Blog CMS" \
+Drupal "CMS V8.5" \
+Joomla "CMS V3.8.6" \
 Back "Back to the Main Menu" \
 Exit "Exit to the shell" 2>"${INPUT}"
 menuitem=$(<"${INPUT}")
@@ -63,6 +67,8 @@ case $menuitem in
         Proxmox) pve=1;;
         PVEMail) do_pvegw=1;;
         Wordpress) wordpress=1;;
+        Drupal) drupal=1;;
+        Joomla) joomla=1;;
 		    Back) goback=1;;
         Exit) echo "Bye"; clear;;
 esac
@@ -133,6 +139,40 @@ if [ $wordpress = 1 ] ; then
   			if [ $response = 0 ]
   			then
           F_wordpress start_wpinstall
+          goback=1
+        fi
+fi
+if [ $drupal = 1 ] ; then
+  dialog --title "Agreement" \
+  --backtitle "Mocis.sh" \
+  --no-lines \
+  --yesno "Are you sure, you want to install Drupal?  " 0 0
+  response=$?
+          case $response in
+          0) echo "";;
+          1) bash $Home;;
+          255) clear echo "[ESC] key pressed.";;
+  		esac
+  			if [ $response = 0 ]
+  			then
+          F_drupal start_drupalinstall
+          goback=1
+        fi
+fi
+if [ $joomla = 1 ] ; then
+  dialog --title "Agreement" \
+  --backtitle "Mocis.sh" \
+  --no-lines \
+  --yesno "Are you sure, you want to install Joomla?  " 0 0
+  response=$?
+          case $response in
+          0) echo "";;
+          1) bash $Home;;
+          255) clear echo "[ESC] key pressed.";;
+  		esac
+  			if [ $response = 0 ]
+  			then
+          F_joomla start_joomlainstall
           goback=1
         fi
 fi

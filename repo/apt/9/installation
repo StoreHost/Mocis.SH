@@ -72,143 +72,7 @@ function F_smartctl {
     _printPoweredBy
   fi
 }
-########################################################################
-#   Wordpress Installation                                             #
-########################################################################
-function F_wordpress {
-    if [[ $1 = start_wpinstall ]]; then
-  clear
-  _printPoweredBy
-  sleep 5
-  green "Please enter your Subdomain or IP address"
-  read wp_subomain
-  wpapache=apache2
-  wpnginx=nginx
-  if (( $(ps -ef | grep -v grep | grep $wpapache | wc -l) > 0 ))
-  then
-    echo "$wpapache is running!!!"
-    apacheinstalled=1
-  else
-    echo "$wpapache is offline!!! or not installed"
-    apacheinstalled=2
-  fi
-  if (( $(ps -ef | grep -v grep | grep $wpnginx | wc -l) > 0 ))
-  then
-    echo "$wpnginx is running!!!"
-    nginxinstalled=1
-  else
-    echo "$wpnginx is offline!!! or not installed"
-    nginxinstalled=2
-  fi
-  if [[ $apacheinstalled = 1 && $nginxinstalled = 2 ]]; then
-    green "Perfect continue..."
-  elif [[ $apacheinstalled = 2 && $nginxinstalled = 1 ]]; then
-    yellow "nginx is used instead of apache"
-  elif [[ $apacheinstalled = 2 && $nginxinstalled = 2 ]]; then
-    yellow "installing apache2..."
-    apt install apache2 -y
-  else
-    red "can't find out what is installed..."
-  fi
-  yellow "installing all php extencions"
-  aptitude install -y php7.0 php7.0-common php7.0-fpm php7.0-cli php7.0-json
-  aptitude install -y php7.0-curl php7.0-intl php7.0-mcrypt php-pear php7.0-mysql
-  aptitude install -y php7.0-gd php7.0-zip php7.0-xml php7.0-mbstring
-  a2enmod proxy_fcgi setenvif
-  a2enconf php7.0-fpm
-  service apache2 restart
-  yellow "Checking if MariaDB is installed"
-  UP=$(pgrep mysqld | wc -l);
-  if [ "$UP" = 0 ];
-  then
-    red "MariaDB is not installed...";
-    yellow "Installing it in the background..."
-    apt-get install mariadb-server -y >> /dev/null
-    clear
-    mysql_secure_installation <<EOF
-y
-secret
-secret
-y
-y
-y
-y
-EOF
-clear
-_printPoweredBy
-  else
-    green "MySQL server is allredy installed"
-  fi
-  green "creating MySQL Databasename"
-  green "creating MySQL User"
-  green "creating MySQL Password"
-sleep 2
-  mysqldbname="mswp$$"
-  mysqlusername=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 5 ; echo '')
-  mysqlpw=wp$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 13 ; echo '')
-yellow "create database whit password and name"
-mysql -u root -psecret -e "CREATE DATABASE ${mysqldbname} /*\!40100 DEFAULT CHARACTER SET utf8 */;"
-mysql -u root -psecret -e "CREATE USER ${mysqlusername}@localhost IDENTIFIED BY '${mysqlpw}';"
-mysql -u root -psecret -e "GRANT ALL PRIVILEGES ON ${mysqldbname}.* TO '${mysqlusername}'@'localhost';"
-mysql -u root -psecret -e "FLUSH PRIVILEGES;"
-green "preparing Wordpress..."
-sleep 2
-aptitude install zip -y >> /dev/null
-wget https://wordpress.org/latest.zip -P /var/www/html
-cd /var/www/html
-unzip latest.zip >> /dev/null
-rm latest.zip
-cd /root
-chown -R www-data:www-data /var/www/html/wordpress
-cat <<EOF >>/etc/apache2/sites-available/$wp_subomain.conf
-<VirtualHost *:80>
-        # The ServerName directive sets the request scheme, hostname and port that
-        # the server uses to identify itself. This is used when creating
-        # redirection URLs. In the context of virtual hosts, the ServerName
-        # specifies what hostname must appear in the request's Host: header to
-        # match this virtual host. For the default virtual host (this file) this
-        # value is not decisive as it is used as a last resort host regardless.
-        # However, you must set it for any further virtual host explicitly.
-        ServerName $wp_subomain
 
-        ServerAdmin webmaster@$wp_subomain
-        DocumentRoot /var/www/html/wordpress
-
-        # Available loglevels: trace8, ..., trace1, debug, info, notice, warn,
-        # error, crit, alert, emerg.
-        # It is also possible to configure the loglevel for particular
-        # modules, e.g.
-        #LogLevel info ssl:warn
-
-        ErrorLog ${APACHE_LOG_DIR}/wordpress.log
-        CustomLog ${APACHE_LOG_DIR}/wordpress.log combined
-
-        # For most configuration files from conf-available/, which are
-        # enabled or disabled at a global level, it is possible to
-        # include a line for only one particular virtual host. For example the
-        # following line enables the CGI configuration for this host only
-        # after it has been globally disabled with "a2disconf".
-        #Include conf-available/serve-cgi-bin.conf
-</VirtualHost>
-EOF
-a2ensite $wp_subomain.conf
-service apache2 reload
-cat <<EOF >>WP-Settings.txt
-##############################
-Databasename: $mysqldbname
-Databasename: $mysqlusername
-DB-Password: $mysqlpw
-##############################
-EOF
-yellow "Databaseusername: $mysqldbname"
-yellow "Databasename: $mysqlusername"
-yellow "DB-Password: $mysqlpw"
-red "Your MySQL information is also available in / root WP-Settings.TXT."
-red "Check out $wp_subomain its should be ready now."
-sleep 10
-return 0
-fi
-}
 ########################################################################
 #   MySQL MariaDB                                                      #
 ########################################################################
@@ -260,6 +124,8 @@ function F_nextcloud {
         green "Apache server is allredy installed"
         sleep 2
       fi
+      green "Please enter your Subdomain or IP address"
+      read subomain
       green "importing errortrap..."
       errorhandling
       green "loaded & starting now..."
@@ -281,7 +147,8 @@ function F_nextcloud {
       chown -R www-data:www-data /var/www/html/nextcloud
       cat <<EOF >> /etc/apache2/sites-available/nextcloud.conf
       <VirtualHost *:80>
-      ServerAdmin admin@example.com
+      ServerName $Subdomain
+      ServerAdmin admin@$subomain
       DocumentRoot "/var/www/html/nextcloud"
       <Directory "/var/www/html/nextcloud/">
       Options MultiViews FollowSymlinks
@@ -540,5 +407,442 @@ EOF
   fi
 }
 ########################################################################
-# Next stuff                                                           #
+#   Wordpress Installation                                             #
 ########################################################################
+function F_wordpress {
+    if [[ $1 = start_wpinstall ]]; then
+  clear
+  _printPoweredBy
+  sleep 5
+  green "Please enter your Subdomain or IP address"
+  read wp_subomain
+  wpapache=apache2
+  wpnginx=nginx
+  if (( $(ps -ef | grep -v grep | grep $wpapache | wc -l) > 0 ))
+  then
+    echo "$wpapache is running!!!"
+    apacheinstalled=1
+  else
+    echo "$wpapache is offline!!! or not installed"
+    apacheinstalled=2
+  fi
+  if (( $(ps -ef | grep -v grep | grep $wpnginx | wc -l) > 0 ))
+  then
+    echo "$wpnginx is running!!!"
+    nginxinstalled=1
+  else
+    echo "$wpnginx is offline!!! or not installed"
+    nginxinstalled=2
+  fi
+  if [[ $apacheinstalled = 1 && $nginxinstalled = 2 ]]; then
+    green "Perfect continue..."
+  elif [[ $apacheinstalled = 2 && $nginxinstalled = 1 ]]; then
+    yellow "nginx is used instead of apache"
+  elif [[ $apacheinstalled = 2 && $nginxinstalled = 2 ]]; then
+    yellow "installing apache2..."
+    apt install apache2 -y
+  else
+    red "can't find out what is installed..."
+  fi
+  yellow "installing all php extencions"
+  aptitude install -y php7.0 php7.0-common php7.0-fpm php7.0-cli php7.0-json
+  aptitude install -y php7.0-curl php7.0-intl php7.0-mcrypt php-pear php7.0-mysql
+  aptitude install -y php7.0-gd php7.0-zip php7.0-xml php7.0-mbstring
+  a2enmod proxy_fcgi setenvif
+  a2enconf php7.0-fpm
+  service apache2 restart
+  yellow "Checking if MariaDB is installed"
+  UP=$(pgrep mysqld | wc -l);
+  if [ "$UP" = 0 ];
+  then
+    red "MariaDB is not installed...";
+    yellow "Installing it in the background..."
+    apt-get install mariadb-server -y >> /dev/null
+    clear
+    mysql_secure_installation <<EOF
+y
+secret
+secret
+y
+y
+y
+y
+EOF
+  clear
+  _printPoweredBy
+  else
+    green "MySQL server is allredy installed"
+  fi
+  green "creating MySQL Databasename"
+  green "creating MySQL User"
+  green "creating MySQL Password"
+  sleep 2
+  mysqldbname="mswp$$"
+  mysqlusername=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 5 ; echo '')
+  mysqlpw=wp$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 13 ; echo '')
+  yellow "create database whit password and name"
+  mysql -u root -psecret -e "CREATE DATABASE ${mysqldbname} /*\!40100 DEFAULT CHARACTER SET utf8 */;"
+  mysql -u root -psecret -e "CREATE USER ${mysqlusername}@localhost IDENTIFIED BY '${mysqlpw}';"
+  mysql -u root -psecret -e "GRANT ALL PRIVILEGES ON ${mysqldbname}.* TO '${mysqlusername}'@'localhost';"
+  mysql -u root -psecret -e "FLUSH PRIVILEGES;"
+  green "preparing Wordpress..."
+  sleep 2
+  aptitude install zip -y >> /dev/null
+  wget https://wordpress.org/latest.zip -P /var/www/html
+  cd /var/www/html
+  unzip latest.zip >> /dev/null
+  rm latest.zip
+  cd /root
+  chown -R www-data:www-data /var/www/html/drupal
+  cat <<EOF >>/etc/apache2/sites-available/$wp_subomain.conf
+  <VirtualHost *:80>
+        # The ServerName directive sets the request scheme, hostname and port that
+        # the server uses to identify itself. This is used when creating
+        # redirection URLs. In the context of virtual hosts, the ServerName
+        # specifies what hostname must appear in the request's Host: header to
+        # match this virtual host. For the default virtual host (this file) this
+        # value is not decisive as it is used as a last resort host regardless.
+        # However, you must set it for any further virtual host explicitly.
+        ServerName $wp_subomain
+
+        ServerAdmin webmaster@$wp_subomain
+        DocumentRoot /var/www/html/wordpress
+
+        # Available loglevels: trace8, ..., trace1, debug, info, notice, warn,
+        # error, crit, alert, emerg.
+        # It is also possible to configure the loglevel for particular
+        # modules, e.g.
+        #LogLevel info ssl:warn
+
+        ErrorLog ${APACHE_LOG_DIR}/wordpress.log
+        CustomLog ${APACHE_LOG_DIR}/wordpress.log combined
+
+        # For most configuration files from conf-available/, which are
+        # enabled or disabled at a global level, it is possible to
+        # include a line for only one particular virtual host. For example the
+        # following line enables the CGI configuration for this host only
+        # after it has been globally disabled with "a2disconf".
+        #Include conf-available/serve-cgi-bin.conf
+  </VirtualHost>
+EOF
+  a2ensite $wp_subomain.conf
+  service apache2 reload
+  cat <<EOF >>WP-Settings.txt
+##############################
+Databasename: $mysqldbname
+Databasename: $mysqlusername
+DB-Password: $mysqlpw
+##############################
+EOF
+  yellow "Databasename: $mysqldbname"
+  yellow "Databaseusername: $mysqlusername"
+  yellow "DB-Password: $mysqlpw"
+  red "Your MySQL information is also available in / root WP-Settings.TXT."
+  red "Check out $wp_subomain its should be ready now."
+  sleep 10
+  return 0
+fi
+}
+########################################################################
+#   Drupal 8.5 Installation                                            #
+########################################################################
+function F_drupal {
+    if [[ $1 = start_drupalinstall ]]; then
+  clear
+  _printPoweredBy
+  sleep 5
+  green "Please enter your Subdomain or IP address"
+  read $drupal_subomain
+  wpapache=apache2
+  wpnginx=nginx
+  if (( $(ps -ef | grep -v grep | grep $wpapache | wc -l) > 0 ))
+  then
+    echo "$wpapache is running!!!"
+    apacheinstalled=1
+  else
+    echo "$wpapache is offline!!! or not installed"
+    apacheinstalled=2
+  fi
+  if (( $(ps -ef | grep -v grep | grep $wpnginx | wc -l) > 0 ))
+  then
+    echo "$wpnginx is running!!!"
+    nginxinstalled=1
+  else
+    echo "$wpnginx is offline!!! or not installed"
+    nginxinstalled=2
+  fi
+  if [[ $apacheinstalled = 1 && $nginxinstalled = 2 ]]; then
+    green "Perfect continue..."
+  elif [[ $apacheinstalled = 2 && $nginxinstalled = 1 ]]; then
+    yellow "nginx is used instead of apache"
+  elif [[ $apacheinstalled = 2 && $nginxinstalled = 2 ]]; then
+    yellow "installing apache2..."
+    apt install apache2 -y
+  else
+    red "can't find out what is installed..."
+  fi
+  yellow "installing all php extencions"
+  aptitude install -y php7.0 php7.0-common php7.0-fpm php7.0-cli php7.0-json
+  aptitude install -y php7.0-curl php7.0-intl php7.0-mcrypt php-pear php7.0-mysql
+  aptitude install -y php7.0-gd php7.0-zip php7.0-xml php7.0-mbstring
+  a2enmod proxy_fcgi setenvif
+  a2enconf php7.0-fpm
+  service apache2 restart
+  yellow "Checking if MariaDB is installed"
+  UP=$(pgrep mysqld | wc -l);
+  if [ "$UP" = 0 ];
+  then
+    red "MariaDB is not installed...";
+    yellow "Installing it in the background..."
+    apt-get install mariadb-server -y >> /dev/null
+    clear
+    mysql_secure_installation <<EOF
+y
+secret
+secret
+y
+y
+y
+y
+EOF
+  green "creating MySQL Databasename"
+  green "creating MySQL User"
+  green "creating MySQL Password"
+  sleep 2
+  mysqldbname="mswp$$"
+  mysqlusername=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 5 ; echo '')
+  mysqlpw=wp$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 13 ; echo '')
+  yellow "create database whit password and name"
+  mysql -u root -psecret -e "CREATE DATABASE ${mysqldbname} /*\!40100 DEFAULT CHARACTER SET utf8 */;"
+  mysql -u root -psecret -e "CREATE USER ${mysqlusername}@localhost IDENTIFIED BY '${mysqlpw}';"
+  mysql -u root -psecret -e "GRANT ALL PRIVILEGES ON ${mysqldbname}.* TO '${mysqlusername}'@'localhost';"
+  mysql -u root -psecret -e "FLUSH PRIVILEGES;"
+  clear
+  _printPoweredBy
+  else
+    yellow "Pease enter the MySQL password"
+    read rootmysqlpw
+    green "creating MySQL Databasename"
+    green "creating MySQL User"
+    green "creating MySQL Password"
+    sleep 2
+    mysqldbname="mswp$$"
+    mysqlusername=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 5 ; echo '')
+    mysqlpw=wp$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 13 ; echo '')
+    yellow "create database whit password and name"
+    mysql -u root -prootmysqlpw -e "CREATE DATABASE ${mysqldbname} /*\!40100 DEFAULT CHARACTER SET utf8 */;"
+    mysql -u root -prootmysqlpw -e "CREATE USER ${mysqlusername}@localhost IDENTIFIED BY '${mysqlpw}';"
+    mysql -u root -prootmysqlpw -e "GRANT ALL PRIVILEGES ON ${mysqldbname}.* TO '${mysqlusername}'@'localhost';"
+    mysql -u root -prootmysqlpw -e "FLUSH PRIVILEGES;"
+    green "MySQL server is allredy installed"
+  fi
+  green "preparing Drupal..."
+  sleep 2
+  aptitude install zip -y >> /dev/null
+  wget https://ftp.drupal.org/files/projects/drupal-8.5.0.zip -P /var/www/html
+  cd /var/www/html
+  unzip drupal-8.5.0.zip >> /dev/null
+  rm drupal-8.5.0.zip
+  mv /var/www/html/drupal-8.5.0 /var/www/html/drupal
+  cd /root
+  chown -R www-data:www-data /var/www/html/drupal
+  cat <<EOF >>/etc/apache2/sites-available/$drupal_subomain.conf
+  <VirtualHost *:80>
+        # The ServerName directive sets the request scheme, hostname and port that
+        # the server uses to identify itself. This is used when creating
+        # redirection URLs. In the context of virtual hosts, the ServerName
+        # specifies what hostname must appear in the request's Host: header to
+        # match this virtual host. For the default virtual host (this file) this
+        # value is not decisive as it is used as a last resort host regardless.
+        # However, you must set it for any further virtual host explicitly.
+        ServerName $wp_subomain
+
+        ServerAdmin webmaster@$drupal_subomain
+        DocumentRoot /var/www/html/drupal
+
+        # Available loglevels: trace8, ..., trace1, debug, info, notice, warn,
+        # error, crit, alert, emerg.
+        # It is also possible to configure the loglevel for particular
+        # modules, e.g.
+        #LogLevel info ssl:warn
+
+        ErrorLog ${APACHE_LOG_DIR}/drupal.log
+        CustomLog ${APACHE_LOG_DIR}/drupal.log combined
+
+        # For most configuration files from conf-available/, which are
+        # enabled or disabled at a global level, it is possible to
+        # include a line for only one particular virtual host. For example the
+        # following line enables the CGI configuration for this host only
+        # after it has been globally disabled with "a2disconf".
+        #Include conf-available/serve-cgi-bin.conf
+  </VirtualHost>
+EOF
+  a2ensite $wp_subomain.conf
+  service apache2 reload
+  cat <<EOF >>Drupal-Settings.txt
+##############################
+Databasename: $mysqldbname
+Databasename: $mysqlusername
+DB-Password: $mysqlpw
+##############################
+EOF
+  yellow "Databasename: $mysqldbname"
+  yellow "Databaseusername: $mysqlusername"
+  yellow "DB-Password: $mysqlpw"
+  red "Your MySQL information is also available in / root Drupal-Settings.TXT."
+  red "Check out $drupal_subomain its should be ready now."
+  sleep 5
+  return 0
+fi
+}
+########################################################################
+#   Joomla Installation                                                #
+########################################################################
+function F_joomla {
+    if [[ $1 = start_joomlainstall ]]; then
+  clear
+  _printPoweredBy
+  sleep 5
+  green "Please enter your Subdomain or IP address"
+  read $drupal_subomain
+  wpapache=apache2
+  wpnginx=nginx
+  if (( $(ps -ef | grep -v grep | grep $wpapache | wc -l) > 0 ))
+  then
+    echo "$wpapache is running!!!"
+    apacheinstalled=1
+  else
+    echo "$wpapache is offline!!! or not installed"
+    apacheinstalled=2
+  fi
+  if (( $(ps -ef | grep -v grep | grep $wpnginx | wc -l) > 0 ))
+  then
+    echo "$wpnginx is running!!!"
+    nginxinstalled=1
+  else
+    echo "$wpnginx is offline!!! or not installed"
+    nginxinstalled=2
+  fi
+  if [[ $apacheinstalled = 1 && $nginxinstalled = 2 ]]; then
+    green "Perfect continue..."
+  elif [[ $apacheinstalled = 2 && $nginxinstalled = 1 ]]; then
+    yellow "nginx is used instead of apache"
+  elif [[ $apacheinstalled = 2 && $nginxinstalled = 2 ]]; then
+    yellow "installing apache2..."
+    apt install apache2 -y
+  else
+    red "can't find out what is installed..."
+  fi
+  yellow "installing all php extencions"
+  aptitude install -y php7.0 php7.0-common php7.0-fpm php7.0-cli php7.0-json
+  aptitude install -y php7.0-curl php7.0-intl php7.0-mcrypt php-pear php7.0-mysql
+  aptitude install -y php7.0-gd php7.0-zip php7.0-xml php7.0-mbstring
+  a2enmod proxy_fcgi setenvif
+  a2enconf php7.0-fpm
+  service apache2 restart
+  yellow "Checking if MariaDB is installed"
+  UP=$(pgrep mysqld | wc -l);
+  if [ "$UP" = 0 ];
+  then
+    red "MariaDB is not installed...";
+    yellow "Installing it in the background..."
+    apt-get install mariadb-server -y >> /dev/null
+    clear
+    mysql_secure_installation <<EOF
+y
+secret
+secret
+y
+y
+y
+y
+EOF
+  green "creating MySQL Databasename"
+  green "creating MySQL User"
+  green "creating MySQL Password"
+  sleep 2
+  mysqldbname="mswp$$"
+  mysqlusername=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 5 ; echo '')
+  mysqlpw=wp$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 13 ; echo '')
+  yellow "create database whit password and name"
+  mysql -u root -psecret -e "CREATE DATABASE ${mysqldbname} /*\!40100 DEFAULT CHARACTER SET utf8 */;"
+  mysql -u root -psecret -e "CREATE USER ${mysqlusername}@localhost IDENTIFIED BY '${mysqlpw}';"
+  mysql -u root -psecret -e "GRANT ALL PRIVILEGES ON ${mysqldbname}.* TO '${mysqlusername}'@'localhost';"
+  mysql -u root -psecret -e "FLUSH PRIVILEGES;"
+  clear
+  _printPoweredBy
+  else
+    yellow "Pease enter the MySQL password"
+    read rootmysqlpw
+    green "creating MySQL Databasename"
+    green "creating MySQL User"
+    green "creating MySQL Password"
+    sleep 2
+    mysqldbname="mswp$$"
+    mysqlusername=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 5 ; echo '')
+    mysqlpw=wp$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 13 ; echo '')
+    yellow "create database whit password and name"
+    mysql -u root -prootmysqlpw -e "CREATE DATABASE ${mysqldbname} /*\!40100 DEFAULT CHARACTER SET utf8 */;"
+    mysql -u root -prootmysqlpw -e "CREATE USER ${mysqlusername}@localhost IDENTIFIED BY '${mysqlpw}';"
+    mysql -u root -prootmysqlpw -e "GRANT ALL PRIVILEGES ON ${mysqldbname}.* TO '${mysqlusername}'@'localhost';"
+    mysql -u root -prootmysqlpw -e "FLUSH PRIVILEGES;"
+    green "MySQL server is allredy installed"
+  fi
+  green "preparing Wordpress..."
+  sleep 2
+  aptitude install zip -y >> /dev/null
+  wget http://dev.mocis.sh/files/Joomla_3.8.6.zip -P /var/www/html/joomla
+  cd /var/www/html/joomla
+  unzip Joomla_3.8.6.zip >> /dev/null
+  rm Joomla_3.8.6.zip
+  cd /root
+  chown -R www-data:www-data /var/www/html/joomla
+  cat <<EOF >>/etc/apache2/sites-available/$drupal_subomain.conf
+  <VirtualHost *:80>
+        # The ServerName directive sets the request scheme, hostname and port that
+        # the server uses to identify itself. This is used when creating
+        # redirection URLs. In the context of virtual hosts, the ServerName
+        # specifies what hostname must appear in the request's Host: header to
+        # match this virtual host. For the default virtual host (this file) this
+        # value is not decisive as it is used as a last resort host regardless.
+        # However, you must set it for any further virtual host explicitly.
+        ServerName $wp_subomain
+
+        ServerAdmin webmaster@$drupal_subomain
+        DocumentRoot /var/www/html/drupal
+
+        # Available loglevels: trace8, ..., trace1, debug, info, notice, warn,
+        # error, crit, alert, emerg.
+        # It is also possible to configure the loglevel for particular
+        # modules, e.g.
+        #LogLevel info ssl:warn
+
+        ErrorLog ${APACHE_LOG_DIR}/drupal.log
+        CustomLog ${APACHE_LOG_DIR}/drupal.log combined
+
+        # For most configuration files from conf-available/, which are
+        # enabled or disabled at a global level, it is possible to
+        # include a line for only one particular virtual host. For example the
+        # following line enables the CGI configuration for this host only
+        # after it has been globally disabled with "a2disconf".
+        #Include conf-available/serve-cgi-bin.conf
+  </VirtualHost>
+EOF
+  a2ensite $wp_subomain.conf
+  service apache2 reload
+  cat <<EOF >>Drupal-Settings.txt
+##############################
+Databasename: $mysqldbname
+Databaseusernamename: $mysqlusername
+DB-Password: $mysqlpw
+##############################
+EOF
+  yellow "Databasename: $mysqldbname"
+  yellow "Databaseusername: $mysqlusername"
+  yellow "DB-Password: $mysqlpw"
+  red "Your MySQL information is also available in / root Drupal-Settings.TXT."
+  red "Check out $drupal_subomain its should be ready now."
+  sleep 5
+  return 0
+fi
+}
