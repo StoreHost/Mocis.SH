@@ -28,6 +28,7 @@ hostname=0
 wordpress=0
 drupal=0
 joomla=0
+webspell=0
 INPUT=sh-installer.sh.$$
 
 dialog --clear --backtitle "[ M.O.C.I.S ]" \
@@ -49,6 +50,7 @@ PVEMail "Proxmox Mail Gateway" \
 Wordpress "Blog CMS" \
 Drupal "CMS V8.5" \
 Joomla "CMS V3.8.6" \
+Webspell "CMS V1.2.5" \
 Back "Back to the Main Menu" \
 Exit "Exit to the shell" 2>"${INPUT}"
 menuitem=$(<"${INPUT}")
@@ -69,6 +71,7 @@ case $menuitem in
         Wordpress) wordpress=1;;
         Drupal) drupal=1;;
         Joomla) joomla=1;;
+        Webspell) webspell=1;;
 		    Back) goback=1;;
         Exit) echo "Bye"; clear;;
 esac
@@ -173,6 +176,23 @@ if [ $joomla = 1 ] ; then
   			if [ $response = 0 ]
   			then
           F_joomla start_joomlainstall
+          goback=1
+        fi
+fi
+if [ $webspell = 1 ] ; then
+  dialog --title "Agreement" \
+  --backtitle "Mocis.sh" \
+  --no-lines \
+  --yesno "Are you sure, you want to install Webspell NOR?  " 0 0
+  response=$?
+          case $response in
+          0) echo "";;
+          1) bash $Home;;
+          255) clear echo "[ESC] key pressed.";;
+  		esac
+  			if [ $response = 0 ]
+  			then
+          F_webspell start_webspellinstall
           goback=1
         fi
 fi
