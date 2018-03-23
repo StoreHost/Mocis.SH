@@ -551,7 +551,6 @@ if [[ $do_io = 0 ]]; then
   datatest=2
 fi
 cpubench="starting"
-uploadbench="preparing"
 ############################
 # Mixedgauge for Data Done / Start CPU Bench
 #
@@ -582,7 +581,7 @@ if [ $do_cpu = 1 ]; then
   #echo ""
   #echo -e "\033[35mCPU Benchmark\033[0m"
 	apt-get install bc -y > /dev/null
-	cpubench=$( { time echo "scale=4000; a(1)*4" | erg=$(bc -l); } 2>&1 )
+	cpubenchtest=$( { time echo "scale=4000; a(1)*4" | erg=$(bc -l); } 2>&1 )
 	#time echo "scale=4000; a(1)*4" | erg=$(bc -l)
   #echo ""
   #echo ""
@@ -595,6 +594,7 @@ fi
 # Mixedgauge for CPU Bench Done / Start Upload
 #
 
+uploadbench="preparing"
 for i in 5 10 20 30 40 50 60 70 80 90 100
 do
 $DIALOG \
@@ -622,11 +622,11 @@ uploadbench=0
 #####################
 #	CPU-Benchmark
 #
-Cpubench=$cpubench
-CPUBENCH="$(echo -e "${Cpubench}" | tr -d '[:space:]')"
-echo "$CPUBENCH"
-sleep 3
-
+echo $cpubenchtest | sed 's/ /%20/g' > result.tmp
+cpubenchresult=$(cat result.tmp)
+if [ ! -f result.tmp ]; then
+    rm result.tmp
+fi
 cpuname=$cname
 CPUNAME=${cpuname// /'%'20}
 cpufreq=$freq
@@ -663,7 +663,7 @@ echo  "$networking" > /dev/null
 #####################
 #	Give it to the API
 #
-curlresponse=$(curl https://api.tjbn.de/imggen/?text=This%20Benchmark%20is%20generated%20by%20Mocis\.sh§§'*'CPU-Benchmark§§Processor:%20$CPUNAME§Cores:%20$cores§MHz:%20$CPUFREQ§Memory:%20$tram%20MB§CPU-bench:%20$cpubench§§'*'Network%20Benchmark§§$networking§'*'Data%20Benchmark§§$IOTEST1§$IOTEST2§$IOTEST3§$IOTEST4) > /dev/null
+curlresponse=$(curl https://api.tjbn.de/imggen/?text=This%20Benchmark%20is%20generated%20by%20Mocis\.sh§§'*'CPU-Benchmark§§Processor:%20$CPUNAME§Cores:%20$cores§MHz:%20$CPUFREQ§Memory:%20$tram%20MB§CPU-bench:%20$cpubenchresult§§'*'Network%20Benchmark§§$networking§'*'Data%20Benchmark§§$IOTEST1§$IOTEST2§$IOTEST3§$IOTEST4) > /dev/null
 
 rm net.tmp
 ############################
