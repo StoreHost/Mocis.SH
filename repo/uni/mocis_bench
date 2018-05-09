@@ -542,6 +542,8 @@ do
       io4=$( ( dd if=/dev/zero of=io-test bs=64k count=16k && rm -f io-test ) 2>&1 | awk -Fs, '{io=$NF} END { print io}' )
       echo -e "\033[36mI/O Performance [4]:\033[0m $io4" > /dev/null
       echo ""
+			lsblk -io MODEL > lsblk
+
   fi
 done
 if [[ $do_io = 1 ]]; then

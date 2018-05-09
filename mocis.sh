@@ -55,9 +55,7 @@ response=$?
 			then
 				if [ "$version" = "$currentversion" ]; then
  					bash /usr/share/mocis/overlay/welcome
-
 				else
-
 					if [ -d $DIRECTORY ]; then
 				  echo "Removing old files..."
 					rm -R /usr/share/mocis/

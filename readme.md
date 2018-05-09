@@ -1,5 +1,5 @@
-# M.O.C.I.S
-Welcome to the M.O.C.I.S Installer.
+# Mocis
+Welcome to the Mocis Linux Installer.
 
 # For what is our Script Designed?
 Easy installation of common and not so common Packages, Services and much more.
