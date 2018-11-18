@@ -128,6 +128,34 @@ done
 
 }
 ########################################################################
+#   Updating                                                           #
+########################################################################
+_update(){
+  git clone -s $giturl
+  mv $gitname $scriptname
+  if [ -d $path ]; then
+    echo "Directory is existing..."
+    rm -rf $path
+    rm -rf $start_path
+    mkdir -p $path
+    mkdir -p $start_path
+    mv mocis/* $path/
+    rm -rf $scriptname
+    mv $path/lib/mocis.sh $start_path/mocis
+    chmod -+x $start_path/mocis
+    python $path/lib/ini.py
+    cd ~
+    clear
+    echo "Installation Done"
+    echo ""
+    echo "You can now use Mocis."
+    echo "Type $scriptname -s or $scriptname -h for help"
+  else
+    echo "could not update... somethint went wrong" 
+    exit 1
+  fi
+}
+########################################################################
 #   Local Installation                                                 #
 ########################################################################
 function _installlocal() {

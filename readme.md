@@ -1,10 +1,9 @@
 # Mocis
-Welcome to the Mocis Linux Installer.
+Willkommen bei Mocis.
+Mocis ist ein Installations helfer unter Debian, welcher einfach zu handhaben ist und mit ettlichen Funtionen ausgestattet ist.
 
-# For what is our Script Designed?
-Easy installation of common and not so common Packages, Services and much more.
-
-Allredy included:
+# Für was kann Mocis verwendet werden?
+In der derzeitigen Version untestützt Mocis Native folgende Installationen:
 ```
 
   Benchmark             #Ensky-Media & Mocis
@@ -31,33 +30,21 @@ Allredy included:
   Gitlab                #Gitlab
 ```
 
-## Getting Started
+## Einfach durchstarten
+Um Mocis bei Ihrem Debian Server zu installieren wird nicht viel vorausgesetzt.
+Laden Sie einfach die setup.sh Datei auf Ihren Server und führen Sie diese aus. Nach erfolgreichem ausführen, wird sich Mocis bei Ihnen selber installieren.
 
-Download the mocis.sh file and execute it. The installation is from this point self-explanatory.
-
-### Prerequisites
-
-This Script requires only Perl Basic and wget
-
-Debian
+### Installation
+Die Installationsdatei herunterladen
 
 ```
-aptitude install wget
+wget  https://raw.githubusercontent.com/StoreHost/Mocis.SH/master/setup.sh
 ```
-
-### Installing
-
-Download the Installer:
+Setup Datei ausführen:
 ```
-wget -O mocis.sh https://stable.mocis.sh
-```
-execute the Installer:
-```
-bash mocis.sh
+bash setup.sh
 ```
 
 # Check our Website
 
-http://www.mocis.sh
-
-Join us now and talk about us or report your bugs and errors.
+https://mocis.sh
