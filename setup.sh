@@ -83,21 +83,48 @@ if [ -d "/etc/apt" ]; then
 fi
 if [ -d "/etc/yum" ]; then
   pmgr=yum
+  exit 0
 fi
 ########################################################################
 #   Binary Installer                                                   #
 ########################################################################
 function _install_binarys {
-echo -ne "Install git, python, zip "  && \
- $pmgr -y install git zip python >/dev/null && \
- $pmgr -y install python-pip -y >/dev/null && \
- pip install wget >/dev/null && \
+  _install() {
+echo -ne "Install git: "  && $pmgr -y install git >/dev/null &&
 RESULT=$?
 if [ $RESULT -eq 0 ]; then
-  echo  " [Ok]"
+  echo " [Ok]"
 else
-  echo " [failed]"
+  echo " [Failed]"
+  exit 1
 fi
+echo -ne "Install python: "  && $pmgr -y install python >/dev/null &&
+RESULT=$?
+if [ $RESULT -eq 0 ]; then
+  echo " [Ok]"
+else
+  echo " Failed]"
+  exit 1
+fi
+}
+
+
+echo "We have to install some packages\n You want to allow it?"
+select yn in "Yes" "No"; do
+    case $yn in
+        Yes ) _install; break;;
+        No ) exit;;
+    esac
+done
+# $pmgr -y install git wget zip python >/dev/null && \
+# $pmgr -y install python-pip -y >/dev/null && \
+# pip install wget >/dev/null && \
+#RESULT=$?
+#if [ $RESULT -eq 0 ]; then
+#  echo  " [Ok]"
+#else
+#  echo " [failed]"
+#fi
 
 }
 ########################################################################
@@ -112,32 +139,41 @@ function _installlocal() {
     echo "Mocis dound... Trying to update $scriptname"
   fi
   _install_binarys
-  cd /tmp
   git clone -s $giturl
   mv $gitname $scriptname
   if [ -d $path ]; then
     echo "Directory is existing..."
     rm -rf $path
     rm -rf $start_path
-    mv mocis/* $path/
-    mv $path/lib/mocis.sh $start_path/mocis
-    chmod -+x $start_path/mocis
-    cd $path/lib/
-    python ini.py
-    cd ~
-    echo "Installation Done"
-    echo ""
-  else
     mkdir -p $path
+    mkdir -p $start_path
     mv mocis/* $path/
+    rm -rf $scriptname
     mv $path/lib/mocis.sh $start_path/mocis
     chmod -+x $start_path/mocis
-    cd $path/lib/
-    python ini.py
+    python $path/lib/ini.py
     cd ~
+    clear
     echo "Installation Done"
     echo ""
-    fi
+    echo "You can now use Mocis."
+    echo "Type $scriptname -s or $scriptname -h for help"
+  else
+    echo "Directory is not existing"
+    mkdir -p $path
+    mkdir -p $start_path
+    mv mocis/* $path/
+    rm -rf $scriptname
+    mv $path/lib/mocis.sh $start_path/mocis
+    chmod -+x $start_path/mocis
+    python $path/lib/ini.py
+    cd ~
+    clear
+    echo "Installation Done"
+    echo ""
+    echo "You can now use Mocis."
+    echo "Type $scriptname -s or $scriptname -h for help"
+  fi
   fi
 }
 ########################################################################
