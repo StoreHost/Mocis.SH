@@ -1,0 +1,1359 @@
+#!/usr/bin/env bash
+########################################################################
+# Developed by Store-Host                                              #
+# Version 0.1                                                          #
+# Web: https://www.store-host.com                                      #
+# 	Mocis is distributed in the hope that it will be useful,       #
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of     #
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the      #
+#   GNU General Public License for more details.                       #
+########################################################################
+########################################################################
+# In this file are all installation which                              #
+# can be executed and installed under Debian 9 "Scretch".              #
+# Please only with caution and extreme caution commands                #
+# or change functions.                                                 #
+########################################################################
+########################################################################
+#   Importing initital Variables from the Config File                  #
+########################################################################
+configfile='/usr/local/share/mocis/config/config.cfg'
+LANGUAGE=${LANG:0:2}
+source /usr/local/share/mocis/config/lang/$LANGUAGE.sh
+source /usr/local/share/mocis/lib/color.lib
+
+########################----Internal-Check's----########################
+function CHECK_OS() {
+if grep -Fq "debian 10" $configfile
+then
+    OS="deb10"
+elif grep -Fq "debian 9" $configfile
+then
+    OS="deb9"
+elif grep -Fq "debian 8" $configfile
+then
+    OS="deb8"
+elif grep -Fq "ubuntu 18" $configfile
+then
+    OS="ubu18"
+elif grep -Fq "ubuntu 17" $configfile
+then
+    OS="ubu17"
+elif grep -Fq "ubuntu 16" $configfile
+then
+  OS="ubu16"
+else 
+    echo "You'r System is not Supported."
+	exit 1;
+fi
+}
+########################################################################
+function errorhandling {
+  #source '/usr/local/share/mocis/lib/errortrap.lib'
+  lightblue "$ERRORHANDLER_ERROR"
+}
+function _slcl {
+  sleep 2 && clear
+}
+spin() {
+   local -a marks=( '/' '-' '\' '|' )
+   while [[ 1 ]]; do
+     printf '%s\r' "${marks[i++ % ${#marks[@]}]}"
+     sleep 1
+   done
+ }
+function _printPoweredBy {
+    cat <<"EOF"
+
+    Powered By:
+    __  __            _        _____ _    _
+   |  \/  |          (_)      / ____| |  | |
+   | \  / | ___   ___ _ ___  | (___ | |__| |
+   | |\/| |/ _ \ / __| / __|  \___ \|  __  |
+   | |  | | (_) | (__| \__ \_ ____) | |  | |
+   |_|  |_|\___/ \___|_|___(_)_____/|_|  |_|
+
+
+   >> Web: https://mocis.sh
+   >> Store: https://www.store-host.com
+
+  ################################################################
+EOF
+}
+function F_smartctl {
+  if [[ $1 = start_smartctl ]]; then
+    _printPoweredBy
+  fi
+}
+###########################----Webserver----############################
+function F_apache {
+if ! which nginx > /dev/null 2>&1; then
+    if ! which nginx > /dev/null 2>&1; then
+        apt-get update && apt-get install apache2 -y >/dev/null
+	fi
+fi
+return
+}
+function F_nginx {
+if ! which nginx > /dev/null 2>&1; then
+    if ! which apache2 > /dev/null 2>&1; then
+        apt-get update && apt-get install nginx -y >/dev/null
+	fi
+fi
+}
+function F_lighttpd {
+if ! which nginx > /dev/null 2>&1; then
+    if ! which apache2 > /dev/null 2>&1; then
+        apt-get update && apt-get install lighttpd -y >/dev/null
+	fi
+fi
+}
+function F_php70_lamp {
+    yellow "$ERRORHANDLER_IMPORT"
+    errorhandling
+    yellow "$ERRORHANDLER_LOADED"
+    _slcl
+	green "Installing Apache2 & activate some extensions"
+	F_apache && _slcl
+	a2enmod ssl && a2enmod rewrite && systemctl apache2 restart && _slcl
+    green "installing the most common used PHP7.0 extension."
+	apt-get install -y -f curl php7.0 php7.0-cgi php7.0-common php7.0-cli \
+        php7.0-curl php7.0-fpm php7.0-gd php7.0-imap php7.0-json \
+        php7.0-mbstring php7.0-mcrypt php7.0-mysql php7.0-opcache \
+        php7.0-xml php7.0-zip _slcl
+	green "install MySQL Server"
+	F_mariadb && _slcl
+	
+}
+function F_imscp {
+  green "$ERRORHANDLER_IMPORT"
+  errorhandling
+  green "$ERRORHANDLER_LOADED"
+  _slcl
+  if [ $OS = 'deb8' ] || [ $OS = 'deb9' ]; then
+  apt-get -y -f --auto-remove --no-install-recommends dist-upgrade
+  apt-get -y -f --auto-remove --no-install-recommends install \ 
+    ca-certificates perl whiptail wget
+	cd /usr/local/src
+	wget https://github.com/i-MSCP/imscp/archive/1.5.x.zip
+	unzip 1.5.x.zip && cd imscp-1.5.x
+	perl imscp-autoinstall -d
+  elif [ $OS = 'ubu16' ] || [ $OS = 'ubu17' ] || [ $OS = 'ubu18' ]; then
+ apt-get -y -f --auto-remove --no-install-recommends dist-upgrade
+    apt-get -y -f --auto-remove --no-install-recommends install \ 
+    ca-certificates perl whiptail wget
+	cd /usr/local/src
+	wget https://github.com/i-MSCP/imscp/archive/1.5.x.zip
+	unzip imscp-1.5.x.zip && cd imscp-1.5.x
+	perl imscp-autoinstall -d
+  else
+    exit 1;
+  fi
+}
+##########################----SQL-Related----###########################
+function F_mariadb {
+  red "$ERRORHANDLER_IMPORT"
+  errorhandling
+  red "$ERRORHANDLER_LOADED"
+  sleep 2
+    UP=$(pgrep mysql | wc -l);
+    if [ "$UP" = 0 ];
+    then
+        red "MariaDB is not installed...";
+        apt-get install mariadb-server -y
+
+        clear
+        mysql_secure_installation
+
+      else
+        green "MySQL server is allredy installed"
+      fi
+}
+function F_mongodb {
+  red "$ERRORHANDLER_IMPORT"
+  errorhandling
+  red "$ERRORHANDLER_LOADED"
+  sleep 2
+  if [ $OS = 'deb8' ] || [ $OS = 'deb9' ]; then
+    apt-get install dirmngr --install-recommends -y -f >/dev/null
+    apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 \
+       --recv 9DA31620334BD75D9DCB49F368818C72E52529D4 
+    if [ $OS = "deb9" ]; then
+       echo "deb http://repo.mongodb.org/apt/debian stretch/mongodb-org/4.0 main" | tee /etc/apt/sources.list.d/mongodb-org-4.0.list
+    elif [ $OS = "deb8" ]; then 
+	   echo "deb http://repo.mongodb.org/apt/debian jessie/mongodb-org/4.0 main" | tee /etc/apt/sources.list.d/mongodb-org-4.0.list
+    fi
+	apt-get update && clear && apt-get install mongodb mongodb-org -y -f && clear
+  elif [ $OS = 'ubu16' ] || [ $OS = 'ubu17' ] || [ $OS = 'ubu18' ]; then
+    apt-get install dirmngr --install-recommends -y -f >/dev/null
+    apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 \
+	   --recv 9DA31620334BD75D9DCB49F368818C72E52529D4
+    echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/4.0 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-4.0.list
+    apt-get update && clear && apt-get install mongodb mongodb-org -y -f && clear
+  else
+    exit 1;
+  fi
+ }
+function F_postgresql {
+  red "$ERRORHANDLER_IMPORT"
+  errorhandling
+  red "$ERRORHANDLER_LOADED"
+  _slcl
+  if [ $OS = 'deb8' ] || [ $OS = 'deb9' ]; then
+	apt-get update && clear && apt-get install \
+      postgresql-9.6 postgresql-client-9.6 -y -f && clear
+  elif [ $OS = 'ubu16' ] || [ $OS = 'ubu17' ] || [ $OS = 'ubu18' ]; then
+    apt-get update && clear && apt-get install \
+      postgresql-9.6 postgresql-client-9.6 -y -f && clear
+  else
+    exit 1;
+  fi
+ } 
+##########################----PHP-Related----###########################
+function F_php70_common {
+    yellow "$ERRORHANDLER_IMPORT"
+    errorhandling
+    yellow "$ERRORHANDLER_LOADED"
+    sleep 2 && clear
+    yellow "installing the most common used PHP7.0 extension."
+	apt-get install -y -f php7.0 php7.0-cgi php7.0-common php7.0-cli \
+        php7.0-curl php7.0-fpm php7.0-gd php7.0-imap php7.0-json \
+        php7.0-mbstring php7.0-mcrypt php7.0-mysql php7.0-opcache \
+        php7.0-xml php7.0-zip && _slcl
+}
+function F_php5_common {
+    yellow "$ERRORHANDLER_IMPORT"
+    errorhandling
+    yellow "$ERRORHANDLER_LOADED"
+    _slcl
+    yellow "installing the most common used PHP7.0 extension."
+	apt-get install -y -f php php-cgi php-common php-cli \
+        php-curl php-fpm php-gd php-imap php-json \
+        php-mbstring php-mcrypt php-mysql php-opcache \
+        php-xml php-zip && _slcl
+}
+########################################################################
+#   PHPmyAdmin                                                         #
+########################################################################
+function F_phpmyadmin {
+if ! which phpmyadmin > /dev/null 2>&1; then
+    yellow "PHPmyAdmin is not installed"
+    apt-get install phpmyadmin -y
+    green  "$PHPMYADMIN"
+    sleep 10
+fi
+}
+
+###########################----Hypervisors----##########################
+#   Virtualisation Hypervisors                                         #
+########################################################################
+function F_proxmoxhyper {
+  errorhandling
+  echo "deb http://download.proxmox.com/debian/pve stretch pve-no-subscription" > /etc/apt/sources.list.d/pve-install-repo.list
+  wget http://download.proxmox.com/debian/proxmox-ve-release-5.x.gpg -O /etc/apt/trusted.gpg.d/proxmox-ve-release-5.x.gpg
+  apt-get update -y && apt-get dist-upgrade -y
+  apt-get install proxmox-ve open-iscsi -y
+  apt-get install postfix -y
+  apt-get remove os-prober -y
+  red "$PROXMOX_CHECK_ERROR"
+  sleep 1
+  red "$PROXMOX_IF_NO_ERROR"
+  green "'https://youripaddress:8006'"
+  sleep 10
+}
+function F_proxmoxmailgw {
+  errorhandling
+  green "$PVE_MAIL_INSTALL"
+  sleep 2
+  echo "deb http://download.proxmox.com/debian/pmg stretch pmg-no-subscription" > /etc/apt/sources.list.d/pve-install-repo.list
+  wget http://download.proxmox.com/debian/proxmox-ve-release-5.x.gpg -O /etc/apt/trusted.gpg.d/proxmox-ve-release-5.x.gpg
+  apt-get update -y
+  apt-get install proxmox-mailgateway -y
+  green "$PROXMOX_IF_NO_ERROR 'https://youripaddress:8006'"
+  sleep 5
+}
+##########################----GIT-Related----###########################
+function F_gitlab {
+    green "$ERRORHANDLER_IMPORT"
+    errorhandling
+    green "$ERRORHANDLER_LOADED"
+    sleep 2
+    green "$GITLAB_INSTALL_APT"
+    sleep 2
+    apt install curl openssh-server ca-certificates postfix -y
+    curl -sS https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.deb.sh | bash
+    green "$GITLAB_INSTALL_GITLAB"
+    apt install gitlab-ce -y
+    green "$GITLAB_RECONFIG"
+    gitlab-ctl reconfigure
+    green "$GITLAB_DONE_INSTALL"
+}
+#########################----Storage-Related----########################
+function F_nfs_server {
+  errorhandling
+  _printPoweredBy
+    green "Starting the installation of NFS"
+    redb "Enter your IP-adress from the client Server and press [ENTER]:"
+    read ipaddress
+    redb  "where you wanna store the Data? (we will create an folder on /mnt/ eg. 'networkstorage'):"
+    read nfs_path
+    echo "$ipaddress , $nfs_path"
+    green "installing..."
+    sleep 3
+    apt-get install nfs-kernel-server -y
+    green "creating export directory"
+    sleep 3
+    if [[ -d /var/nfs-export ]]; then
+      echo ""
+    else
+      mkdir /var/nfs-export
+    fi
+    sleep 3
+    if [[ -d $nfs_path ]]; then
+      echo ""
+    else
+      mkdir /mnt/$nfs_path
+    fi
+    echo "/mnt/$nfs_path $ipaddress(rw,sync,no_subtree_check,no_root_squash)" >> /etc/exports
+    green "reloading all NFS exports"
+    sleep 2
+    exportfs -a
+    systemctl enable nfs-kernel-server
+    yellowb "Installation successfuly finished."
+    sleep 10
+}
+function F_openmediavault {
+  green "$ERRORHANDLER_IMPORT"
+  errorhandling
+  green "$ERRORHANDLER_LOADED"
+  sleep 2
+    if [[ ! -f /etc/apt/sources.list.d/openmediavault.list  ]]; then
+      cat <<EOF >> /etc/apt/sources.list.d/openmediavault.list
+      deb http://packages.openmediavault.org/public arrakis main
+      # deb http://downloads.sourceforge.net/project/openmediavault/packages arrakis main
+      ## Uncomment the following line to add software from the proposed repository.
+      # deb http://packages.openmediavault.org/public arrakis-proposed main
+      # deb http://downloads.sourceforge.net/project/openmediavault/packages arrakis-proposed main
+      ## This software is not part of OpenMediaVault, but is offered by third-party
+      ## developers as a service to OpenMediaVault users.
+      # deb http://packages.openmediavault.org/public arrakis partner
+      # deb http://downloads.sourceforge.net/project/openmediavault/packages arrakis partner
+EOF
+    export LANG=C
+    export DEBIAN_FRONTEND=noninteractive
+    export APT_LISTCHANGES_FRONTEND=none
+    apt-get update
+    apt-get --allow-unauthenticated install openmediavault-keyring
+    apt-get update
+    apt-get --yes --auto-remove --show-upgraded \
+      --allow-downgrades --allow-change-held-packages \
+      --no-install-recommends \
+      --option Dpkg::Options::="--force-confdef" \
+      --option DPkg::Options::="--force-confold" \
+      install postfix openmediavault
+      # Initialize the system and database.
+      omv-initsystem
+    else
+      red "$IS_INSTALLED"
+    fi
+    clear
+    green "$OMV_DEFAULT_NAME"
+    green "$OMV_DEFAULT_PASSWORD"
+    sleep 10
+}
+###########################----Frameworks----###########################
+function F_nextcloud {
+      UP=$(pgrep mysql | wc -l);
+      if [ "$UP" = 0 ];
+      then
+        red "$MYSQL_NOT_INSTALLED"
+        sleep 2
+        apt-get install mariadb-server -y
+        clear
+        mysql_secure_installation
+      else
+        green "$MYSQL_INSTALLED"
+        sleep 2
+      fi
+      UP=$(pgrep apache2 | wc -l);
+      if [ "$UP" = 0 ];
+      then
+        red "$APACHE_NOT_INSTALLED"
+        sleep 2
+        apt-get install apache2 -y
+      else
+        green "$APACHE_INSTALLED"
+        sleep 2
+      fi
+      green "$ERRORHANDLER_IMPORT"
+      errorhandling
+      green "$ERRORHANDLER_LOADED"
+      sleep 2
+      green "$PHP_INSTALL"
+      apt-get install php7.0-xml php7.0 php7.0-cgi php7.0-cli php7.0-gd -y
+      apt-get install php7.0-curl php7.0-zip php7.0-mysql -y
+      apt-get install libapache2-mod-php php7.0-mbstring unzip -y
+      red "$MYSQL_LOGIN_SECURE_INSTALL"
+      green "$MYSQL_CREATE_USER"
+      green "$MYSQL_GRANT_PRIVILEGES"
+      green "$MYSQL_FLUSH"
+      green "$MYSQL_QUIT"
+      sleep 10
+      mysql -u root -p
+      wget https://download.nextcloud.com/server/releases/nextcloud-13.0.0.zip
+      unzip nextcloud-13.0.0.zip
+      mv nextcloud /var/www/html/
+      chown -R www-data:www-data /var/www/html/nextcloud
+      cat <<EOF >> /etc/apache2/sites-available/nextcloud.conf
+      <VirtualHost *:80>
+      ServerName $Subdomain
+      ServerAdmin admin@localhost.localhost
+      DocumentRoot "/var/www/html/nextcloud"
+      <Directory "/var/www/html/nextcloud/">
+      Options MultiViews FollowSymlinks
+
+      AllowOverride All
+      Order allow,deny
+      Allow from all
+      </Directory>
+      TransferLog /var/log/apache2/nextcloud_access.log
+      ErrorLog /var/log/apache2/nextcloud_error.log
+      </VirtualHost>
+EOF
+  a2ensite nextcloud
+  systemctl restart apache2
+  clear
+  green "$NEXTCLOUD_ONLINE"
+  echo ""
+  green "$MYSQL_USERNAME"
+  green "$MYSQL_DATABASE"
+  green "$MYSQL_PASSWORD"
+  green "$NEXTCLOUD_CHECKOUT"
+  sleep 20
+}
+function F_webmin {
+  green "$ERRORHANDLER_IMPORT"
+  errorhandling
+  green "$ERRORHANDLER_LOADED"
+  sleep 2
+    if [[ ! -f /etc/apt/sources.list.d/webmin.list  ]]; then
+      sh -c 'echo "deb http://download.webmin.com/download/repository sarge contrib" > /etc/apt/sources.list.d/webmin.list'
+    else
+      red "$FILE_EXISTS"
+    fi
+    green "$DOWNLOADING_KEY"
+    sleep 2
+    wget -qO - http://www.webmin.com/jcameron-key.asc | apt-key add -
+    apt-get update -y
+    green "$WEBMIN_INSTALL"
+    sleep 2
+    apt-get install webmin -y
+    green "$WEBMIN_DONE"
+    sleep 10
+return
+}
+function F_wordpress {
+    if [[ $1 = start_wpinstall ]]; then
+  clear
+  _printPoweredBy
+  sleep 5
+  green "$WP_SUBDOMAIN"
+  read wp_subomain
+  wpapache=apache2
+  wpnginx=nginx
+  if (( $(ps -ef | grep -v grep | grep $wpapache | wc -l) > 0 ))
+  then
+    echo "$wpapache is running!!!"
+    apacheinstalled=1
+  else
+    echo "$wpapache is offline!!! or not installed"
+    apacheinstalled=2
+  fi
+  if (( $(ps -ef | grep -v grep | grep $wpnginx | wc -l) > 0 ))
+  then
+    echo "$wpnginx is running!!!"
+    nginxinstalled=1
+  else
+    echo "$wpnginx is offline!!! or not installed"
+    nginxinstalled=2
+  fi
+  if [[ $apacheinstalled = 1 && $nginxinstalled = 2 ]]; then
+    green "Perfect continue..."
+  elif [[ $apacheinstalled = 2 && $nginxinstalled = 1 ]]; then
+    yellow "nginx is used instead of apache"
+  elif [[ $apacheinstalled = 2 && $nginxinstalled = 2 ]]; then
+    yellow "installing apache2..."
+    apt install apache2 -y
+  else
+    red "can't find out what is installed..."
+  fi
+  yellow "$PHP_INSTALL"
+  aptitude install -y php7.0 php7.0-common php7.0-fpm php7.0-cli php7.0-json
+  aptitude install -y php7.0-curl php7.0-intl php7.0-mcrypt php-pear php7.0-mysql
+  aptitude install -y php7.0-gd php7.0-zip php7.0-xml php7.0-mbstring
+  a2enmod proxy_fcgi setenvif
+  a2enconf php7.0-fpm
+  service apache2 restart
+  yellow "$MYSQL_CHECK_INSTALLED"
+  UP=$(pgrep mysqld | wc -l);
+  if [ "$UP" = 0 ];
+  then
+    red "$MYSQL_NOT_INSTALLED";
+    yellow "$MYSQL_INSTALL_SERVICE"
+    apt-get install mariadb-server -y >> /dev/null
+    clear
+    mysql_secure_installation <<EOF
+y
+secret
+secret
+y
+y
+y
+y
+EOF
+  clear
+  _printPoweredBy
+  else
+    green "$MYSQL_INSTALLED"
+  fi
+  green "$MYSQL_CREATE_DB"
+  green "$MYSQL_CREATE_USER"
+  green "$MYSQL_CREATE_PW"
+  sleep 2
+  mysqldbname="mswp$$"
+  mysqlusername=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 5 ; echo '')
+  mysqlpw=wp$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 13 ; echo '')
+  yellow "$MYSQL_CREATE_DB_PW_USER"
+  mysql -u root -psecret -e "CREATE DATABASE ${mysqldbname} /*\!40100 DEFAULT CHARACTER SET utf8 */;"
+  mysql -u root -psecret -e "CREATE USER ${mysqlusername}@localhost IDENTIFIED BY '${mysqlpw}';"
+  mysql -u root -psecret -e "GRANT ALL PRIVILEGES ON ${mysqldbname}.* TO '${mysqlusername}'@'localhost';"
+  mysql -u root -psecret -e "FLUSH PRIVILEGES;"
+  green "$WP_PREPARE"
+  sleep 2
+  aptitude install zip -y >> /dev/null
+  wget https://wordpress.org/latest.zip -P /var/www/html
+  cd /var/www/html
+  unzip latest.zip >> /dev/null
+  rm latest.zip
+  cd /root
+  chown -R www-data:www-data /var/www/html/drupal
+  cat <<EOF >>/etc/apache2/sites-available/$wp_subomain.conf
+  <VirtualHost *:80>
+        # The ServerName directive sets the request scheme, hostname and port that
+        # the server uses to identify itself. This is used when creating
+        # redirection URLs. In the context of virtual hosts, the ServerName
+        # specifies what hostname must appear in the request's Host: header to
+        # match this virtual host. For the default virtual host (this file) this
+        # value is not decisive as it is used as a last resort host regardless.
+        # However, you must set it for any further virtual host explicitly.
+        ServerName $wp_subomain
+
+        ServerAdmin webmaster@$wp_subomain
+        DocumentRoot /var/www/html/wordpress
+
+        # Available loglevels: trace8, ..., trace1, debug, info, notice, warn,
+        # error, crit, alert, emerg.
+        # It is also possible to configure the loglevel for particular
+        # modules, e.g.
+        #LogLevel info ssl:warn
+
+        ErrorLog ${APACHE_LOG_DIR}/wordpress.log
+        CustomLog ${APACHE_LOG_DIR}/wordpress.log combined
+
+        # For most configuration files from conf-available/, which are
+        # enabled or disabled at a global level, it is possible to
+        # include a line for only one particular virtual host. For example the
+        # following line enables the CGI configuration for this host only
+        # after it has been globally disabled with "a2disconf".
+        #Include conf-available/serve-cgi-bin.conf
+  </VirtualHost>
+EOF
+  a2ensite $wp_subomain.conf
+  service apache2 reload
+  cat <<EOF >>WP-Settings.txt
+##############################
+Databasename: $mysqldbname
+Databasename: $mysqlusername
+DB-Password: $mysqlpw
+##############################
+EOF
+  yellow "Databasename: $mysqldbname"
+  yellow "Databaseusername: $mysqlusername"
+  yellow "DB-Password: $mysqlpw"
+  red "$WP_MYSQL_SETTINGS"
+  red "$WP_CHECK_DOMAIN_1 $wp_subomain $WP_CHECK_DOMAIN_2"
+  sleep 10
+fi
+}
+function F_drupal {
+  clear
+  _printPoweredBy
+  sleep 5
+  green "$WP_SUBDOMAIN"
+  read $drupal_subomain
+  wpapache=apache2
+  wpnginx=nginx
+  if (( $(ps -ef | grep -v grep | grep $wpapache | wc -l) > 0 ))
+  then
+    echo "$wpapache is running!!!"
+    apacheinstalled=1
+  else
+    echo "$wpapache is offline!!! or not installed"
+    apacheinstalled=2
+  fi
+  if (( $(ps -ef | grep -v grep | grep $wpnginx | wc -l) > 0 ))
+  then
+    echo "$wpnginx is running!!!"
+    nginxinstalled=1
+  else
+    echo "$wpnginx is offline!!! or not installed"
+    nginxinstalled=2
+  fi
+  if [[ $apacheinstalled = 1 && $nginxinstalled = 2 ]]; then
+    green "Perfect continue..."
+  elif [[ $apacheinstalled = 2 && $nginxinstalled = 1 ]]; then
+    yellow "nginx is used instead of apache"
+  elif [[ $apacheinstalled = 2 && $nginxinstalled = 2 ]]; then
+    yellow "installing apache2..."
+    apt install apache2 -y
+  else
+    red "$DONT_KNOW_INSTALLED"
+  fi
+  yellow "$PHP_INSTALL"
+  aptitude install -y php7.0 php7.0-common php7.0-fpm php7.0-cli php7.0-json
+  aptitude install -y php7.0-curl php7.0-intl php7.0-mcrypt php-pear php7.0-mysql
+  aptitude install -y php7.0-gd php7.0-zip php7.0-xml php7.0-mbstring
+  a2enmod proxy_fcgi setenvif
+  a2enconf php7.0-fpm
+  service apache2 restart
+  yellow "$MYSQL_CHECK_INSTALLED"
+  UP=$(pgrep mysqld | wc -l);
+  if [ "$UP" = 0 ];
+  then
+    red "$MYSQL_NOT_INSTALLED";
+    yellow "$MYSQL_INSTALL_SERVICE"
+    apt-get install mariadb-server -y >> /dev/null
+    clear
+    mysql_secure_installation <<EOF
+y
+secret
+secret
+y
+y
+y
+y
+EOF
+  green "$MYSQL_CREATE_DB"
+  green "$MYSQL_CREATE_USER"
+  green "$MYSQL_CREATE_PW"
+  sleep 2
+  mysqldbname="mswp$$"
+  mysqlusername=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 5 ; echo '')
+  mysqlpw=wp$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 13 ; echo '')
+  yellow "$MYSQL_CREATE_DB_PW_USER"
+  mysql -u root -psecret -e "CREATE DATABASE ${mysqldbname} /*\!40100 DEFAULT CHARACTER SET utf8 */;"
+  mysql -u root -psecret -e "CREATE USER ${mysqlusername}@localhost IDENTIFIED BY '${mysqlpw}';"
+  mysql -u root -psecret -e "GRANT ALL PRIVILEGES ON ${mysqldbname}.* TO '${mysqlusername}'@'localhost';"
+  mysql -u root -psecret -e "FLUSH PRIVILEGES;"
+  clear
+  _printPoweredBy
+  else
+    yellow "$MYSQL_LOGIN_PW"
+    read rootmysqlpw
+    green "$MYSQL_CREATE_DB"
+    green "$MYSQL_CREATE_USER"
+    green "$MYSQL_CREATE_PW"
+    sleep 2
+    mysqldbname="mswp$$"
+    mysqlusername=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 5 ; echo '')
+    mysqlpw=wp$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 13 ; echo '')
+    yellow "$MYSQL_CREATE_DB_PW_USER"
+    mysql -u root -prootmysqlpw -e "CREATE DATABASE ${mysqldbname} /*\!40100 DEFAULT CHARACTER SET utf8 */;"
+    mysql -u root -prootmysqlpw -e "CREATE USER ${mysqlusername}@localhost IDENTIFIED BY '${mysqlpw}';"
+    mysql -u root -prootmysqlpw -e "GRANT ALL PRIVILEGES ON ${mysqldbname}.* TO '${mysqlusername}'@'localhost';"
+    mysql -u root -prootmysqlpw -e "FLUSH PRIVILEGES;"
+    green "$MYSQL_INSTALLED"
+  fi
+  green "$DRUPAL_PREPARE"
+  sleep 2
+  aptitude install zip -y >> /dev/null
+  wget https://ftp.drupal.org/files/projects/drupal-8.5.0.zip -P /var/www/html
+  cd /var/www/html
+  unzip drupal-8.5.0.zip >> /dev/null
+  rm drupal-8.5.0.zip
+  mv /var/www/html/drupal-8.5.0 /var/www/html/drupal
+  cd /root
+  chown -R www-data:www-data /var/www/html/drupal
+  cat <<EOF >>/etc/apache2/sites-available/$drupal_subomain.conf
+  <VirtualHost *:80>
+        # The ServerName directive sets the request scheme, hostname and port that
+        # the server uses to identify itself. This is used when creating
+        # redirection URLs. In the context of virtual hosts, the ServerName
+        # specifies what hostname must appear in the request's Host: header to
+        # match this virtual host. For the default virtual host (this file) this
+        # value is not decisive as it is used as a last resort host regardless.
+        # However, you must set it for any further virtual host explicitly.
+        ServerName $wp_subomain
+
+        ServerAdmin webmaster@$drupal_subomain
+        DocumentRoot /var/www/html/drupal
+
+        # Available loglevels: trace8, ..., trace1, debug, info, notice, warn,
+        # error, crit, alert, emerg.
+        # It is also possible to configure the loglevel for particular
+        # modules, e.g.
+        #LogLevel info ssl:warn
+
+        ErrorLog ${APACHE_LOG_DIR}/drupal.log
+        CustomLog ${APACHE_LOG_DIR}/drupal.log combined
+
+        # For most configuration files from conf-available/, which are
+        # enabled or disabled at a global level, it is possible to
+        # include a line for only one particular virtual host. For example the
+        # following line enables the CGI configuration for this host only
+        # after it has been globally disabled with "a2disconf".
+        #Include conf-available/serve-cgi-bin.conf
+  </VirtualHost>
+EOF
+  a2ensite $wp_subomain.conf
+  service apache2 reload
+  cat <<EOF >>Drupal-Settings.txt
+##############################
+Databasename: $mysqldbname
+Databasename: $mysqlusername
+DB-Password: $mysqlpw
+##############################
+EOF
+  yellow "$MYSQL_DB_NAME $mysqldbname"
+  yellow "$MYSQL_DB_USER $mysqlusername"
+  yellow "$MYSQL_DB_PW $mysqlpw"
+  red "$DRUPAL_MYSQL_SETTINGS"
+  red "DRUPAL_CHECK_DOMAIN_1 $drupal_subomain $DRUPAL_CHECK_DOMAIN_2"
+  sleep 5
+}
+function F_joomla {
+  clear
+  _printPoweredBy
+  sleep 5
+  green "$JOOMLA_SUBDOMAIN"
+  read $drupal_subomain
+  wpapache=apache2
+  wpnginx=nginx
+  if (( $(ps -ef | grep -v grep | grep $wpapache | wc -l) > 0 ))
+  then
+    echo "$wpapache is running!!!"
+    apacheinstalled=1
+  else
+    echo "$wpapache is offline!!! or not installed"
+    apacheinstalled=2
+  fi
+  if (( $(ps -ef | grep -v grep | grep $wpnginx | wc -l) > 0 ))
+  then
+    echo "$wpnginx is running!!!"
+    nginxinstalled=1
+  else
+    echo "$wpnginx is offline!!! or not installed"
+    nginxinstalled=2
+  fi
+  if [[ $apacheinstalled = 1 && $nginxinstalled = 2 ]]; then
+    green "Perfect continue..."
+  elif [[ $apacheinstalled = 2 && $nginxinstalled = 1 ]]; then
+    yellow "nginx is used instead of apache"
+  elif [[ $apacheinstalled = 2 && $nginxinstalled = 2 ]]; then
+    yellow "installing apache2..."
+    apt install apache2 -y
+  else
+    red "$DONT_KNOW_INSTALLED"
+  fi
+  yellow "$PHP_INSTALL"
+  aptitude install -y php7.0 php7.0-common php7.0-fpm php7.0-cli php7.0-json
+  aptitude install -y php7.0-curl php7.0-intl php7.0-mcrypt php-pear php7.0-mysql
+  aptitude install -y php7.0-gd php7.0-zip php7.0-xml php7.0-mbstring
+  a2enmod proxy_fcgi setenvif
+  a2enconf php7.0-fpm
+  service apache2 restart
+  yellow "$MYSQL_CHECK_INSTALLED"
+  UP=$(pgrep mysqld | wc -l);
+  if [ "$UP" = 0 ];
+  then
+    red "$MYSQL_NOT_INSTALLED";
+    yellow "$MYSQL_INSTALL_SERVICE"
+    apt-get install mariadb-server -y >> /dev/null
+    clear
+    mysql_secure_installation <<EOF
+y
+secret
+secret
+y
+y
+y
+y
+EOF
+  green "$MYSQL_CREATE_DB"
+  green "$MYSQL_CREATE_USER"
+  green "$MYSQL_CREATE_PW"
+  sleep 2
+  mysqldbname="mswp$$"
+  mysqlusername=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 5 ; echo '')
+  mysqlpw=wp$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 13 ; echo '')
+  yellow "$MYSQL_CREATE_DB_PW_USER"
+  mysql -u root -psecret -e "CREATE DATABASE ${mysqldbname} /*\!40100 DEFAULT CHARACTER SET utf8 */;"
+  mysql -u root -psecret -e "CREATE USER ${mysqlusername}@localhost IDENTIFIED BY '${mysqlpw}';"
+  mysql -u root -psecret -e "GRANT ALL PRIVILEGES ON ${mysqldbname}.* TO '${mysqlusername}'@'localhost';"
+  mysql -u root -psecret -e "FLUSH PRIVILEGES;"
+  clear
+  _printPoweredBy
+  else
+    yellow "$MYSQL_LOGIN_PW"
+    read rootmysqlpw
+    green "$MYSQL_CREATE_DB"
+    green "$MYSQL_CREATE_USER"
+    green "$MYSQL_CREATE_PW"
+    sleep 2
+    mysqldbname="mswp$$"
+    mysqlusername=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 5 ; echo '')
+    mysqlpw=wp$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 13 ; echo '')
+    yellow "MYSQL_CREATE_DB_PW_USER"
+    mysql -u root -prootmysqlpw -e "CREATE DATABASE ${mysqldbname} /*\!40100 DEFAULT CHARACTER SET utf8 */;"
+    mysql -u root -prootmysqlpw -e "CREATE USER ${mysqlusername}@localhost IDENTIFIED BY '${mysqlpw}';"
+    mysql -u root -prootmysqlpw -e "GRANT ALL PRIVILEGES ON ${mysqldbname}.* TO '${mysqlusername}'@'localhost';"
+    mysql -u root -prootmysqlpw -e "FLUSH PRIVILEGES;"
+    green "$MYSQL_INSTALLED"
+  fi
+  green "$JOOMLA_PREPARE"
+  sleep 2
+  aptitude install zip -y >> /dev/null
+  wget http://dev.mocis.sh/files/Joomla_3.8.6.zip -P /var/www/html/joomla
+  cd /var/www/html/joomla
+  unzip Joomla_3.8.6.zip >> /dev/null
+  rm Joomla_3.8.6.zip
+  cd /root
+  chown -R www-data:www-data /var/www/html/joomla
+  cat <<EOF >>/etc/apache2/sites-available/$drupal_subomain.conf
+  <VirtualHost *:80>
+        # The ServerName directive sets the request scheme, hostname and port that
+        # the server uses to identify itself. This is used when creating
+        # redirection URLs. In the context of virtual hosts, the ServerName
+        # specifies what hostname must appear in the request's Host: header to
+        # match this virtual host. For the default virtual host (this file) this
+        # value is not decisive as it is used as a last resort host regardless.
+        # However, you must set it for any further virtual host explicitly.
+        ServerName $wp_subomain
+
+        ServerAdmin webmaster@$drupal_subomain
+        DocumentRoot /var/www/html/drupal
+
+        # Available loglevels: trace8, ..., trace1, debug, info, notice, warn,
+        # error, crit, alert, emerg.
+        # It is also possible to configure the loglevel for particular
+        # modules, e.g.
+        #LogLevel info ssl:warn
+
+        ErrorLog ${APACHE_LOG_DIR}/drupal.log
+        CustomLog ${APACHE_LOG_DIR}/drupal.log combined
+
+        # For most configuration files from conf-available/, which are
+        # enabled or disabled at a global level, it is possible to
+        # include a line for only one particular virtual host. For example the
+        # following line enables the CGI configuration for this host only
+        # after it has been globally disabled with "a2disconf".
+        #Include conf-available/serve-cgi-bin.conf
+  </VirtualHost>
+EOF
+  a2ensite $wp_subomain.conf
+  service apache2 reload
+  cat <<EOF >>Joomla-Settings.txt
+##############################
+Databasename: $mysqldbname
+Databaseusernamename: $mysqlusername
+DB-Password: $mysqlpw
+##############################
+EOF
+  yellow "$MYSQL_DB_NAME $mysqldbname"
+  yellow "$MYSQL_DB_USER $mysqlusername"
+  yellow "$MYSQL_DB_PW $mysqlpw"
+  red "$JOOMLA_MYSQL_SETTINGS"
+  red "$JOOMLA_CHECK_DOMAIN_1 $drupal_subomain JOOMLA_CHECK_DOMAIN_2"
+  sleep 5
+}
+function F_webspell {
+  clear
+  _printPoweredBy
+  sleep 5
+  green "Please enter your Subdomain or IP address"
+  read $drupal_subomain
+  wpapache=apache2
+  wpnginx=nginx
+  if (( $(ps -ef | grep -v grep | grep $wpapache | wc -l) > 0 ))
+  then
+    echo "$wpapache is running!!!"
+    apacheinstalled=1
+  else
+    echo "$wpapache is offline!!! or not installed"
+    apacheinstalled=2
+  fi
+  if (( $(ps -ef | grep -v grep | grep $wpnginx | wc -l) > 0 ))
+  then
+    echo "$wpnginx is running!!!"
+    nginxinstalled=1
+  else
+    echo "$wpnginx is offline!!! or not installed"
+    nginxinstalled=2
+  fi
+  if [[ $apacheinstalled = 1 && $nginxinstalled = 2 ]]; then
+    green "Perfect continue..."
+  elif [[ $apacheinstalled = 2 && $nginxinstalled = 1 ]]; then
+    yellow "nginx is used instead of apache"
+  elif [[ $apacheinstalled = 2 && $nginxinstalled = 2 ]]; then
+    yellow "installing apache2..."
+    apt install apache2 -y
+  else
+    red "can't find out what is installed..."
+  fi
+  yellow "installing all php extencions"
+  aptitude install -y php7.0 php7.0-common php7.0-fpm php7.0-cli php7.0-json
+  aptitude install -y php7.0-curl php7.0-intl php7.0-mcrypt php-pear php7.0-mysql
+  aptitude install -y php7.0-gd php7.0-zip php7.0-xml php7.0-mbstring
+  a2enmod proxy_fcgi setenvif
+  a2enconf php7.0-fpm
+  service apache2 restart
+  yellow "Checking if MariaDB is installed"
+  UP=$(pgrep mysqld | wc -l);
+  if [ "$UP" = 0 ];
+  then
+    red "MariaDB is not installed...";
+    yellow "Installing it in the background..."
+    apt-get install mariadb-server -y >> /dev/null
+    clear
+    mysql_secure_installation <<EOF
+y
+secret
+secret
+y
+y
+y
+y
+EOF
+  green "creating MySQL Databasename"
+  green "creating MySQL User"
+  green "creating MySQL Password"
+  sleep 2
+  mysqldbname="mswp$$"
+  mysqlusername=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 5 ; echo '')
+  mysqlpw=wp$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 13 ; echo '')
+  yellow "create database whit password and name"
+  mysql -u root -psecret -e "CREATE DATABASE ${mysqldbname} /*\!40100 DEFAULT CHARACTER SET utf8 */;"
+  mysql -u root -psecret -e "CREATE USER ${mysqlusername}@localhost IDENTIFIED BY '${mysqlpw}';"
+  mysql -u root -psecret -e "GRANT ALL PRIVILEGES ON ${mysqldbname}.* TO '${mysqlusername}'@'localhost';"
+  mysql -u root -psecret -e "FLUSH PRIVILEGES;"
+  clear
+  _printPoweredBy
+  else
+    yellow "Pease enter the MySQL password"
+    read rootmysqlpw
+    green "creating MySQL Databasename"
+    green "creating MySQL User"
+    green "creating MySQL Password"
+    sleep 2
+    mysqldbname="mswp$$"
+    mysqlusername=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 5 ; echo '')
+    mysqlpw=wp$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 13 ; echo '')
+    yellow "create database whit password and name"
+    mysql -u root -prootmysqlpw -e "CREATE DATABASE ${mysqldbname} /*\!40100 DEFAULT CHARACTER SET utf8 */;"
+    mysql -u root -prootmysqlpw -e "CREATE USER ${mysqlusername}@localhost IDENTIFIED BY '${mysqlpw}';"
+    mysql -u root -prootmysqlpw -e "GRANT ALL PRIVILEGES ON ${mysqldbname}.* TO '${mysqlusername}'@'localhost';"
+    mysql -u root -prootmysqlpw -e "FLUSH PRIVILEGES;"
+    green "MySQL server is allredy installed"
+  fi
+  green "preparing Wordpress..."
+  sleep 2
+  aptitude install zip -y >> /dev/null
+  wget http://dev.mocis.sh/files/Webspell_1_2_5.zip -P /var/www/html
+  cd /var/www/html
+  unzip Webspell_1_2_5.zip >> /dev/null
+  rm Webspell_1_2_5.zip
+  cd /root
+  mv /var/www/html/Webspell_1_2_5 /var/www/html/webspell
+  chown -R www-data:www-data /var/www/html/joomla
+  cat <<EOF >>/etc/apache2/sites-available/$drupal_subomain.conf
+  <VirtualHost *:80>
+        # The ServerName directive sets the request scheme, hostname and port that
+        # the server uses to identify itself. This is used when creating
+        # redirection URLs. In the context of virtual hosts, the ServerName
+        # specifies what hostname must appear in the request's Host: header to
+        # match this virtual host. For the default virtual host (this file) this
+        # value is not decisive as it is used as a last resort host regardless.
+        # However, you must set it for any further virtual host explicitly.
+        ServerName $wp_subomain
+
+        ServerAdmin webmaster@$drupal_subomain
+        DocumentRoot /var/www/html/drupal
+
+        # Available loglevels: trace8, ..., trace1, debug, info, notice, warn,
+        # error, crit, alert, emerg.
+        # It is also possible to configure the loglevel for particular
+        # modules, e.g.
+        #LogLevel info ssl:warn
+
+        ErrorLog ${APACHE_LOG_DIR}/drupal.log
+        CustomLog ${APACHE_LOG_DIR}/drupal.log combined
+
+        # For most configuration files from conf-available/, which are
+        # enabled or disabled at a global level, it is possible to
+        # include a line for only one particular virtual host. For example the
+        # following line enables the CGI configuration for this host only
+        # after it has been globally disabled with "a2disconf".
+        #Include conf-available/serve-cgi-bin.conf
+  </VirtualHost>
+EOF
+  a2ensite $wp_subomain.conf
+  service apache2 reload
+  cat <<EOF >>Drupal-Settings.txt
+##############################
+Databasename: $mysqldbname
+Databaseusernamename: $mysqlusername
+DB-Password: $mysqlpw
+##############################
+EOF
+  yellow "Databasename: $mysqldbname"
+  yellow "Databaseusername: $mysqlusername"
+  yellow "DB-Password: $mysqlpw"
+  red "Your MySQL information is also available in / root Drupal-Settings.TXT."
+  red "Check out $drupal_subomain its should be ready now."
+  sleep 5
+}
+
+##########################-----Docker----###############################
+function F_docker_ce {
+ yellow "Updating the System"
+ apt-get update -y
+ green "installing Docker-CE"
+ apt-get install \
+ apt-transport-https \
+ ca-certificates \
+ curl gnupg2 \
+ software-properties-common -y
+ green "adding GPG Key"
+ curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
+ add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/debian \
+   $(lsb_release -cs) \
+   stable"
+ apt-get update
+ apt-get install docker-ce
+}
+function F_docker_compose {
+    green "$ERRORHANDLER_IMPORT"
+    errorhandling
+    green "$ERRORHANDLER_LOADED"
+    sleep 2
+}
+#######################----Security-Related----#########################
+function F_autoupdate {
+  green "Loading errorhandling..."
+  errorhandling
+  green "loaded... & starting now"
+  red "is not implemented at the moment!!!"
+}
+function F_teampass {
+  green "loading errorhandling..."
+  errorhandling
+    if ! which nginx > /dev/null 2>&1; then
+      green "Perfect... Nginx not installed"
+      sleep 5
+    else
+      red "Nginx is not supported. Please install Apache2 or disable Nginx"
+    fi
+    if ! which apache2 > /dev/null 2>&1; then
+      apt-get install apache2 -y > /dev/null
+    fi
+    if ! which mysql > /dev/null 2>&1; then
+      green "installing Mysql Server"
+      apt-get install mariadb-server -y > /dev/null
+      mysql_secure_installation
+    else
+      red "MySQL is Installed continue whit installation"
+    fi
+    apt-get install php7.0 php7.0-ldap php7.0-mysql php7.0-mcrypt \
+	   php7.0-mbstring php7.0-fpm php7.0-common php7.0-xml php7.0-gd \
+	   openssl php7.0-mysql php7.0-curl php7.0-bcmath -y > /dev/null
+    service apache2 restart
+    if ! which phpmyadmin > /dev/null 2>&1; then
+        yellow "PHPmyAdmin is not installed"
+        apt-get install phpmyadmin -y
+        green  "Please navigate to your PHPmyAdmin. There create a new Database and User."
+        sleep 10
+        apt-get install zip -y > /dev/null
+        wget --no-check-certificate \
+           https://github.com/nilsteampassnet/TeamPass/archive/master.zip &>/dev/null
+        unzip master.zip
+        rm master.zip
+        mv TeamPass-master/ /var/www/html/teampass
+        chmod -R 0777 /var/www/html/teampass/includes/config
+        chmod -R 0777 /var/www/html/teampass/includes/avatars
+        chmod -R 0777 /var/www/html/teampass/includes/libraries/csrfp/libs
+        chmod -R 0777 /var/www/html/teampass/includes/libraries/csrfp/log
+        chmod -R 0777 /var/www/html/teampass/includes/libraries/csrfp/js
+        chmod -R 0777 /var/www/html/teampass/backups
+        chmod -R 0777 /var/www/html/teampass/files
+        chmod -R 0777 /var/www/html/teampass/includes
+        chmod -R 0777 /var/www/html/teampass/install
+        chmod -R 0777 /var/www/html/teampass/upload
+        green  "You can now navigate to: yourip/teampass."
+        sleep 10
+    fi
+}
+function F_vmware {
+  green "$ERRORHANDLER_IMPORT"
+  errorhandling
+  green "$ERRORHANDLER_LOADED"
+  sleep 2
+  apt-get install -y -f open-vm-tools 
+}
+function F_fail2ban {
+    green "$ERRORHANDLER_IMPORT"
+    errorhandling
+    green "$ERRORHANDLER_LOADED"
+    sleep 2
+    apt-get install -y -f fail2ban
+	sleep 2
+	clear
+	cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
+    yellow "you can tweak some parameteres in: \n# /etc/fail2ban/jail.local"
+}
+function F_ssh_imp {
+    green "$ERRORHANDLER_IMPORT"
+    errorhandling
+    green "$ERRORHANDLER_LOADED"
+    sleep 2
+    green "Please enter your SSH Public Key:"
+    read sshkey
+    clear
+    yellow "is this correct? \n \
+    $sshkey \n >> Yes | No <<"
+    read answer
+    if [[ $answer =~ ^([yY][eE][sS]|[yY])+$ ]]; then
+        echo 'nice Job'
+        if [ -d "~/.ssh" ]; then
+            echo $sshkey > ~/.ssh/authorized_keys
+		    yellowb "reloading Open-SSH Server"
+		    service sshd restart
+        else
+            echo "directory does not exist \n Creating..."
+            mkdir -p ~/.ssh
+		    touch ~/.ssh/authorized_keys
+            echo $sshkey > ~/.ssh/authorized_keys
+		    yellowb "reloading Open-SSH Server"
+            service sshd restart
+			_slcl
+        fi
+    else
+	    red "Try againg"
+	    F_ssh_imp
+    fi
+}
+function F_ssh_gen {
+    green "$ERRORHANDLER_IMPORT"
+    errorhandling
+    green "$ERRORHANDLER_LOADED"
+	local email
+    sleep 2
+	yellow "Please enter your Email Adress:"
+	read $email
+    green "Lets start whit the funny part"
+	ssh-keygen -t rsa -b 4096 -C "$email" -f /root/my_ssh_key
+}
+function F_rkhunter {
+    green "$ERRORHANDLER_IMPORT"
+    errorhandling
+    green "$ERRORHANDLER_LOADED"
+	local email 
+	yellow "Please enter your Email Adress:"
+	read $email && _slcl
+	green "lets try to install"
+	apt-get install -y -f rkhunter && clear
+	sed -i 's/#MAIL-ON-WARNING=root/MAIL-ON-WARNING=$email/g' /etc/rkhunter.conf 
+}
+function F_cert_ssl {
+    green "$ERRORHANDLER_IMPORT"
+    errorhandling
+    green "$ERRORHANDLER_LOADED"
+	local dir
+	local domain
+    _slcl
+	green "lets try to install"
+	apt-get install -y -f certbot && clear
+    yellow "Domain:"
+    read $domain
+    yellow "directory: (eg. /var/www/html/wordpress)"
+    read $dir
+    certbot certonly --webroot -w $dir -d $domain -d www.$domain 
+    clear
+    certbot renew --dry-run
+	sleep 2 && clear
+}
+##############################----CORE----#°############################
+CHECK_OS
+while :
+do
+    case "$1" in
+
+    --call_apache)
+	    F_apache
+        exit 0
+		;;
+
+    --call_nginx)
+        F_nginx
+        exit 0
+        ;;
+
+    --call_lighttpd)
+        F_lighttpd
+        exit 0
+        ;;
+
+    --call_php70_common)
+        F_php70_common
+        exit 0
+        ;;
+
+    --call_php5_common)
+        F_php5_common
+        exit 0
+        ;;
+
+
+	--call_php70_lamp)
+        F_php70_lamp
+        exit 0
+        ;;
+
+    --call_phpmyadmin)
+        F_phpmyadmin
+        exit 0
+        ;;
+
+    --call_mariadb)
+        F_mariadb  
+        exit 0		
+        ;;
+
+    --call_mongodb)
+        F_mongodb
+        exit 0
+        ;;
+
+    --call_postgresql)
+        F_postgresql
+        exit 0
+        ;;
+
+    --call_nextcloud)
+        F_nextcloud  
+        exit 0
+        ;;
+		  
+    --call_proxmoxhyper)
+        F_proxmoxhyper  
+        exit 0
+        ;;
+		  
+    --call_proxmoxmailgw)
+        F_proxmoxmailgw  
+        exit 0
+        ;;
+  
+    --call_nfs_server)
+        F_nfs_server  
+        exit 0
+        ;;
+
+	--call_teampass)
+        F_teampass  
+        exit 0
+        ;;
+	
+	--call_webmin)
+        F_webmin  
+        exit 0
+        ;;
+
+	--call_gitlab)
+        F_gitlab
+        exit 0
+        ;;
+
+	--call_openmediavault)
+        F_openmediavault  
+        exit 0
+        ;;
+
+    --call_wordpress)
+        F_wordpress 
+        exit 0
+        ;;
+
+    --call_drupal)
+        F_drupal
+        exit 0
+        ;;
+
+    --call_joomla)
+        F_joomla
+        exit 0
+        ;;
+
+    --call_webspell)
+        F_webspell
+        exit 0
+        ;;
+		
+    --call_docker_ce)
+        F_docker_ce
+        exit 0
+        ;;
+		
+    --call_imscp)
+        F_imscp
+        exit 0
+        ;;
+
+    --call_vmware)
+        F_vmware
+        exit 0
+        ;;
+    --call_fail2ban)
+        F_fail2ban
+        exit 0
+        ;;
+
+    --call_sshkey_imp)
+        F_ssh_imp
+        exit 0
+        ;;
+    --call_sshkey_gen)
+        F_ssh_gen
+        exit 0
+        ;;
+
+    --call_cert_ssl)
+        F_cert_ssl
+        exit 0
+        ;;
+
+    --call_rkhunter)
+        F_rkhunter
+        exit 0
+        ;;
+
+    -*)
+        echo "$START_INPUT_ERROR $1" >&2
+        ## or call function display_help
+        exit 1
+        ;;
+    *)  # No more options
+        exit 0
+        ;;
+    esac
+done

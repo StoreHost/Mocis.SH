@@ -24,11 +24,17 @@ scriptname="mocis"
 scriptnamezipped="mocis.zip"
 start_path="/usr/local/bin"
 path="/usr/local/share/mocis"
-updateurl="stable.mocis.sh/$scriptname"
 installedname="mocis"
-version="1.00"
-giturl="stable.mocis.sh/mocis-ce.zip"
-gitname="mocis-ce.zip"
+version="0.2.00"
+giturl="https://github.com/StoreHost/Mocis.SH.git"
+updateurl=$giturl
+gitname="Mocis.SH"
+
+_gitclone() {
+  cd /tmp/
+  git clone --quiet https://github.com/StoreHost/Mocis.SH.git
+  return 0
+}
 ########################################################################
 #   Spinner                                                            #
 ########################################################################
@@ -103,29 +109,35 @@ function _installlocal() {
   read legal
   if [[ $legal =~ ^([aA][cC][cC]|[eE]|[pP]|[tT])+$ ]]; then
   if [ -d $path ]; then
-    echo "please start the service using $scriptname --start or update $scriptname --update"
-  else
-    _install_binarys
-    #git clone -s $giturl -p $path
-	mkdir -p $path
-	wget -q $giturl
-	mv $gitname $scriptnamezipped
-	unzip mocis.zip > /dev/null
-	mv mocis/* $path/
-	#mv $path/mocis/* $path && rm -R $path/mocis
-	mv $path/lib/mocis.sh $start_path/mocis
-	chmod -+x $start_path/mocis
+    echo "Mocis dound... Trying to update $scriptname"
+  fi
+  _install_binarys
+  cd /tmp
+  git clone -s $giturl
+  mv $gitname $scriptname
+  if [ -d $path ]; then
+    echo "Directory is existing..."
+    rm -rf $path
+    rm -rf $start_path
+    mv mocis/* $path/
+    mv $path/lib/mocis.sh $start_path/mocis
+    chmod -+x $start_path/mocis
     cd $path/lib/
     python ini.py
     cd ~
     echo "Installation Done"
-	echo ""
-    echo "doing some cleaning..."
-	rm -Rf /root/mocis && rm -Rf mocis.zip
-	echo "You can now start whit \"$installedname\" or \"$installedname -h\" to view all commands"
-  fi
+    echo ""
   else
-   exit 0
+    mkdir -p $path
+    mv mocis/* $path/
+    mv $path/lib/mocis.sh $start_path/mocis
+    chmod -+x $start_path/mocis
+    cd $path/lib/
+    python ini.py
+    cd ~
+    echo "Installation Done"
+    echo ""
+    fi
   fi
 }
 ########################################################################
