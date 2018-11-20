@@ -62,7 +62,7 @@ cu_free_space="Freier Speicherplatz anzeigen"
 cu_help="Hilfe"
 cu_install="Lokal installieren"
 cu_show_missing="Zeige fehlende Programme an"
-else 
+else
 cu_gateringsysinfo="Gathering System information"
 cu_calcdisk="Calculate Diskspace"
 cu_uptime="uptime"
@@ -224,7 +224,7 @@ fi
 if [ ! -f /tmp/100MB.zip ]; then
   wget -q http://100mb.mocis.sh/100MB.zip -P /tmp/
 else
-  echo ""
+  echo "clould not download 100mb Test File"
 fi
 ########################################################################
 #   Binary Installer                                                   #
@@ -576,10 +576,10 @@ function _speed_test_v4() {
 	   trail=""
 	fi
 	lightblue "${nodeName} ${trail} ${speedtest}"
-	
+
 }
 function _speed_v4() {
-  _speed_test_v4 'http://cachefly.cachefly.net/100mb.test' 'CacheFly' 
+  _speed_test_v4 'http://cachefly.cachefly.net/100mb.test' 'CacheFly'
   _speed_test_v4 'http://fsit.ch/speed/100mebibyte.dat' 'Fsit, Zurich,       CH'
   _speed_test_v4 'http://speedtest.tokyo.linode.com/100MB-tokyo.bin' 'Linode, Tokyo, JP'
   _speed_test_v4 'http://speedtest.singapore.linode.com/100MB-singapore.bin' 'Linode, Singapore, SG'
@@ -942,8 +942,8 @@ do
       *)  # No more options
           break
           ;;
-		  
-	  
+
+
     esac
 done
 ########################################################################

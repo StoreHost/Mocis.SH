@@ -42,7 +42,7 @@ then
 elif grep -Fq "ubuntu 16" $configfile
 then
   OS="ubu16"
-else 
+else
     echo "You'r System is not Supported."
 	exit 1;
 fi
@@ -123,7 +123,7 @@ function F_php70_lamp {
         php7.0-xml php7.0-zip _slcl
 	green "install MySQL Server"
 	F_mariadb && _slcl
-	
+
 }
 function F_imscp {
   green "$ERRORHANDLER_IMPORT"
@@ -132,7 +132,7 @@ function F_imscp {
   _slcl
   if [ $OS = 'deb8' ] || [ $OS = 'deb9' ]; then
   apt-get -y -f --auto-remove --no-install-recommends dist-upgrade
-  apt-get -y -f --auto-remove --no-install-recommends install \ 
+  apt-get -y -f --auto-remove --no-install-recommends install \
     ca-certificates perl whiptail wget
 	cd /usr/local/src
 	wget https://github.com/i-MSCP/imscp/archive/1.5.x.zip
@@ -140,7 +140,7 @@ function F_imscp {
 	perl imscp-autoinstall -d
   elif [ $OS = 'ubu16' ] || [ $OS = 'ubu17' ] || [ $OS = 'ubu18' ]; then
  apt-get -y -f --auto-remove --no-install-recommends dist-upgrade
-    apt-get -y -f --auto-remove --no-install-recommends install \ 
+    apt-get -y -f --auto-remove --no-install-recommends install \
     ca-certificates perl whiptail wget
 	cd /usr/local/src
 	wget https://github.com/i-MSCP/imscp/archive/1.5.x.zip
@@ -177,10 +177,10 @@ function F_mongodb {
   if [ $OS = 'deb8' ] || [ $OS = 'deb9' ]; then
     apt-get install dirmngr --install-recommends -y -f >/dev/null
     apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 \
-       --recv 9DA31620334BD75D9DCB49F368818C72E52529D4 
+       --recv 9DA31620334BD75D9DCB49F368818C72E52529D4
     if [ $OS = "deb9" ]; then
        echo "deb http://repo.mongodb.org/apt/debian stretch/mongodb-org/4.0 main" | tee /etc/apt/sources.list.d/mongodb-org-4.0.list
-    elif [ $OS = "deb8" ]; then 
+    elif [ $OS = "deb8" ]; then
 	   echo "deb http://repo.mongodb.org/apt/debian jessie/mongodb-org/4.0 main" | tee /etc/apt/sources.list.d/mongodb-org-4.0.list
     fi
 	apt-get update && clear && apt-get install mongodb mongodb-org -y -f && clear
@@ -208,7 +208,7 @@ function F_postgresql {
   else
     exit 1;
   fi
- } 
+ }
 ##########################----PHP-Related----###########################
 function F_php70_common {
     yellow "$ERRORHANDLER_IMPORT"
@@ -1108,7 +1108,7 @@ function F_vmware {
   errorhandling
   green "$ERRORHANDLER_LOADED"
   sleep 2
-  apt-get install -y -f open-vm-tools 
+  apt-get install -y -f open-vm-tools
 }
 function F_fail2ban {
     green "$ERRORHANDLER_IMPORT"
@@ -1167,12 +1167,12 @@ function F_rkhunter {
     green "$ERRORHANDLER_IMPORT"
     errorhandling
     green "$ERRORHANDLER_LOADED"
-	local email 
+	local email
 	yellow "Please enter your Email Adress:"
 	read $email && _slcl
 	green "lets try to install"
 	apt-get install -y -f rkhunter && clear
-	sed -i 's/#MAIL-ON-WARNING=root/MAIL-ON-WARNING=$email/g' /etc/rkhunter.conf 
+	sed -i 's/#MAIL-ON-WARNING=root/MAIL-ON-WARNING=$email/g' /etc/rkhunter.conf
 }
 function F_cert_ssl {
     green "$ERRORHANDLER_IMPORT"
@@ -1187,12 +1187,18 @@ function F_cert_ssl {
     read $domain
     yellow "directory: (eg. /var/www/html/wordpress)"
     read $dir
-    certbot certonly --webroot -w $dir -d $domain -d www.$domain 
+    certbot certonly --webroot -w $dir -d $domain -d www.$domain
     clear
     certbot renew --dry-run
 	sleep 2 && clear
 }
-##############################----CORE----#°############################
+############################----Monitoring----###########################
+function F_zabbix() {
+  #statements
+}
+
+
+##############################----CORE----##############################
 CHECK_OS
 while :
 do
@@ -1235,8 +1241,8 @@ do
         ;;
 
     --call_mariadb)
-        F_mariadb  
-        exit 0		
+        F_mariadb
+        exit 0
         ;;
 
     --call_mongodb)
@@ -1250,32 +1256,32 @@ do
         ;;
 
     --call_nextcloud)
-        F_nextcloud  
+        F_nextcloud
         exit 0
         ;;
-		  
+
     --call_proxmoxhyper)
-        F_proxmoxhyper  
+        F_proxmoxhyper
         exit 0
         ;;
-		  
+
     --call_proxmoxmailgw)
-        F_proxmoxmailgw  
+        F_proxmoxmailgw
         exit 0
         ;;
-  
+
     --call_nfs_server)
-        F_nfs_server  
+        F_nfs_server
         exit 0
         ;;
 
 	--call_teampass)
-        F_teampass  
+        F_teampass
         exit 0
         ;;
-	
+
 	--call_webmin)
-        F_webmin  
+        F_webmin
         exit 0
         ;;
 
@@ -1285,12 +1291,12 @@ do
         ;;
 
 	--call_openmediavault)
-        F_openmediavault  
+        F_openmediavault
         exit 0
         ;;
 
     --call_wordpress)
-        F_wordpress 
+        F_wordpress
         exit 0
         ;;
 
@@ -1308,12 +1314,12 @@ do
         F_webspell
         exit 0
         ;;
-		
+
     --call_docker_ce)
         F_docker_ce
         exit 0
         ;;
-		
+
     --call_imscp)
         F_imscp
         exit 0
@@ -1346,6 +1352,11 @@ do
         F_rkhunter
         exit 0
         ;;
+
+    --call_zabbix)
+       F_zabbix
+       exit 0
+       ;;
 
     -*)
         echo "$START_INPUT_ERROR $1" >&2
