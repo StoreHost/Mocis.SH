@@ -38,13 +38,15 @@ Laden Sie einfach die setup.sh Datei auf Ihren Server und führen Sie diese aus.
 Die Installationsdatei herunterladen
 
 ```
-wget  https://raw.githubusercontent.com/StoreHost/Mocis.SH/master/setup.sh
-```
-Setup Datei ausführen:
-```
-bash setup.sh
+wget  https://raw.githubusercontent.com/StoreHost/Mocis.SH/master/setup.sh && bash setup.sh
 ```
 
 # Check our Website
 
 https://mocis.sh
+
+
+# Preiswerte & Robuste Virtuelle Server
+
+Du bist auf der suche nach einem Bezahlbaren virtuellem Server, mit Standort in der Schweiz?
+Dann besuche uns auf www.store-host.com
