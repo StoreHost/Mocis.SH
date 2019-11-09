@@ -20,6 +20,7 @@
 ########################################################################
 #   Variables                                                          #
 ########################################################################
+# Test änderung
 scriptname="mocis"
 scriptnamezipped="mocis.zip"
 start_path="/usr/local/bin"
